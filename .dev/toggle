@@ -1,0 +1,17 @@
+#!/bin/bash
+
+SCRIPTPATH="$BASH_SOURCE"
+SCRIPTDIR=`cd "$(dirname "$SCRIPTPATH")"; pwd`
+PRJMAKE="akmk"
+
+if [ "$PYPRJROOT" ]; then
+    echo "anchor deleted"
+    unset PYPRJROOT
+    unalias $PRJMAKE
+    deactivate
+else
+    echo "anchor here"
+    export PYPRJROOT=`pwd`
+    alias $PRJMAKE="make -C $PYPRJROOT -s"
+    . $SCRIPTDIR/activate
+fi

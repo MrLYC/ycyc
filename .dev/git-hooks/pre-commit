@@ -1,0 +1,6 @@
+#!/bin/sh
+
+make test
+status=$?
+make clean
+exit $status
