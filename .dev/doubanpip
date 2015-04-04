@@ -1,0 +1,13 @@
+#!/bin/bash
+
+SELFPATH=$(cd $(dirname $BASH_SOURCE); pwd)
+WORKINGDIR=`pwd`
+
+cd $SELFPATH
+VENVPATH=`make dev-venv-path`
+
+cd $WORKINGDIR
+
+if [ -e "$VENVPATH/bin" ]; then
+    $VENVPATH/bin/pip $@ -i http://pypi.douban.com/simple
+fi
