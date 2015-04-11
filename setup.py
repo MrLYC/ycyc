@@ -17,8 +17,11 @@ except ImportError:
 
 from setuptools import find_packages
 
+dirname = os.path.dirname(__file__)
 
-def requirements_file_to_list(fn="requirements.txt"):
+
+def requirements_file_to_list():
+    fn = os.path.join(dirname, "requirements.txt")
     with open(fn, 'rb') as f:
         return [x.rstrip() for x in list(f) if x and not x.startswith('#')]
 
