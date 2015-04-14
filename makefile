@@ -38,3 +38,6 @@ test: pylint
 
 requires: $(ROOTPATH)/requirements.txt
 	$(PIPINSTALL) -r $(ROOTPATH)/requirements.txt
+
+ipy:
+	$(PYENV) ipython
