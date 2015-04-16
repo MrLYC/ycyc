@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import six
+import contextlib
+import logging.config
+import logging
 
 
 def quick_config(log_file="application.log"):
@@ -10,7 +12,6 @@ def quick_config(log_file="application.log"):
 
     :param log_file: the file for file handler
     """
-    import logging.config
     config = {
         'version': 1,
         'disable_existing_loggers': True,
@@ -45,3 +46,12 @@ def quick_config(log_file="application.log"):
         },
     }
     logging.config.dictConfig(config)
+
+
+@contextlib.contextmanager
+def log_disable(level=logging.CRITICAL):
+    """disable logger
+    """
+    logging.disable(level)
+    yield
+    logging.disable(logging.NOTSET)
