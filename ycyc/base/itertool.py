@@ -15,7 +15,7 @@ def getitems(obj, items, default=None):
 
     try:
         return reduce(lambda x, i: x[i], items, obj)
-    except IndexError, KeyError:
+    except (IndexError, KeyError):
         return default
 
 
@@ -34,3 +34,37 @@ def getattrs(obj, attrs, default=None):
         return reduce(lambda x, n: getattr(x, n), attrs, obj)
     except AttributeError:
         return default
+
+
+def iterable(obj):
+    """
+    Check obj if is iterable
+    :param obj: object
+    :return: boolean
+    """
+    return hasattr(obj, "__iter__")
+
+
+def getnext(iterator, default=None):
+    """
+    Get next item of iterable object
+    :param iterator: object
+    :param default: default value
+    :return: next item of iterator till the end, otherwise default value
+    """
+    try:
+        return next(iterator)
+    except StopIteration:
+        return default
+
+
+def getfirst(obj, default=None):
+    """
+    Get first item of iterable object
+    :param obj: object
+    :param default: default value
+    :return: first item of obj if obj is not empty, otherwise default value
+    """
+    if not obj:
+        return default
+    return getnext(iter(obj), default)
