@@ -3,7 +3,7 @@
 
 from unittest import TestCase
 
-from ycyc.utils.contextmgr import catch
+from ycyc.base.contextmgr import catch
 
 
 class TestCatch(TestCase):

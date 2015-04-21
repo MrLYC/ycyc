@@ -4,7 +4,7 @@
 from unittest import TestCase
 import six
 
-from ycyc.utils import encode, decode
+from ycyc.base import encode, decode
 
 
 class TestCoding(TestCase):

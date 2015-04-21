@@ -3,7 +3,7 @@
 
 from unittest import TestCase
 
-from ycyc.utils.adapter import ObjAsDictAdapter
+from ycyc.base.adapter import ObjAsDictAdapter
 
 
 class TestObjAsDictAdapter(TestCase):
