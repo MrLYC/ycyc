@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import collections
+from functools import wraps
 
 
 class ObjAsDictAdapter(collections.Mapping):
@@ -22,3 +23,16 @@ class ObjAsDictAdapter(collections.Mapping):
 
     def __len__(self):
         return len(dir(self.__object))
+
+
+def withmanager(ctxmgr, *ctxargs, **ctxkwg):
+    """call function with ctxmgr(*ctxargs, **ctxkwg)
+    """
+    def decorator(func):
+        @wraps(func)
+        def helper(*args, **kwg):
+            with ctxmgr(*ctxargs, **ctxkwg):
+                return func(*args, **kwg)
+
+        return helper
+    return decorator
