@@ -4,7 +4,7 @@
 from unittest import TestCase
 from collections import namedtuple
 
-from ycyc.utils.itertool import getitems, getattrs
+from ycyc.base.itertool import getitems, getattrs
 
 
 class Testgetitems(TestCase):

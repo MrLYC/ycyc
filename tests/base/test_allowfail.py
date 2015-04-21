@@ -5,11 +5,11 @@ from unittest import TestCase
 
 import mock
 
-from ycyc.utils.allowfail import AllowFail
+from ycyc.base.allowfail import AllowFail
 
 
 class TestUsage(TestCase):
-    @mock.patch("ycyc.utils.allowfail.AllowFail.on_error")
+    @mock.patch("ycyc.base.allowfail.AllowFail.on_error")
     def test_decorator(self, magic_mock):
         @AllowFail("test func")
         def func():
@@ -20,7 +20,7 @@ class TestUsage(TestCase):
         self.assertEqual(result, 1)
         self.assertIsNone(magic_mock.call_args)
 
-    @mock.patch("ycyc.utils.allowfail.AllowFail.on_error")
+    @mock.patch("ycyc.base.allowfail.AllowFail.on_error")
     def test_decorator_err(self, magic_mock):
         @AllowFail("test valueerror")
         def valueerror():
@@ -33,14 +33,14 @@ class TestUsage(TestCase):
         self.assertEqual(args[0], "test valueerror")
         self.assertIs(args[1], exception)
 
-    @mock.patch("ycyc.utils.allowfail.AllowFail.on_error")
+    @mock.patch("ycyc.base.allowfail.AllowFail.on_error")
     def test_contextmanager(self, magic_mock):
         with AllowFail("test contextmanager"):
             pass
 
         self.assertIsNone(magic_mock.call_args)
 
-    @mock.patch("ycyc.utils.allowfail.AllowFail.on_error")
+    @mock.patch("ycyc.base.allowfail.AllowFail.on_error")
     def test_contextmanager_err(self, magic_mock):
         with AllowFail("test contextmanager"):
             raise ValueError()
