@@ -3,6 +3,7 @@
 
 import functools
 import logging
+import types
 
 logger = logging.getLogger(__file__)
 
@@ -34,3 +35,17 @@ def with_lock(lock):
                 return func(*args, **kwg)
         return f
     return _
+
+
+class _CachedProperty(object):
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, instance, cls):
+        if not hasattr(self, "cached_result"):
+            self.cached_result = types.MethodType(self.func, instance, cls)()
+        return self.cached_result
+
+    def __set__(self, obj, cls):
+        raise AttributeError("can't set attribute")
+cachedproperty = _CachedProperty
