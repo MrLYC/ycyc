@@ -17,3 +17,16 @@ def catch(errors=Exception, reraise=None, callback=None):
             callback(err)
         if reraise:
             six.raise_from(reraise, err)
+
+
+@contextmanager
+def subprocessor(*args, **kwg):
+    from subprocessor import Popen
+    processor = None
+    try:
+        processor = Popen(*args, **kwg)
+        yield processor
+    finally:
+        if processor.poll() is None:
+            processor.terminate()
+            processor.wait()
