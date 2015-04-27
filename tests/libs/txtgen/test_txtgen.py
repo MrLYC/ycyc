@@ -4,7 +4,7 @@
 from unittest import TestCase
 import textwrap
 
-from ycyc.frameworks import txtgen
+from ycyc.libs import txtgen
 
 
 class Test_TxtGenerator(TestCase):
