@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import itertools
+import collections
+
 
 def getitems(obj, items, default=None):
     """
@@ -68,3 +71,18 @@ def getfirst(obj, default=None):
     if not obj:
         return default
     return getnext(iter(obj), default)
+
+
+def groupby(iterable, keyfunc):
+    """
+    Group iterable by keyfunc
+    :param iterable: iterable obj
+    :param keyfunc: group by keyfunc
+    :return: dict {<keyfunc result>: [item1, item2]}
+    """
+    grouper = itertools.groupby(iterable, keyfunc)
+    group_dict = collections.defaultdict(list)
+    for k, r in grouper:
+        group = group_dict[k]
+        group.extend(r)
+    return dict(group_dict)
