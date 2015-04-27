@@ -39,9 +39,10 @@ class TxtGenerator(object):
         self.write(txt + self.NEWLINE_SEP, **extend_data)
 
     def prepare(self):
-        txt = self.ITEM_SEP.join(self.output_lst)
-        self.output_lst.clear()
-        self.output_lst.append(txt)
+        if len(self.output_lst) > 1:
+            txt = self.ITEM_SEP.join(self.output_lst)
+            self.output_lst.clear()
+            self.output_lst.append(txt)
 
     def getval(self):
         self.prepare()
