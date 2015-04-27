@@ -3,7 +3,7 @@
 
 from unittest import TestCase
 
-from ycyc.base.adapter import ObjAsDictAdapter
+from ycyc.base import adapter
 
 
 class TestObjAsDictAdapter(TestCase):
@@ -26,7 +26,7 @@ class TestObjAsDictAdapter(TestCase):
 
     def test_base_method(self):
         parent = self.Parent()
-        parent_dict = ObjAsDictAdapter(parent)
+        parent_dict = adapter.ObjAsDictAdapter(parent)
 
         self.assertEqual(parent_dict["pclsval"], parent.pclsval)
         self.assertEqual(parent_dict["pinsval"], parent.pinsval)
@@ -35,7 +35,7 @@ class TestObjAsDictAdapter(TestCase):
 
     def test_inherit(self):
         child = self.Child()
-        child_dict = ObjAsDictAdapter(child)
+        child_dict = adapter.ObjAsDictAdapter(child)
 
         self.assertEqual(child_dict["pclsval"], child.pclsval)
         self.assertEqual(child_dict["pinsval"], child.pinsval)
@@ -48,7 +48,7 @@ class TestObjAsDictAdapter(TestCase):
 
     def test_dynamic_attr(self):
         child = self.Child()
-        child_dict = ObjAsDictAdapter(child)
+        child_dict = adapter.ObjAsDictAdapter(child)
 
         self.assertEqual(child_dict["dynamicval"], child.dynamicval)
         self.assertNotIn("dynamicval", iter(child_dict))
@@ -60,8 +60,8 @@ class TestObjAsDictAdapter(TestCase):
     def test_dict_interface(self):
         child = self.Child()
         parent = self.Parent()
-        child_dict = ObjAsDictAdapter(child)
-        parent_dict = ObjAsDictAdapter(parent)
+        child_dict = adapter.ObjAsDictAdapter(child)
+        parent_dict = adapter.ObjAsDictAdapter(parent)
 
         self.assertEqual(parent_dict.get("cinsval"), None)
         self.assertEqual(

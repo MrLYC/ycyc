@@ -3,6 +3,7 @@
 
 import collections
 from functools import wraps
+import types
 
 
 class ObjAsDictAdapter(collections.Mapping):
