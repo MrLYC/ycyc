@@ -86,3 +86,16 @@ def groupby(iterable, keyfunc):
         group = group_dict[k]
         group.extend(r)
     return dict(group_dict)
+
+
+def mkparts(sequence, indices):
+    indices = indices or [1]
+    result_list = []
+    start = 0
+    for end in indices:
+        if end < start:
+            raise ValueError("end index is less than start index")
+        result_list.append(sequence[start:end])
+        start = end
+    result_list.append(sequence[start:])
+    return result_list

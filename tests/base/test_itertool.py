@@ -5,7 +5,7 @@ from unittest import TestCase
 from collections import namedtuple
 
 from ycyc.base.itertool import (
-    getitems, getattrs, iterable, getnext, getfirst
+    getitems, getattrs, iterable, getnext, getfirst, mkparts
 )
 
 
@@ -79,3 +79,45 @@ class TestIterObj(TestCase):
         self.assertEqual(getnext(gen), 1)
         self.assertEqual(getnext(gen), None)
         self.assertEqual(getnext(gen, 2), 2)
+
+
+class TestMakeParts(TestCase):
+    def test_usage(self):
+        lst = list(range(10))
+        part1, part2, part3, part4 = mkparts(lst, [1, 3, 6])
+        self.assertListEqual(part1, [0])
+        self.assertListEqual(part2, [1, 2])
+        self.assertListEqual(part3, [3, 4, 5])
+        self.assertListEqual(part4, [6, 7, 8, 9])
+
+    def test_special_val(self):
+        empty_lst = []
+        part1, part2, part3 = mkparts(empty_lst, [2, 4])
+        self.assertListEqual(part1, [])
+        self.assertListEqual(part2, [])
+        self.assertListEqual(part3, [])
+
+        lst = list(range(3))
+        part1, part2 = mkparts(lst, [])
+        self.assertListEqual(part1, [0])
+        self.assertListEqual(part2, [1, 2])
+        part1, part2 = mkparts(lst, [1])
+        self.assertListEqual(part1, [0])
+        self.assertListEqual(part2, [1, 2])
+
+        part1, part2 = mkparts(lst, [4])
+        self.assertListEqual(part1, [0, 1, 2])
+        self.assertListEqual(part2, [])
+
+        part1, part2, part3 = mkparts(lst, [1, 2])
+        self.assertListEqual(part1, [0])
+        self.assertListEqual(part2, [1])
+        self.assertListEqual(part3, [2])
+
+        part1, part2, part3 = mkparts(lst, [1, 1])
+        self.assertListEqual(part1, [0])
+        self.assertListEqual(part2, [])
+        self.assertListEqual(part3, [1, 2])
+
+        with self.assertRaisesRegexp(ValueError, "end index is less than start index"):
+            part1, part2, part3 = mkparts(lst, [2, 1])
