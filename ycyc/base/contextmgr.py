@@ -21,7 +21,7 @@ def catch(errors=Exception, reraise=None, callback=None):
 
 @contextmanager
 def subprocessor(*args, **kwg):
-    from subprocessor import Popen
+    from subprocess import Popen
     processor = None
     try:
         processor = Popen(*args, **kwg)
