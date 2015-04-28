@@ -88,9 +88,9 @@ def groupby(iterable, keyfunc):
     return dict(group_dict)
 
 
-def mkparts(sequence, indices):
+def mkparts(sequence, indices=None):
     indices = indices or [1]
-    result_list = []
+    result_list = collections.deque()
     start = 0
     for end in indices:
         if end < start:
