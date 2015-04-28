@@ -49,3 +49,11 @@ class _CachedProperty(object):
     def __set__(self, obj, cls):
         raise AttributeError("can't set attribute")
 cachedproperty = _CachedProperty
+
+
+def chainingmethod(func):
+    @functools.wraps(func)
+    def chaining(self, *args, **kwg):
+        func(self, *args, **kwg)
+        return self
+    return chaining
