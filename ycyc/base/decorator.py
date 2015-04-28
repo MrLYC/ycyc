@@ -57,3 +57,22 @@ def chainingmethod(func):
         func(self, *args, **kwg)
         return self
     return chaining
+
+
+def retry(num, errors=Exception):
+    if num < 0:
+        raise ValueError("num:%d can not less than 0" % num)
+
+    def foo(func):
+        @functools.wraps(func)
+        def baz(*args, **kwg):
+            i = num and num + 1
+            while True:
+                try:
+                    return func(*args, **kwg)
+                except errors:
+                    i -= 1
+                    if i == 0:
+                        raise
+        return baz
+    return foo

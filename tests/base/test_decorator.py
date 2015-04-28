@@ -49,3 +49,40 @@ class TestChainingMethod(TestCase):
         self.assertEqual(mockobj.called.pop(), ("free_args", (3,), {"val": 4}))
         self.assertEqual(mockobj.called.pop(), ("keyword_arg", {"val": 2}))
         self.assertEqual(mockobj.called.pop(), ("position_arg", 1))
+
+
+class TestRetry(TestCase):
+    def mockfunc(self, iterator):
+        try:
+            n = next(iterator)
+            raise ValueError("%s" % n)
+        except StopIteration:
+            return None
+
+    def test_retry_useage(self):
+        @decorator.retry(3)
+        def mockfunc3(iterator):
+            return self.mockfunc(iterator)
+
+        @decorator.retry(0)
+        def mockfunc0(iterator):
+            return self.mockfunc(iterator)
+
+        with self.assertRaisesRegexp(ValueError, "can not less than 0"):
+            @decorator.retry(-1)
+            def mockfunc(iterator):
+                return self.mockfunc(iterator)
+
+        self.assertIsNone(mockfunc3(iter(range(1))))
+        self.assertIsNone(mockfunc3(iter(range(2))))
+        self.assertIsNone(mockfunc3(iter(range(3))))
+        with self.assertRaisesRegexp(Exception, "3"):
+            mockfunc3(iter(range(4)))
+        with self.assertRaisesRegexp(Exception, "3"):
+            mockfunc3(iter(range(5)))
+
+        self.assertIsNone(mockfunc0(iter(range(1))))
+        self.assertIsNone(mockfunc0(iter(range(2))))
+        self.assertIsNone(mockfunc0(iter(range(3))))
+        self.assertIsNone(mockfunc0(iter(range(4))))
+        self.assertIsNone(mockfunc0(iter(range(5))))
