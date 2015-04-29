@@ -4,7 +4,7 @@
 from unittest import TestCase
 from collections import namedtuple
 
-from ycyc.base.itertool import (
+from ycyc.base.iterutils import (
     getitems, getattrs, iterable, getnext, getfirst, mkparts
 )
 

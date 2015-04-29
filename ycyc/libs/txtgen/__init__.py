@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 import collections
-from ycyc.base.itertool import getfirst
+from ycyc.base.iterutils import getfirst
 
 
 class GenData(collections.Mapping):

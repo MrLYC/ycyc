@@ -4,14 +4,14 @@
 from unittest import TestCase
 from collections import namedtuple
 
-from ycyc.base import calctools
+from ycyc.base import calcutils
 
 ObjModel = namedtuple("ObjModel", ["key"])
 
 
 class TestSafeCalc(TestCase):
     def test_usage(self):
-        calc = calctools.SafeCalc({
+        calc = calcutils.SafeCalc({
             "vint": 1, "vfloat": 2.3, "vstr": "456", "vlist": [7, 8.9, "10"],
             "vdict": {"key1": 11, "key2": ObjModel(key=12.13)}
         })
@@ -26,26 +26,26 @@ class TestSafeCalc(TestCase):
     def test_func(self):
         import operator
 
-        calc = calctools.SafeCalc({
+        calc = calcutils.SafeCalc({
             "add": operator.add, "sub": operator.sub,
         })
 
         self.assertEqual(calc("add(1, sub(2, 3))"), 0)
 
-        with self.assertRaises(calctools.NameParseError):
+        with self.assertRaises(calcutils.NameParseError):
             calc("mul(4, 5)")
 
         with self.assertRaises(NameError):
             calc("mul")
 
-        self.assert_(issubclass(calctools.NameParseError, NameError))
+        self.assert_(issubclass(calcutils.NameParseError, NameError))
 
     def test_evil(self):
         forbidden_exprs = (
             "import os", "open('test.txt', 'w')", "def x(): pass; print x.func_globals",
             "().__class__.mro()[1].__subclasses__()"
         )
-        calc = calctools.SafeCalc({})
+        calc = calcutils.SafeCalc({})
 
         for e in forbidden_exprs:
             with self.assertRaises(Exception):
