@@ -118,7 +118,7 @@ def withmanager(ctxmgr, *ctxargs, **ctxkwg):
             mgr = ctxmgr
             if callable(ctxmgr):
                 mgr = ctxmgr(*ctxargs, **ctxkwg)
-            with ctxmgr:
+            with mgr:
                 return func(*args, **kwg)
 
         return helper
