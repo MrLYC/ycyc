@@ -106,7 +106,8 @@ def retry(num, errors=Exception):
 
 def withmanager(ctxmgr, *ctxargs, **ctxkwg):
     """
-    A decorator call function with ctxmgr(*ctxargs, **ctxkwg)
+    A decorator call function with ctxmgr, if ctxmgr is callable
+    reset ctxmgr as ctxmgr(*ctxargs, **ctxkwg) every time.
     :param ctxmgr: context manager
     :param ctxargs: position argument
     :param ctxkwg: key word argument
@@ -114,7 +115,10 @@ def withmanager(ctxmgr, *ctxargs, **ctxkwg):
     def decorator(func):
         @functools.wraps(func)
         def helper(*args, **kwg):
-            with ctxmgr(*ctxargs, **ctxkwg):
+            mgr = ctxmgr
+            if callable(ctxmgr):
+                mgr = ctxmgr(*ctxargs, **ctxkwg)
+            with ctxmgr:
                 return func(*args, **kwg)
 
         return helper
