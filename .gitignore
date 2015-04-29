@@ -58,6 +58,7 @@ target/
 *.tmp
 *.*~
 .idea/
+tmp/
 
 # virtualenv
 ycyc-venv/

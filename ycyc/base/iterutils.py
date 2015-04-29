@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+"""
+iterutils provided some utils to operate a iterable or indexable object.
+"""
+
 import itertools
 import collections
 
@@ -89,6 +93,12 @@ def groupby(iterable, keyfunc):
 
 
 def mkparts(sequence, indices=None):
+    """
+    Make some parts from sequence by indices
+    :param sequence: indexable object
+    :param indices: index list
+    :return: [seq_part1, seq_part2, ...]
+    """
     indices = indices or [1]
     result_list = collections.deque()
     start = 0

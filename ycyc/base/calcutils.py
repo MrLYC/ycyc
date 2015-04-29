@@ -3,11 +3,13 @@
 
 import ast
 
-
 NameParseError = type("NameParseError", (NameError,), {})
 
 
 class SafeCalc(ast.NodeTransformer):
+    """
+    Python expression safe calculator
+    """
     globals = {
         "locals": None, "globals": None, "__name__": None,
         "__file__": None, "__builtins__": None, "True": True,
@@ -41,5 +43,11 @@ class SafeCalc(ast.NodeTransformer):
 
 
 def safecalc(expr, **locals):
+    """
+    A quick function to calculate Python expression
+    :param expr: Python expression
+    :param locals: variables
+    :return: value
+    """
     calc = SafeCalc(locals)
     return calc(expr)
