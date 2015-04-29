@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from ycyc.base import lazytool
+from ycyc.base import lazyutils
 
 from unittest import TestCase
 
 
 class TestLazyEnv(TestCase):
     def test_attr_usage(self):
-        env = lazytool.LazyEnv()
+        env = lazyutils.LazyEnv()
         env.a = lambda: global_a
 
         with self.assertRaisesRegexp(NameError, r"\bglobal_a\b"):
@@ -29,7 +29,7 @@ class TestLazyEnv(TestCase):
     def test_item_usage(self):
         import types
 
-        env = lazytool.LazyEnv()
+        env = lazyutils.LazyEnv()
         env["a"] = lambda: global_a
 
         self.assertIsInstance(env.a, types.LambdaType)
