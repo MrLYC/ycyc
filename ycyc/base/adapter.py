@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+"""
+A adapter tool module
+"""
+
 import collections
-from functools import wraps
-import types
 
 
 class ObjAsDictAdapter(collections.Mapping):
+    """
+    Provided a adapter that allow visit a object as dict
+    """
     def __init__(self, obj):
         self.__object = obj
 
@@ -24,16 +29,3 @@ class ObjAsDictAdapter(collections.Mapping):
 
     def __len__(self):
         return len(dir(self.__object))
-
-
-def withmanager(ctxmgr, *ctxargs, **ctxkwg):
-    """call function with ctxmgr(*ctxargs, **ctxkwg)
-    """
-    def decorator(func):
-        @wraps(func)
-        def helper(*args, **kwg):
-            with ctxmgr(*ctxargs, **ctxkwg):
-                return func(*args, **kwg)
-
-        return helper
-    return decorator

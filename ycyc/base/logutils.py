@@ -50,8 +50,10 @@ def quick_config(log_file="application.log"):
 
 @contextlib.contextmanager
 def log_disable(level=logging.CRITICAL):
-    """disable logger
     """
-    logging.disable(level)
+    A context manager to disable all logging calls of
+    severity 'level' and below in block
+    """
+    level, logging.root.manager.disable = logging.root.manager.disable, level
     yield
-    logging.disable(logging.NOTSET)
+    level, logging.root.manager.disable = logging.root.manager.disable, level

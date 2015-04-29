@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+"""
+decoratorutils provided some useful decorators.
+"""
+
 import functools
 import logging
 import types
@@ -9,6 +13,11 @@ logger = logging.getLogger(__file__)
 
 
 def call_trace(loger=None, name=None):
+    """
+    Trace a fun call with loger.
+    :param loger: logging.Logger
+    :param name: function name
+    """
     def _(func):
         fname = name or func.func_name
 
@@ -28,6 +37,10 @@ def call_trace(loger=None, name=None):
 
 
 def with_lock(lock):
+    """
+    Call function with a lock
+    :param lock: lock context manager
+    """
     def _(func):
         @functools.wraps(func)
         def f(*args, **kwg):
@@ -38,6 +51,10 @@ def with_lock(lock):
 
 
 class _CachedProperty(object):
+    """
+    Call func at first time and cached the result, return result
+    immediately later.
+    """
     def __init__(self, func):
         self.func = func
 
@@ -52,6 +69,10 @@ cachedproperty = _CachedProperty
 
 
 def chainingmethod(func):
+    """
+    Declare a method is a chaining method which return self as returned value
+    :param func: real func
+    """
     @functools.wraps(func)
     def chaining(self, *args, **kwg):
         func(self, *args, **kwg)
@@ -60,6 +81,11 @@ def chainingmethod(func):
 
 
 def retry(num, errors=Exception):
+    """
+    Recall func when catched target errors at most num times
+    :param num: maximum retry number, 0 for forever.
+    :param errors: catch target errors
+    """
     if num < 0:
         raise ValueError("num:%d can not less than 0" % num)
 
@@ -76,3 +102,20 @@ def retry(num, errors=Exception):
                         raise
         return baz
     return foo
+
+
+def withmanager(ctxmgr, *ctxargs, **ctxkwg):
+    """
+    A decorator call function with ctxmgr(*ctxargs, **ctxkwg)
+    :param ctxmgr: context manager
+    :param ctxargs: position argument
+    :param ctxkwg: key word argument
+    """
+    def decorator(func):
+        @functools.wraps(func)
+        def helper(*args, **kwg):
+            with ctxmgr(*ctxargs, **ctxkwg):
+                return func(*args, **kwg)
+
+        return helper
+    return decorator

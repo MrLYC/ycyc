@@ -5,7 +5,7 @@ from unittest import TestCase
 
 import mock
 
-from ycyc.base import decorator
+from ycyc.base import decoratorutils
 
 
 class TestCachedProperty(TestCase):
@@ -15,7 +15,7 @@ class TestCachedProperty(TestCase):
         obj_mock = mock.MagicMock(returnval=datetime.now())
 
         class Object(object):
-            @decorator.cachedproperty
+            @decoratorutils.cachedproperty
             def first_visited_time(self):
                 return obj_mock()
 
@@ -30,15 +30,15 @@ class TestChainingMethod(TestCase):
             def __init__(self):
                 self.called = []
 
-            @decorator.chainingmethod
+            @decoratorutils.chainingmethod
             def position_arg(self, val):
                 self.called.append(("position_arg", val))
 
-            @decorator.chainingmethod
+            @decoratorutils.chainingmethod
             def keyword_arg(self, val):
                 self.called.append(("keyword_arg", {"val": val}))
 
-            @decorator.chainingmethod
+            @decoratorutils.chainingmethod
             def free_args(self, *args, **kwg):
                 self.called.append(("free_args", args, kwg))
 
@@ -60,16 +60,16 @@ class TestRetry(TestCase):
             return None
 
     def test_retry_useage(self):
-        @decorator.retry(3)
+        @decoratorutils.retry(3)
         def mockfunc3(iterator):
             return self.mockfunc(iterator)
 
-        @decorator.retry(0)
+        @decoratorutils.retry(0)
         def mockfunc0(iterator):
             return self.mockfunc(iterator)
 
         with self.assertRaisesRegexp(ValueError, "can not less than 0"):
-            @decorator.retry(-1)
+            @decoratorutils.retry(-1)
             def mockfunc(iterator):
                 return self.mockfunc(iterator)
 

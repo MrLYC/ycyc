@@ -9,7 +9,13 @@ logger = logging.getLogger(__name__)
 
 
 @contextmanager
-def catch(errors=Exception, reraise=None, callback=None):
+def catch(errors=Exception, reraise=None, callback=logger.warning):
+    """
+    A context manager to catch the exceptions raised from block.
+    :param errors: exception or exceptions tuple
+    :param reraise: reraise a new exception from catched exception(default: None)
+    :param callback: callback when catched a exception(default: logger.warning)
+    """
     try:
         yield
     except errors as err:
@@ -21,6 +27,11 @@ def catch(errors=Exception, reraise=None, callback=None):
 
 @contextmanager
 def subprocessor(*args, **kwg):
+    """
+    With new subprocess call,terminate it when exit context
+    :param args: argument pass to subprocess.Popen
+    :param kwg: key word argument pass to subprocess.Popen
+    """
     from subprocess import Popen
     processor = None
     try:
