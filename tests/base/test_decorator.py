@@ -86,3 +86,35 @@ class TestRetry(TestCase):
         self.assertIsNone(mockfunc0(iter(range(3))))
         self.assertIsNone(mockfunc0(iter(range(4))))
         self.assertIsNone(mockfunc0(iter(range(5))))
+
+
+class TestWithManager(TestCase):
+    def test_withmanager(self):
+        ctxmgr_cls = mock.MagicMock()
+        ctxmgr_obj = mock.MagicMock()
+        ctxmgr_cls.return_value = ctxmgr_obj
+        enter_mock = mock.MagicMock()
+        exit_mock = mock.MagicMock()
+        setattr(ctxmgr_obj, "__enter__", enter_mock)
+        setattr(ctxmgr_obj, "__exit__", exit_mock)
+
+        @decoratorutils.withmanager(ctxmgr_cls, 1, 2, k=3)
+        def func1(k):
+            return k + 1
+
+        @decoratorutils.withmanager(lambda: ctxmgr_obj)
+        def func2(k):
+            return k + 1
+        self.assertEqual(func1(4), 5)
+        self.assertEqual(ctxmgr_cls.call_count, 1)
+        self.assertEqual(ctxmgr_cls.call_args[0], (1, 2))
+        self.assertEqual(ctxmgr_cls.call_args[1], {"k": 3})
+        self.assertEqual(ctxmgr_obj.call_count, 0)
+        self.assertEqual(enter_mock.call_count, 1)
+        self.assertEqual(exit_mock.call_count, 1)
+
+        self.assertEqual(func2(5), 6)
+        self.assertEqual(ctxmgr_cls.call_count, 1)
+        self.assertEqual(ctxmgr_obj.call_count, 0)
+        self.assertEqual(enter_mock.call_count, 2)
+        self.assertEqual(exit_mock.call_count, 2)
