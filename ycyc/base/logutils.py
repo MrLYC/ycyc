@@ -61,11 +61,11 @@ def log_disable(level=logging.CRITICAL):
 
 def log_with_label(log_method, label):
     """
-    logger_waring = log_with_label(logger.waring, "waring: %s")
-    try:
-        may_raise_exception()
-    except Exception as err:
-        logger_waring(err)
+    >>> logger_waring = log_with_label(logger.waring, "waring: %s")
+    >>> try:
+    ...     may_raise_exception()
+    ... except Exception as err:
+    ...     logger_waring(err)
 
     :param log_method: method of a logger to pack
     :param label: label pass to log_method as the first argument

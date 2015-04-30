@@ -12,14 +12,14 @@ def template_render(template, model):
     """
     A simple template render.
     Example:
-        model = {
-            "name": "lyc",
-            "foo": {
-              "bar": "hello"
-            }
-          }
-        template = "{{foo.bar}} {{ name }}"
-        template_render(template, model)
+    >>> model = {
+    ...     "name": "lyc",
+    ...     "foo": {
+    ...       "bar": "hello"
+    ...     }
+    ...   }
+    >>> template = "{{foo.bar}} {{ name }}"
+    >>> template_render(template, model)
 
     :param template: template string
     :param model: dict model

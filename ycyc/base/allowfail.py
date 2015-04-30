@@ -16,25 +16,25 @@ AllowFailResult = namedtuple("AllowFailResult", ["result", "exception"])
 class AllowFail(object):
     """
     As a context manager:
-        with AllowFail("not important block"):
-            not_important_operator()
+    >>> with AllowFail("not important block"):
+    ...     not_important_operator()
 
     As a decorator:
-        @AllowFail("not important function")
-        def not_important_function():
-            pass
+    >>> @AllowFail("not important function")
+    ... def not_important_function():
+    ...     pass
     It will packing the function returned result as AllowFailResult.
     AllowFailResult is a subclass of tuple which the first item is
     the real result of function call(set None when crashed) and the
     second item is the catched exception (set None when success).
     Call example:
-        result, exception = not_important_function()
-        if exception is not None:
-            do_rockball_operator()
+    >>> result, exception = not_important_function()
+    ... if exception is not None:
+    ...     do_rockball_operator()
 
-        result = not_important_function()
-        if result.exception is not None:
-            do_rockball_operator()
+    >>> result = not_important_function()
+    >>> if result.exception is not None:
+    ...     do_rockball_operator()
     """
     logger = logging.getLogger("AllowFail")
 
