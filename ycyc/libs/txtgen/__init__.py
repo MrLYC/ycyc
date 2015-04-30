@@ -32,9 +32,9 @@ class TxtGenerator(object):
     ITEM_SEP = ""
     NEWLINE_SEP = "\n"
 
-    def __init__(self, data):
+    def __init__(self, data=None):
         self.output_lst = collections.deque()
-        self.data = data
+        self.data = data or {}
 
     def write(self, txt, **extend_data):
         data = GenData(self.data, extend_data)
@@ -52,3 +52,9 @@ class TxtGenerator(object):
     def getval(self):
         self.prepare()
         return getfirst(self.output_lst)
+
+    def clear(self):
+        self.output_lst.clear()
+
+    def pop(self):
+        self.output_lst.pop()
