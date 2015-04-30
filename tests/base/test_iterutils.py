@@ -90,6 +90,11 @@ class TestMakeParts(TestCase):
         self.assertListEqual(part3, [3, 4, 5])
         self.assertListEqual(part4, [6, 7, 8, 9])
 
+        head, middle, tail = mkparts(lst, [1, -1])
+        self.assertEqual(head, [0])
+        self.assertEqual(middle, [1, 2, 3, 4, 5, 6, 7, 8])
+        self.assertEqual(tail, [9])
+
     def test_special_val(self):
         empty_lst = []
         part1, part2, part3 = mkparts(empty_lst, [2, 4])
@@ -121,3 +126,6 @@ class TestMakeParts(TestCase):
 
         with self.assertRaisesRegexp(ValueError, "end index is less than start index"):
             part1, part2, part3 = mkparts(lst, [2, 1])
+
+        with self.assertRaisesRegexp(ValueError, "end index is less than start index"):
+            part1, part2, part3 = mkparts(lst, [2, -2])

@@ -102,7 +102,10 @@ def mkparts(sequence, indices=None):
     indices = indices or [1]
     result_list = collections.deque()
     start = 0
+    seq_len = len(sequence)
     for end in indices:
+        if end < 0:
+            end = seq_len + end
         if end < start:
             raise ValueError("end index is less than start index")
         result_list.append(sequence[start:end])
