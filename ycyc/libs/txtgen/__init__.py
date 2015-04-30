@@ -3,8 +3,12 @@
 
 import collections
 from ycyc.base.iterutils import getfirst
+from ycyc.collections.tagmaps import TagMaps
+
+__all__ = TagMaps()
 
 
+@__all__.register("GenData")
 class GenData(collections.Mapping):
     def __init__(self, base, extend=None):
         self.base_data = base
@@ -23,6 +27,7 @@ class GenData(collections.Mapping):
         return len(self.real_keys)
 
 
+@__all__.register("TxtGenerator")
 class TxtGenerator(object):
     ITEM_SEP = ""
     NEWLINE_SEP = "\n"
