@@ -118,3 +118,25 @@ class TestWithManager(TestCase):
         self.assertEqual(ctxmgr_obj.call_count, 0)
         self.assertEqual(enter_mock.call_count, 2)
         self.assertEqual(exit_mock.call_count, 2)
+
+
+class TestOnErrorReturn(TestCase):
+    def test_usage(self):
+        callback_mock = mock.MagicMock()
+
+        @decoratorutils.onerror_return(None, StopIteration, callback_mock)
+        def gen_next(gen):
+            return next(gen)
+
+        gen = (i for i in range(2))
+        self.assertEqual(gen_next(gen), 0)
+        self.assertEqual(gen_next(gen), 1)
+        self.assertEqual(callback_mock.call_count, 0)
+        self.assertEqual(gen_next(gen), None)
+        self.assertEqual(callback_mock.call_count, 1)
+
+        gen = (i / 0 for i in range(2))
+        with self.assertRaises(ZeroDivisionError):
+            gen_next(gen)
+
+        self.assertEqual(callback_mock.call_count, 1)

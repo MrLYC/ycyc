@@ -123,3 +123,24 @@ def withmanager(ctxmgr, *ctxargs, **ctxkwg):
 
         return helper
     return decorator
+
+
+def onerror_return(default_val, errors=Exception, callback=logger.warning):
+    """
+    return the default value when catch errors
+    :param default_val: default value
+    :param errors: catch exceptions(default: Exception)
+    :param callback: callback when catched a exception(default: logger.warning)
+    :return: func result if success else default_val
+    """
+    def foo(func):
+        @functools.wraps(func)
+        def baz(*args, **kwg):
+            try:
+                return func(*args, **kwg)
+            except errors as err:
+                if callback:
+                    callback(err)
+            return default_val
+        return baz
+    return foo
