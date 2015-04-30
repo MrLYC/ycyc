@@ -41,3 +41,12 @@ requires: $(ROOTPATH)/requirements.txt
 
 ipy:
 	$(PYENV) ipython
+
+publish:
+	git checkout master
+	git pull --rebase origin master
+	git rebase dev
+	git tag `$(PYTHON) $(ROOTPATH)/setup.py --version`
+	$(PYTHON) $(ROOTPATH)/setup.py publish
+	git checkout dev
+	git rebase master
