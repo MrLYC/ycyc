@@ -4,7 +4,7 @@ DEVMKFILE := $(DEVPATH)/makefile
 SRCPATH := $(ROOTPATH)/ycyc
 
 # ENV VARS
-PYENV := env PYTHONPATH=$(SRCPATH)
+PYENV := env PYTHONPATH=$(ROOTPATH)
 PYTHON := $(PYENV) python
 PEP8 := $(PYENV) pep8 --repeat --ignore=E202,E501
 PYLINT := $(PYENV) pylint --disable=I0011 --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"
