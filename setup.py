@@ -19,16 +19,8 @@ from setuptools import find_packages
 
 dirname = os.path.dirname(__file__)
 
+standard_exclude = ["*.py", "*.pyc", "*$py.class", "*~", ".*", "*.bak"]
 
-def requirements_file_to_list():
-    fn = os.path.join(dirname, "requirements.txt")
-    with open(fn, 'rb') as f:
-        return [x.rstrip() for x in list(f) if x and not x.startswith('#')]
-
-
-if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist upload')
-    sys.exit()
 
 setup(
     name='ycyc',
@@ -37,8 +29,8 @@ setup(
     long_description=open('pypi.rst', 'a+').read(),
     author='Liu Yicong',
     author_email='imyikong@gmail.com',
-    packages=find_packages(),
-    install_requires=requirements_file_to_list(),
+    packages=find_packages(exclude=["tests.*", "tests"]),
+    install_requires=['six==1.9.0'],
     license='BSD',
     classifiers=[
         'Development Status :: 3 - Alpha',
