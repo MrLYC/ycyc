@@ -60,6 +60,9 @@ def timeout(seconds, interval=None):
     start = time.time()
     interval = interval or 0.1
 
+    cur_thread = threading.current_thread()
+    assert cur_thread.name == "MainThread"
+
     def poll_signal():
         now = time.time()
         while not signal_finished and now - start < seconds:
