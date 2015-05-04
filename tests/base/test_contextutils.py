@@ -72,3 +72,7 @@ class TestTimeout(TestCase):
         with self.assertRaises(KeyboardInterrupt):
             with timeout(0.01, 0.01):
                 raise KeyboardInterrupt
+
+        # 0 for forever
+        with timeout(0, 0.001):
+            time.sleep(0.01)
