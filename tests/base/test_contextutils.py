@@ -3,7 +3,9 @@
 
 from unittest import TestCase
 
-from ycyc.base.contextutils import catch
+from ycyc.base.contextutils import (
+    catch, timeout
+)
 
 
 class TestCatch(TestCase):
@@ -55,3 +57,18 @@ class TestCatch(TestCase):
         with catch((ZeroDivisionError, IndexError), callback=results.append):
             list()[1]
         self.assertIsInstance(results.pop(), IndexError)
+
+
+class TestTimeout(TestCase):
+    def test_usage(self):
+        import time
+
+        with self.assertRaisesRegexp(RuntimeError, "timeout"):
+            start = time.time()
+            with timeout(0.01, 0.01):
+                time.sleep(1)
+        self.assertLess(time.time() - start, 1)
+
+        with self.assertRaises(KeyboardInterrupt):
+            with timeout(0.01, 0.01):
+                raise KeyboardInterrupt
