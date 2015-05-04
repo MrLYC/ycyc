@@ -26,7 +26,7 @@ class SafeCalc(ast.NodeTransformer):
     def visit_Call(self, node):
         if isinstance(node.func, ast.Name):
             name = node.func.id
-            if name not in self.locals:
+            if name not in self.locals and name not in self.globals:
                 raise NameParseError("%s not found" % name)
         self.generic_visit(node)
         return node
