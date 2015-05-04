@@ -3,6 +3,8 @@
 
 import ast
 
+from ycyc.base.contextutils import timeout
+
 NameParseError = type("NameParseError", (NameError,), {})
 
 
@@ -16,8 +18,10 @@ class SafeCalc(ast.NodeTransformer):
         "False": False,
     }
 
-    def __init__(self, locals):
+    def __init__(self, locals, timeout=0, interval=None):
         self.locals = locals
+        self.timeout = timeout
+        self.interval = interval
 
     def visit_Call(self, node):
         if isinstance(node.func, ast.Name):
@@ -39,7 +43,8 @@ class SafeCalc(ast.NodeTransformer):
         ast_node = self.visit(ast_node)
         ast_node = ast.fix_missing_locations(ast_node)
         code = compile(ast_node, "<string>", mode="eval")
-        return eval(code, self.globals, self.locals)
+        with timeout(self.timeout, self.interval):
+            return eval(code, self.globals, self.locals)
 
 
 def safecalc(expr, **locals):
