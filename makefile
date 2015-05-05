@@ -46,7 +46,7 @@ publish:
 	git checkout master
 	git pull --rebase origin master
 	git rebase dev
-	git tag `$(PYTHON) $(ROOTPATH)/setup.py --version`
+	git tag `$(PYTHON) $(ROOTPATH)/setup.py --version` || true
 	$(PYTHON) $(ROOTPATH)/setup.py clean bdist_egg sdist upload
 	git checkout dev
 	git rebase master
