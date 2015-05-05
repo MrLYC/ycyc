@@ -84,3 +84,11 @@ def timeout(seconds, interval=None):
         raise
     finally:
         signal_finished = True
+
+
+@contextmanager
+def nothing(*args, **kwg):
+    """
+    Just a place holder.
+    """
+    yield
