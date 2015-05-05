@@ -55,8 +55,10 @@ def log_disable(level=logging.CRITICAL):
     severity 'level' and below in block
     """
     level, logging.root.manager.disable = logging.root.manager.disable, level
-    yield
-    level, logging.root.manager.disable = logging.root.manager.disable, level
+    try:
+        yield
+    finally:
+        level, logging.root.manager.disable = logging.root.manager.disable, level
 
 
 def log_with_label(log_method, label):
