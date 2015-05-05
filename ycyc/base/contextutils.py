@@ -74,8 +74,9 @@ def timeout(seconds, interval=None):
     if seconds > 0:
         poll_thread = threading.Thread(target=poll_signal)
         poll_thread.start()
+    else:
+        poll_thread = None
     try:
-        time.sleep(0)
         yield
     except KeyboardInterrupt:
         now = time.time()
@@ -84,6 +85,8 @@ def timeout(seconds, interval=None):
         raise
     finally:
         signal_finished = True
+        if poll_thread and poll_thread.is_alive():
+            poll_thread.join()
 
 
 @contextmanager
