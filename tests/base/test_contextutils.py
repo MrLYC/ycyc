@@ -2,9 +2,10 @@
 # encoding: utf-8
 
 from unittest import TestCase
+import mock
 
 from ycyc.base.contextutils import (
-    catch, timeout
+    catch, timeout, atlast
 )
 
 
@@ -76,3 +77,22 @@ class TestTimeout(TestCase):
         # 0 for forever
         with timeout(0, 0.001):
             time.sleep(0.01)
+
+
+class TestAtlast(TestCase):
+    def test_usage(self):
+        func = mock.MagicMock()
+
+        with atlast(func):
+            self.assertEqual(func.call_count, 0)
+        self.assertEqual(func.call_count, 1)
+
+        with self.assertRaises(ZeroDivisionError):
+            with atlast(func):
+                1 / 0
+        self.assertEqual(func.call_count, 1)
+
+        with self.assertRaises(ZeroDivisionError):
+            with atlast(func, force=True):
+                1 / 0
+        self.assertEqual(func.call_count, 2)

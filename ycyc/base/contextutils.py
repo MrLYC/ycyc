@@ -95,3 +95,17 @@ def nothing(*args, **kwg):
     Just a place holder.
     """
     yield
+
+
+@contextmanager
+def atlast(func, force=False):
+    """
+    Run func at last
+    """
+    try:
+        yield
+        func()
+    except Exception:
+        if force:
+            func()
+        raise
