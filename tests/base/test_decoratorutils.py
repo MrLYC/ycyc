@@ -23,6 +23,10 @@ class TestCachedProperty(TestCase):
         self.assertIs(obj.first_visited_time, obj.first_visited_time)
         self.assertEqual(obj_mock.call_count, 1)
 
+        obj = Object()
+        self.assertIs(obj.first_visited_time, obj.first_visited_time)
+        self.assertEqual(obj_mock.call_count, 2)
+
 
 class TestChainingMethod(TestCase):
     def test_chainingmethod(self):
