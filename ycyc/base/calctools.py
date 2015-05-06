@@ -2,28 +2,20 @@
 # encoding: utf-8
 
 import ast
-import inspect
 
 from ycyc.base.contextutils import timeout
 
 NameParseError = type("NameParseError", (NameError,), {})
 
 
-def protect_f(obj):
-    if inspect.isclass(obj):
-        raise TypeError("%s" % type(obj))
-    return obj
-
-
 class SafeCalc(ast.NodeTransformer):
     """
     Python expression safe calculator
     """
-    protect_fname = "_"
     globals = {
         "locals": None, "globals": None, "__name__": None,
         "__file__": None, "__builtins__": None, "True": True,
-        "False": False, protect_fname: protect_f,
+        "False": False,
     }
 
     def __init__(self, locals, timeout=0, interval=None):
@@ -44,15 +36,6 @@ class SafeCalc(ast.NodeTransformer):
         if name.startswith("__"):
             raise NameParseError("%s not allow" % name)
         self.generic_visit(node)
-        node.value = self.make_protect(node.value)
-        return node
-
-    def make_protect(self, node):
-        if isinstance(node, ast.Attribute):
-            expr_node = ast.parse("%s()" % self.protect_fname, mode="eval")
-            call_node = expr_node.body
-            call_node.args.append(node)
-            node = call_node
         return node
 
     def __call__(self, expr):
