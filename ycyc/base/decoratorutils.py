@@ -50,7 +50,7 @@ def with_lock(lock):
     return _
 
 
-class _CachedProperty(object):
+class CachedProperty(object):
     """
     Call func at first time and cached the result, return result
     immediately later.
@@ -60,12 +60,10 @@ class _CachedProperty(object):
 
     def __get__(self, instance, cls):
         if not hasattr(self, "cached_result"):
-            self.cached_result = types.MethodType(self.func, instance, cls)()
-        return self.cached_result
-
-    def __set__(self, obj, cls):
-        raise AttributeError("can't set attribute")
-cachedproperty = _CachedProperty
+            result = types.MethodType(self.func, instance, cls)()
+            setattr(instance, self.func.func_name, result)
+        return result
+cachedproperty = CachedProperty
 
 
 def chainingmethod(func):
