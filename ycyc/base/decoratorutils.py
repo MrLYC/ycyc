@@ -30,7 +30,7 @@ def call_trace(loger=None, name=None):
                 loger.info("%s[%s] return", fname, fid)
                 return res
             except Exception as err:
-                logger.info("%s[%d] got error: %s", fname, fid, err)
+                loger.info("%s[%d] got error: %s", fname, fid, err)
                 raise
         return f
     return _
