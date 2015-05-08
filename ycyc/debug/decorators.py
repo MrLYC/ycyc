@@ -33,13 +33,13 @@ def debug_call_trace(loger=None, name=None):
         @functools.wraps(func)
         def f(*args, **kwg):
             fid = id(args) ^ id(kwg)
-            loger.info("%s[%d] call, args: %s, kwg: %s", fname, fid, args, kwg)
+            loger.debug("%s[%d] call, args: %s, kwg: %s", fname, fid, args, kwg)
             try:
                 res = func(*args, **kwg)
-                loger.info("%s[%s] return: %s", fname, fid, res)
+                loger.debug("%s[%s] return: %s", fname, fid, res)
                 return res
             except Exception as err:
-                loger.info("%s[%d] got error: %s", fname, fid, err)
+                loger.debug("%s[%d] got error: %s", fname, fid, err)
                 raise
         return f
     return _
