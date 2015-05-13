@@ -73,6 +73,7 @@ def timeout(seconds, interval=None):
 
     if seconds > 0:
         poll_thread = threading.Thread(target=poll_signal)
+        poll_thread.daemon = True
         poll_thread.start()
     else:
         poll_thread = None
