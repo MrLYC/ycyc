@@ -44,21 +44,24 @@ def subprocessor(*args, **kwg):
 
 
 @contextmanager
-def timeout(seconds, interval=None):
+def timeout(seconds, interval=None, ticks=None):
     """
     Send KeyboardInterrupt to main thread to terminate it and
     convert it as RuntimeError if timeout.
     :param seconds: timeout seconds
     :param interval: poll interval
+    :param ticks: CPU-Bound thread check interval
     """
     import threading
     import time
     import os
     import signal
+    import sys
 
     signal_finished = False
     start = time.time()
     interval = interval or 0.1
+    old_ticks = sys.getcheckinterval()
 
     cur_thread = threading.current_thread()
     assert cur_thread.name == "MainThread"
@@ -77,6 +80,9 @@ def timeout(seconds, interval=None):
         poll_thread.start()
     else:
         poll_thread = None
+
+    if ticks is not None:
+        sys.setcheckinterval(ticks)
     try:
         yield
     except KeyboardInterrupt:
@@ -86,6 +92,8 @@ def timeout(seconds, interval=None):
         raise
     finally:
         signal_finished = True
+        if ticks is not None:
+            sys.setcheckinterval(old_ticks)
         if poll_thread and poll_thread.is_alive():
             poll_thread.join()
 

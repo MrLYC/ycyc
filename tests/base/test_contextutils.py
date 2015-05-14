@@ -63,20 +63,34 @@ class TestCatch(TestCase):
 class TestTimeout(TestCase):
     def test_usage(self):
         import time
+        import sys
+
+        ticks = sys.getcheckinterval()
 
         with self.assertRaisesRegexp(RuntimeError, "timeout"):
             start = time.time()
             with timeout(0.01, 0.01):
                 time.sleep(1)
         self.assertLess(time.time() - start, 1)
+        self.assertEqual(ticks, sys.getcheckinterval())
 
         with self.assertRaises(KeyboardInterrupt):
             with timeout(0.01, 0.01):
                 raise KeyboardInterrupt
+        self.assertEqual(ticks, sys.getcheckinterval())
+
+        with self.assertRaisesRegexp(RuntimeError, "timeout"):
+            start = time.time()
+            with timeout(0.01, 0.01, 10):
+                while True:
+                    pass
+        self.assertLess(time.time() - start, 0.03)
+        self.assertEqual(ticks, sys.getcheckinterval())
 
         # 0 for forever
         with timeout(0, 0.001):
             time.sleep(0.01)
+        self.assertEqual(ticks, sys.getcheckinterval())
 
 
 class TestAtlast(TestCase):
