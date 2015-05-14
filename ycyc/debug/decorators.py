@@ -43,3 +43,24 @@ def debug_call_trace(loger=None, name=None):
                 raise
         return f
     return _
+
+
+def display_profile_stats(filename=None, sort_fields=(), p_amount=()):
+    import cProfile
+    from pstats import Stats
+
+    def profiler(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwg):
+            f = func
+            res = None
+            try:
+                cProfile.runctx("res = f(*args, **kwg)", globals(), locals(), filename)
+                return res
+            finally:
+                if filename:
+                    pstats = Stats(filename)
+                    pstats.sort_stats(*sort_fields)
+                    pstats.print_stats(*p_amount)
+        return wrapper
+    return profiler
