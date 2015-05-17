@@ -28,16 +28,19 @@ class Request(requests.Request):
 class Response(object):
     def __init__(self, request, response):
         self.raw_request = request
-        self.raw_reponse = response
+        self.raw_response = response
+
+    def __getattr__(self, name):
+        return getattr(self.raw_response, name)
 
     @cachedproperty
     def html(self):
-        return self.raw_reponse.text
+        return self.raw_response.text
 
     @cachedproperty
     def selector(self):
         pq = pyquery.PyQuery(self.html)
-        pq.make_links_absolute(self.raw_reponse.url)
+        pq.make_links_absolute(self.raw_response.url)
         return pq
 
 
