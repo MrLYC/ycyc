@@ -43,9 +43,13 @@ class Response(object):
 
 class ThreadingSpirderWorker(object):
     def __init__(self, worker_cnt=5):
-        import queue
+        try:
+            from queue import Queue
+        except ImportError:
+            from Queue import Queue
+
         self.worker_cnt = worker_cnt
-        self.task_quque = queue.Queue(worker_cnt)
+        self.task_quque = Queue(worker_cnt)
         self.threads = []
         self.enable = False
 
