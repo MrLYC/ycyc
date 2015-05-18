@@ -43,10 +43,11 @@ ipy:
 	$(PYENV) ipython
 
 publish:
-	git pull --rebase origin dev
+	git pull --rebase origin dev --tags
 	git checkout master
 	git rebase dev
-	git tag `$(PYTHON) $(ROOTPATH)/setup.py --version` || true
+	git tag `$(PYTHON) $(ROOTPATH)/setup.py --version`
 	$(PYTHON) $(ROOTPATH)/setup.py clean bdist_egg sdist upload
 	git checkout dev
 	git rebase master
+	git push origin master dev --tags
