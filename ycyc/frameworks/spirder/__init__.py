@@ -3,13 +3,13 @@
 
 import functools
 import logging
+from multiprocessing import pool
 
 import requests
 import pyquery
 
 from ycyc.base.decoratorutils import cachedproperty
-from ycyc.base.contextutils import catch
-from ycyc.debug import decorators
+from ycyc.debug.decorators import debug_call_trace
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +26,9 @@ class Request(requests.Request):
 
 
 class Response(object):
-    def __init__(self, request, response):
-        self.raw_request = request
+    def __init__(self, raw_request, response):
         self.raw_response = response
+        self.raw_request = raw_request
 
     def __getattr__(self, name):
         return getattr(self.raw_response, name)
@@ -40,94 +40,70 @@ class Response(object):
     @cachedproperty
     def selector(self):
         pq = pyquery.PyQuery(self.html)
-        pq.make_links_absolute(self.raw_response.url)
         return pq
 
-
-class ThreadingSpirderWorker(object):
-    def __init__(self, worker_cnt=5):
-        try:
-            from queue import Queue
-        except ImportError:
-            from Queue import Queue
-
-        self.worker_cnt = worker_cnt
-        self.task_quque = Queue(worker_cnt)
-        self.threads = []
-        self.enable = False
-
-    @decorators.debug_call_trace(logger)
-    def add_task(self, task):
-        self.task_quque.put(task)
-
-    @decorators.debug_call_trace(logger)
-    def start(self):
-        from threading import Thread
-
-        def work():
-            while self.enable:
-                with catch():
-                    task = self.task_quque.get()
-                    result, callback = task()
-                    callback(result)
-
-        self.enable = True
-        self.threads.extend([
-            Thread(target=work) for i in range(self.worker_cnt)
-        ])
-        for thread in self.threads:
-            thread.daemon = True
-            thread.start()
-
-    @decorators.debug_call_trace(logger)
-    def stop(self):
-        self.enable = False
-        for thread in self.threads:
-            thread.join()
-            self.threads.remove(thread)
+    def make_links_absolute(self):
+        self.selector.make_links_absolute(self.raw_response.url)
 
 
 class Spirder(object):
-    def __init__(self, worker_factory=ThreadingSpirderWorker):
+    def __init__(self, target=None, worker_factory=pool.ThreadPool):
         self.worker = worker_factory()
         self.session = requests.Session()
+        self.target = target
 
-    @decorators.debug_call_trace(logger)
-    def send(self, request):
-        p_request = request.prepare()
-        response = self.session.send(p_request)
-        return Response(request, response), self.on_response
+    @debug_call_trace(logger)
+    def on_request(self, request):
+        self.worker.apply_async(
+            self.session.send,
+            args=(request.prepare(),),
+            callback=functools.partial(
+                self.on_response,
+                request=request,
+                callback=request.callback,
+            ),
+        )
 
-    @decorators.debug_call_trace(logger)
-    def on_response(self, response):
-        callback = response.raw_request.callback
-        self.add_tasks(callback(response))
+    @debug_call_trace(logger)
+    def on_response(self, response, request, callback):
+        real_response = Response(request, response)
+        self.add_tasks(callback(real_response))
 
-    @decorators.debug_call_trace(logger)
+    @debug_call_trace(logger)
     def add_tasks(self, requests):
         for request in requests or ():
-            self.worker.add_task(
-                functools.partial(self.send, request)
+            self.worker.apply_async(
+                self.on_request,
+                args=(request,),
             )
 
-    @decorators.debug_call_trace(logger)
+    @debug_call_trace(logger)
     def start(self):
         requests = self.start_request()
         self.add_tasks(requests)
-        self.worker.start()
 
-    @decorators.debug_call_trace(logger)
+    @debug_call_trace(logger)
     def stop(self):
-        self.worker.stop()
+        self.worker.close()
+        self.worker.join()
 
+    @debug_call_trace(logger)
     def start_request(self):
-        raise NotImplementedError
+        if not callable(self.target):
+            raise NotImplementedError
+        return self.target()
 
-    def step_redirect(self, url, callback, **kwg):
-        def redirect(response):
-            yield Request(url=url, callback=callback, **kwg)
-        return redirect
 
-    def save_to(self, path, data, mode="wb"):
-        with open(path, mode) as fp:
-            fp.write(data)
+def redirect_to(url, callback, **kwg):
+    def redirect(response):
+        yield Request(url=url, callback=callback, **kwg)
+    return redirect
+
+
+def save_to(path, data, mode="at"):
+    with open(path, mode) as fp:
+        fp.write(data)
+
+
+def flow_return():
+    raise StopIteration
