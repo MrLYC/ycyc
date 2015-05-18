@@ -47,15 +47,15 @@ class Response(object):
 
 
 class Spirder(object):
-    def __init__(self, target=None, worker_factory=pool.ThreadPool):
+    def __init__(self, target=None, opener=None, worker_factory=pool.ThreadPool):
         self.worker = worker_factory()
-        self.session = requests.Session()
+        self.opener = opener or requests.Session()
         self.target = target
 
     @debug_call_trace(logger)
     def on_request(self, request):
         self.worker.apply_async(
-            self.session.send,
+            self.opener.send,
             args=(request.prepare(),),
             callback=functools.partial(
                 self.on_response,
@@ -100,7 +100,7 @@ def redirect_to(url, callback, **kwg):
     return redirect
 
 
-def save_to(path, data, mode="at"):
+def save_to(path, data, mode="ab"):
     with open(path, mode) as fp:
         fp.write(data)
 
