@@ -3,10 +3,8 @@
 
 import functools
 import logging
-from multiprocessing import pool
 
 import requests
-import pyquery
 
 from ycyc.base.decoratorutils import cachedproperty
 from ycyc.debug.decorators import debug_call_trace
@@ -39,6 +37,7 @@ class Response(object):
 
     @cachedproperty
     def selector(self):
+        import pyquery
         pq = pyquery.PyQuery(self.html)
         return pq
 
@@ -47,8 +46,8 @@ class Response(object):
 
 
 class Spirder(object):
-    def __init__(self, target=None, opener=None, worker_factory=pool.ThreadPool):
-        self.worker = worker_factory()
+    def __init__(self, target=None, opener=None, worker=None):
+        self.worker = worker or self.worker_factory()
         self.opener = opener or requests.Session()
         self.target = target
 
@@ -79,19 +78,26 @@ class Spirder(object):
 
     @debug_call_trace(logger)
     def start(self):
-        requests = self.start_request()
+        requests = self.run()
         self.add_tasks(requests)
 
     @debug_call_trace(logger)
-    def stop(self):
-        self.worker.close()
+    def join(self):
+        if hasattr(self.worker, "close"):
+            # for multiprocessing.pool
+            self.worker.close()
         self.worker.join()
 
     @debug_call_trace(logger)
-    def start_request(self):
+    def run(self):
         if not callable(self.target):
             raise NotImplementedError
         return self.target()
+
+    @classmethod
+    def worker_factory(cls):
+        from multiprocessing.pool import ThreadPool
+        return ThreadPool()
 
 
 def redirect_to(url, callback, **kwg):
