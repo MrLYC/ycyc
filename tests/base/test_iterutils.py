@@ -5,8 +5,11 @@ from unittest import TestCase
 from collections import namedtuple
 
 from ycyc.base.iterutils import (
-    getitems, getattrs, iterable, getnext, getfirst, mkparts
+    getitems, getattrs, iterable, getnext, getfirst, mkparts,
+    get_single_item,
 )
+
+import mock
 
 
 class Testgetitems(TestCase):
@@ -129,3 +132,17 @@ class TestMakeParts(TestCase):
 
         with self.assertRaisesRegexp(ValueError, "end index is less than start index"):
             part1, part2, part3 = mkparts(lst, [2, -2])
+
+
+class TestGetSingleItem(TestCase):
+    def test_usage(self):
+        mock_logger = mock.MagicMock()
+
+        self.assertEqual(get_single_item([], logger=mock_logger), None)
+        self.assertEqual(mock_logger.warning.call_count, 0)
+        self.assertEqual(get_single_item([], 1, logger=mock_logger), 1)
+        self.assertEqual(mock_logger.warning.call_count, 0)
+        self.assertEqual(get_single_item([1], logger=mock_logger), 1)
+        self.assertEqual(mock_logger.warning.call_count, 0)
+        self.assertEqual(get_single_item([1, 2], logger=mock_logger), 1)
+        self.assertEqual(mock_logger.warning.call_count, 1)

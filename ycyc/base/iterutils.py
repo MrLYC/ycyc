@@ -7,6 +7,9 @@ iterutils provided some utils to operate a iterable or indexable object.
 
 import itertools
 import collections
+import logging
+
+logger = logging
 
 
 def getitems(obj, items, default=None):
@@ -112,3 +115,18 @@ def mkparts(sequence, indices=None):
         start = end
     result_list.append(sequence[start:])
     return result_list
+
+
+def get_single_item(obj, default=None, logger=logger):
+    """
+    Get the single item from obj, if obj has more than 1 items, it
+    will log a warning record.
+    :param obj: iterable obj
+    :param default: default value if obj is empty
+    :return: obj first item
+    """
+    if obj and len(obj) > 1:
+        logger.warning(
+            "iterable object has more than 1 items, %s actually.", len(obj)
+        )
+    return getfirst(obj, default)
