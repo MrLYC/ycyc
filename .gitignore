@@ -59,6 +59,7 @@ target/
 *.*~
 .idea/
 tmp/
+ycyc.psproj
 
 # virtualenv
 ycyc-venv/
