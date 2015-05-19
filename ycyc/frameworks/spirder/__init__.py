@@ -7,7 +7,6 @@ import logging
 import requests
 
 from ycyc.base.decoratorutils import cachedproperty
-from ycyc.debug.decorators import debug_call_trace
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +50,8 @@ class Spirder(object):
         self.opener = opener or requests.Session()
         self.target = target
 
-    @debug_call_trace(logger)
     def on_request(self, request):
+        logger.debug("Spirder on_request, url: %s", request.url)
         self.worker.apply_async(
             self.opener.send,
             args=(request.prepare(),),
@@ -63,32 +62,34 @@ class Spirder(object):
             ),
         )
 
-    @debug_call_trace(logger)
     def on_response(self, response, request, callback):
+        logger.debug(
+            "Spirder on_response, url: %s, status: %s, reason: %s",
+            response.url, response.status_code, response.reason,
+        )
         real_response = Response(request, response)
         self.add_tasks(callback(real_response))
 
-    @debug_call_trace(logger)
     def add_tasks(self, requests):
         for request in requests or ():
+            logger.debug("Spirder add a new task: %s", request.url)
             self.worker.apply_async(
                 self.on_request,
                 args=(request,),
             )
 
-    @debug_call_trace(logger)
     def start(self):
+        logger.info("Spirder start to run")
         requests = self.run()
         self.add_tasks(requests)
 
-    @debug_call_trace(logger)
     def join(self):
+        logger.info("Spirder start to join")
         if hasattr(self.worker, "close"):
             # for multiprocessing.pool
             self.worker.close()
         self.worker.join()
 
-    @debug_call_trace(logger)
     def run(self):
         if not callable(self.target):
             raise NotImplementedError
@@ -102,6 +103,7 @@ class Spirder(object):
 
 def redirect_to(url, callback, **kwg):
     def redirect(response):
+        logger.info("redirect to %s", url)
         yield Request(url=url, callback=callback, **kwg)
     return redirect
 
