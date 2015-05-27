@@ -144,3 +144,14 @@ class TestOnErrorReturn(TestCase):
             gen_next(gen)
 
         self.assertEqual(callback_mock.call_count, 1)
+
+
+class TestCallImmediately(TestCase):
+    def test_usage(self):
+        @decoratorutils.call_immediately(10, init_val=0)
+        def val_lst(num, init_val):
+            return [init_val for i in range(num)]
+
+        self.assertListEqual(val_lst, [
+            0 for i in range(10)
+        ])

@@ -142,3 +142,15 @@ def onerror_return(default_val, errors=Exception, callback=logger.warning):
             return default_val
         return baz
     return foo
+
+
+def call_immediately(*args, **kwg):
+    """
+    Call func immediately and return the result instead func name.
+
+    :param args: position arguments
+    :param kwg: key word arguments
+    """
+    def invoker(func):
+        return func(*args, **kwg)
+    return invoker
