@@ -6,6 +6,7 @@ funcutils provided some useful functions.
 """
 
 import re
+import operator
 
 
 def template_render(template, model):
