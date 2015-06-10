@@ -6,7 +6,7 @@ from collections import namedtuple
 
 from ycyc.base.iterutils import (
     getitems, getattrs, iterable, getnext, getfirst, mkparts,
-    get_single_item,
+    get_single_item, dict_merge
 )
 
 import mock
@@ -146,3 +146,18 @@ class TestGetSingleItem(TestCase):
         self.assertEqual(mock_logger.warning.call_count, 0)
         self.assertEqual(get_single_item([1, 2], logger=mock_logger), 1)
         self.assertEqual(mock_logger.warning.call_count, 1)
+
+
+class TestDictMerge(TestCase):
+    def test_usage(self):
+        with self.assertRaises(IndexError):
+            dict_merge([])
+
+        self.assertDictEqual(
+            dict_merge([
+                {1: 2, 2: 3},
+                {2: 4, 3: 4},
+                {4: 5},
+            ]),
+            {1: 2, 2: 3, 3: 4, 4: 5}
+        )

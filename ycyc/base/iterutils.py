@@ -130,3 +130,22 @@ def get_single_item(obj, default=None, logger=logger):
             "iterable object has more than 1 items, %s actually.", len(obj)
         )
     return getfirst(obj, default)
+
+
+def dict_merge(dicts):
+    """
+    Merge dict list to a dict object
+    :param dicts: dict list
+    :return: dict
+    """
+    if not dicts:
+        raise IndexError()
+
+    result = {}
+
+    for d in dicts:
+        for k, v in d.items():
+            if k not in result:
+                result[k] = v
+
+    return result
