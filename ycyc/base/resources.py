@@ -82,6 +82,14 @@ class Regex(object):
         return r"{q}((?:\\.|[^{q}\\])*){q}".format(q=q_mark)
 
     @classmethod
+    def variabl_name(cls):
+        return r"[_a-zA-Z]\w*"
+
+    @classmethod
+    def hex_num(cls, repeat=1):
+        return cls.pattern_repeat(r"[0-9A-Fa-f]", repeat)
+
+    @classmethod
     def pattern_repeat(cls, pattern, end, start=1):
         if end is None:
             if start == 0:
@@ -134,7 +142,5 @@ class Regex(object):
 
     @classmethod
     def ipv4(cls):
-        return (
-            r"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
-            r"(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}"
-        )
+        ip_field = "0*%s" % cls.num_less_than(256)
+        return r"{f}.{f}.{f}.{f}".format(f=ip_field)
