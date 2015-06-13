@@ -82,6 +82,57 @@ class Regex(object):
         return r"{q}((?:\\.|[^{q}\\])*){q}".format(q=q_mark)
 
     @classmethod
+    def pattern_repeat(cls, pattern, end, start=1):
+        if end is None:
+            if start == 0:
+                return "(%s)*" % pattern
+            elif start == 1:
+                return "(%s)+" % pattern
+        if end == 1:
+            if start == 1:
+                return pattern
+            elif start == 0:
+                return "(%s)?" % pattern
+        if end > start:
+            return "(%s){%s,%s}" % (pattern, start, end)
+        elif end < start:
+            return ""
+        return "(%s){%s}" % (pattern, end)
+
+    @classmethod
+    def num_less_than(cls, num):
+        def up_to(end, start=0):
+            if end > start:
+                return "[%s-%s]" % (start, end)
+            elif end < start:
+                return ""
+            return "%s" % end
+
+        if num <= 0:
+            raise ValueError()
+        if num < 10:
+            return up_to(num - 1, 0)
+
+        str_n = str(num)
+        len_n = len(str_n)
+
+        pattern_set = {cls.pattern_repeat(up_to(9, 0), len_n - 1)}
+        l_pattern = ""
+        for i, n in enumerate(str_n):
+            n = int(n)
+            if n > 0:
+                pattern_set.add(
+                    "%s%s%s" % (
+                        l_pattern,
+                        up_to(n - 1, 0 if i > 0 else 1),
+                        cls.pattern_repeat(up_to(9, 0), len_n - 1 - i)
+                    )
+                )
+            l_pattern += str(n)
+
+        return "(%s)" % "|".join(pattern_set)
+
+    @classmethod
     def ipv4(cls):
         return (
             r"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
