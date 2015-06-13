@@ -93,23 +93,27 @@ class Regex(object):
     def pattern_repeat(cls, pattern, end, start=1):
         if end is None:
             if start == 0:
-                return "(%s)*" % pattern
+                return "(?:%s)*" % pattern
             elif start == 1:
-                return "(%s)+" % pattern
+                return "(?:%s)+" % pattern
         if end == 1:
             if start == 1:
                 return pattern
             elif start == 0:
-                return "(%s)?" % pattern
+                return "(?:%s)?" % pattern
         if end > start:
-            return "(%s){%s,%s}" % (pattern, start, end)
+            return "(?:%s){%s,%s}" % (pattern, start, end)
         elif end < start:
             return ""
-        return "(%s){%s}" % (pattern, end)
+        elif end > 0:
+            return "(?:%s){%s}" % (pattern, end)
+        return ""
 
     @classmethod
     def num_less_than(cls, num):
         def up_to(end, start=0):
+            if end == 9 and start == 0:
+                return r"\d"
             if end > start:
                 return "[%s-%s]" % (start, end)
             elif end < start:
@@ -128,17 +132,19 @@ class Regex(object):
         l_pattern = ""
         for i, n in enumerate(str_n):
             n = int(n)
-            if n > 0:
+            repeats = len_n - 1 - i
+            h_up_to = up_to(n - 1, 0 if i > 0 else 1)
+            if n > 0 and h_up_to:
                 pattern_set.add(
                     "%s%s%s" % (
                         l_pattern,
-                        up_to(n - 1, 0 if i > 0 else 1),
-                        cls.pattern_repeat(up_to(9, 0), len_n - 1 - i)
+                        h_up_to,
+                        cls.pattern_repeat(up_to(9, 0), repeats, repeats)
                     )
                 )
             l_pattern += str(n)
 
-        return "(%s)" % "|".join(pattern_set)
+        return "(?:%s)" % "|".join(pattern_set)
 
     @classmethod
     def ipv4(cls):
