@@ -149,4 +149,4 @@ class Regex(object):
     @classmethod
     def ipv4(cls):
         ip_field = "0*%s" % cls.num_less_than(256)
-        return r"{f}.{f}.{f}.{f}".format(f=ip_field)
+        return r"(?<!\d)(%s(?:\.%s){3})(?!\d)" % (ip_field, ip_field)
