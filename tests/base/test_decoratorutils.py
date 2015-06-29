@@ -155,3 +155,23 @@ class TestCallImmediately(TestCase):
         self.assertListEqual(val_lst, [
             0 for i in range(10)
         ])
+
+
+class TestMethodDecorator(TestCase):
+    def test_usage(self):
+        def add_one(func):
+            return lambda: 1 + func()
+
+        class AClass(object):
+            def __init__(self, val):
+                self.val = val
+
+            @decoratorutils.method_decorator(add_one)
+            def get_value(self):
+                return self.val
+
+        a = AClass(1)
+        b = AClass(5)
+
+        self.assertEqual(a.get_value(), 2)
+        self.assertEqual(b.get_value(), 6)

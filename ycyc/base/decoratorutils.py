@@ -154,3 +154,17 @@ def call_immediately(*args, **kwg):
     def invoker(func):
         return func(*args, **kwg)
     return invoker
+
+
+def method_decorator(decorator):
+    """
+    Make a simple decorator to adapt class method
+
+    :param decorator: simple decorator
+    """
+    def foo(func):
+        def bar(_, *args, **kwg):
+            method = func.__get__(_, type(_))
+            return decorator(method)(*args, **kwg)
+        return bar
+    return foo
