@@ -168,3 +168,21 @@ def method_decorator(decorator):
             return decorator(method)(*args, **kwg)
         return bar
     return foo
+
+
+def withattr(**kwg):
+    """
+    Set attributes to a func, example:
+    >>> Class Model(DjangoModel):
+    ... @withattr(alters_data=True)
+    ... def delete(self):
+    ...     delete(self)
+
+    :param kwg: attributes dict
+    """
+    def foo(func):
+        for name, value in kwg.items():
+            setattr(func, name, value)
+        return func
+
+    return foo

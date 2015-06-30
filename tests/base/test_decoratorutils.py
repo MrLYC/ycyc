@@ -175,3 +175,14 @@ class TestMethodDecorator(TestCase):
 
         self.assertEqual(a.get_value(), 2)
         self.assertEqual(b.get_value(), 6)
+
+
+class TestWithAttr(TestCase):
+    def test_usage(self):
+        @decoratorutils.withattr(alters_data=True, debug=True)
+        def test_func(val):
+            return val + 1
+
+        self.assertTrue(test_func.alters_data)
+        self.assertTrue(test_func.debug)
+        self.assertEqual(test_func(0), 1)
