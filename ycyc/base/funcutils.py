@@ -83,3 +83,27 @@ def strcat(s1, s2, encoding1="utf-8", encoding2=None):
     """
     encoding2 = encoding2 or encoding1
     return decode(s1, encoding1) + decode(s2, encoding2)
+
+
+def str_remove_left(s, pattern):
+    """
+    Remove left part which equal to pattern of a string.
+
+    :param s: string
+    :param pattern: string pattern
+    """
+    if s.startswith(pattern):
+        return s[len(pattern):]
+    return s
+
+
+def str_remove_right(s, pattern):
+    """
+    Remove right part which equal to pattern of a string.
+
+    :param s: string
+    :param pattern: string pattern
+    """
+    if s.endswith(pattern):
+        return s[:-len(pattern)]
+    return s

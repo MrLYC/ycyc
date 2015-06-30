@@ -59,3 +59,25 @@ class TestCoding(TestCase):
             funcutils.strcat(self.b_ch, gbk_ch, "utf-8", "gbk"), target)
         self.assertEqual(
             funcutils.strcat(self.u_ch, gbk_ch, "utf-8", "gbk"), target)
+
+
+class TestStringUtils(TestCase):
+    def test_str_remove_left(self):
+        self.assertEqual(
+            funcutils.str_remove_left("root/file.txt", "root/"),
+            "file.txt"
+        )
+        self.assertEqual(
+            funcutils.str_remove_left("dir/file.txt", "root/"),
+            "dir/file.txt"
+        )
+
+    def test_str_remove_right(self):
+        self.assertEqual(
+            funcutils.str_remove_right("file.txt", ".txt"),
+            "file"
+        )
+        self.assertEqual(
+            funcutils.str_remove_right("file.tmp", ".txt"),
+            "file.tmp"
+        )
