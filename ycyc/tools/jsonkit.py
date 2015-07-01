@@ -58,3 +58,8 @@ class RichTypeJSONEncoder(object):
 
             (collections.Mapping, ): dict,
         }
+
+
+def dumps(obj):
+    encoder = RichTypeJSONEncoder(RichTypeJSONEncoder.default_type_mapping())
+    return json.dumps(obj, cls=encoder.encoder_factory)
