@@ -12,6 +12,11 @@ import types
 logger = logging.getLogger(__file__)
 
 
+class DescriptorBase(object):
+    def __init__(self, func):
+        self.func = func
+
+
 def call_trace(loger=None, name=None):
     """
     Trace a fun call with loger.
@@ -50,14 +55,11 @@ def with_lock(lock):
     return _
 
 
-class CachedProperty(object):
+class CachedProperty(DescriptorBase):
     """
     Call func at first time and cached the result, return result
     immediately later.
     """
-    def __init__(self, func):
-        self.func = func
-
     def __get__(self, instance, cls):
         if not hasattr(self, "cached_result"):
             result = types.MethodType(self.func, instance, cls)()
@@ -188,10 +190,7 @@ def withattr(**kwg):
     return foo
 
 
-class AllowUnboundMethod(object):
-    def __init__(self, func):
-        self.func = func
-
+class AllowUnboundMethod(DescriptorBase):
     def __get__(self, instance, cls):
         if instance is not None:
             return types.MethodType(self.func, instance, cls)
