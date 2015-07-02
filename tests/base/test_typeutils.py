@@ -56,3 +56,10 @@ class TestExceptionsFactory(TestCase):
         TestType = typeutils.exceptions_factory.TestType()
         self.assertTrue(issubclass(TestType, Exception))
         self.assertIsNot(TestType, typeutils.exceptions_factory.TestType())
+
+
+class TestSimpleExceptions(TestCase):
+    def test_usage(self):
+        simple_exceptions = typeutils.SimpleExceptions()
+        self.assertIsInstance(simple_exceptions.NewError, type)
+        self.assertIs(simple_exceptions.NewError, simple_exceptions.NewError)
