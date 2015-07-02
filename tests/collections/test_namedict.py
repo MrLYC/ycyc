@@ -100,6 +100,11 @@ class TestNamedDict(TestCase):
         with self.assertRaises(AttributeError):
             params.nothing
 
+        Params = namedict("Params", ["key", "value"])
+        params = Params("test", value=2)
+        self.assertEqual(params.key, "test")
+        self.assertEqual(params.value, 2)
+
     def test_logging(self):
         with mock.patch("ycyc.collections.namedict.logger"):
             from ycyc.collections.namedict import logger

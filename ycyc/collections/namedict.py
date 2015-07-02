@@ -71,7 +71,7 @@ class NamedDict(six.with_metaclass(NamedDictMeta, dict)):
         self[name] = key
 
 
-def namedict(name, fields, requires=()):
+def namedict(name, requires=(), fields=None):
     """
     Return a subclass of dict with named fields
 
@@ -79,6 +79,6 @@ def namedict(name, fields, requires=()):
     :param requires: requires fields
     """
     return type(name, (NamedDict,), {
-        "__Fields__": fields,
+        "__Fields__": fields or {},
         "__Requires__": requires,
     })
