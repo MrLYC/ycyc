@@ -191,6 +191,9 @@ def withattr(**kwg):
 
 
 class AllowUnboundMethod(DescriptorBase):
+    """
+    Allow a method called by class
+    """
     def __get__(self, instance, cls):
         if instance is not None:
             return types.MethodType(self.func, instance, cls)
