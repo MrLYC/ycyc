@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import types
+import functools
 
 
 class LazyEnv(object):
@@ -57,3 +58,19 @@ class LazyEnv(object):
             return getattr(self, key)
         except AttributeError:
             raise KeyError("%s not found" % key)
+
+
+def lazy_init(func):
+    """
+    Decorator for __getattr__ method only, cached the real __getattr__
+    method returned value and init the attribute.
+    """
+    assert func.func_name == "__getattr__"
+
+    @functools.wraps(func)
+    def lazy_get(self, name):
+        value = func(self, name)
+        setattr(self, name, value)
+        return value
+
+    return lazy_get

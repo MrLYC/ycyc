@@ -73,13 +73,3 @@ class TestObjAsDictAdapter(TestCase):
         self.assertEqual(parent_dict.values(), list(parent_dict.itervalues()))
         self.assertEqual(parent_dict.items(), list(parent_dict.iteritems()))
         self.assertEqual(len(parent_dict), len(list(parent_dict)))
-
-
-def TestMarker(TestCase):
-    def test_usage(self):
-        self.assertNotEqual(adapter.Marker(), adapter.Marker())
-        self.assertNotEqual(adapter.Marker("test"), adapter.Marker("test"))
-        self.assertNotEqual(adapter.Marker("undefined"), adapter.Undefined)
-        marker = adapter.Marker()
-        self.assertEqual(marker, marker)
-        self.assertIs(marker, marker)
