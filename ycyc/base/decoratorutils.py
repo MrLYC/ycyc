@@ -186,3 +186,14 @@ def withattr(**kwg):
         return func
 
     return foo
+
+
+class AllowUnboundMethod(object):
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, instance, cls):
+        if instance is not None:
+            return types.MethodType(self.func, instance, cls)
+        return types.UnboundMethodType(self.func, cls, cls)
+allow_unbound_method = AllowUnboundMethod

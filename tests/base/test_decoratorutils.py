@@ -186,3 +186,20 @@ class TestWithAttr(TestCase):
         self.assertTrue(test_func.alters_data)
         self.assertTrue(test_func.debug)
         self.assertEqual(test_func(0), 1)
+
+
+class TestAllowUnboundMethod(TestCase):
+    def test_usage(self):
+        invokers = []
+
+        class TestCls(object):
+            @decoratorutils.allow_unbound_method
+            def save_invoker(invoker):
+                invokers.append(invoker)
+
+        TestCls.save_invoker()
+        self.assertEqual(TestCls, invokers.pop())
+
+        test_obj = TestCls()
+        test_obj.save_invoker()
+        self.assertEqual(test_obj, invokers.pop())
