@@ -42,6 +42,10 @@ requires: $(ROOTPATH)/requirements.txt
 ipy:
 	$(PYENV) ipython
 
+author-config:
+	git config user.email saber_zodiac@sohu.com --local
+	git config user.name MrLYC --local
+
 publish:
 	git pull --rebase origin dev --tags
 	git checkout master
