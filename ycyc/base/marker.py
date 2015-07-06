@@ -12,11 +12,16 @@ class Marker(object):
             raise AttributeError("attribute %s is not writable" % name)
         super(Marker, self).__setattr__(name, val)
 
+    def __eq__(self, other):
+        if not isinstance(other, Marker):
+            return False
+        return self.name == other.name
+
     def __str__(self):
         return self.name
 
     def __repr__(self):
-        return "%s('%s')" % (self.__class__.__name__, self.name)
+        return "%s(%s)" % (self.__class__.__name__, repr(self.name))
 
 Marker.Undefined = Marker("undefined")
 Marker.Missed = Marker("missed")
