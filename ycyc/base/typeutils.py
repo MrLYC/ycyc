@@ -79,3 +79,27 @@ class SimpleExceptions(object):
         exception = subexception(name)
         setattr(self, name, exception)
         return exception
+
+
+def freezed_attrs(attrs):
+    """
+    Decorator the declare attributes of cls is freezed.
+    Attributes in attrs can only assigned once as
+    initialization(usually is in __init__).
+
+    :param attrs: attribute list
+    """
+    def setattr_hook(cls):
+        def __setattr__(self, name, val):
+            if name not in attrs or hasattr(self, name):
+                raise AttributeError("attribute %s is not writable" % name)
+            return super(cls, self).__setattr__(name, val)
+
+        return subtype(
+            cls.__name__, cls,
+            {
+                "__doc__": cls.__doc__,
+                "__setattr__": __setattr__,
+            }
+        )
+    return setattr_hook
