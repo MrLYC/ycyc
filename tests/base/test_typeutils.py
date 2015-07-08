@@ -63,3 +63,23 @@ class TestSimpleExceptions(TestCase):
         simple_exceptions = typeutils.SimpleExceptions()
         self.assertIsInstance(simple_exceptions.NewError, type)
         self.assertIs(simple_exceptions.NewError, simple_exceptions.NewError)
+
+
+class TestFreezedAttrs(TestCase):
+    def test_usage(self):
+        @typeutils.freezed_attrs(["name", "value"])
+        class TestObj(object):
+            def __init__(self, name, value):
+                self.name = name
+                self.value = value
+
+        m = TestObj("test", 123)
+        with self.assertRaisesRegexp(AttributeError, "name is not writable"):
+            m.name = 1
+        self.assertEqual(m.name, "test")
+        with self.assertRaisesRegexp(AttributeError, "value is not writable"):
+            m.value = 1
+        self.assertEqual(m.value, 123)
+        with self.assertRaisesRegexp(AttributeError, "noting is not writable"):
+            m.noting = 1
+        self.assertFalse(hasattr(m, "noting"))
