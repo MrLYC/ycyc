@@ -6,7 +6,7 @@ from unittest import TestCase
 from ycyc.base import marker
 
 
-def TestMarker(TestCase):
+class TestMarker(TestCase):
     def test_usage(self):
         self.assertNotEqual(marker.Marker(), marker.Marker())
 
@@ -16,9 +16,28 @@ def TestMarker(TestCase):
         self.assertIsNot(test1, test2)
 
         test_undefined = marker.Marker("undefined")
-        self.assertEqual(test_undefined, marker.Undefined)
-        self.assertIsNot(test_undefined, marker.Undefined)
+        self.assertEqual(test_undefined, marker.Marker.Undefined)
+        self.assertIsNot(test_undefined, marker.Marker.Undefined)
 
-        marker = marker.Marker()
-        self.assertEqual(marker, marker)
-        self.assertIs(marker, marker)
+        m = marker.Marker()
+        self.assertEqual(m, m)
+        self.assertIs(m, m)
+
+        self.assertFalse(bool(marker.Marker.Undefined))
+        self.assertFalse(bool(marker.Marker.Missed))
+        self.assertFalse(bool(marker.Marker.Disabled))
+
+        m = marker.Marker("test", True)
+        self.assertTrue(m)
+
+    def test_freeze_attrs(self):
+        m = marker.Marker("test", 123)
+        with self.assertRaisesRegexp(AttributeError, "name is not writable"):
+            m.name = 1
+        self.assertEqual(m.name, "test")
+        with self.assertRaisesRegexp(AttributeError, "value is not writable"):
+            m.value = 1
+        self.assertEqual(m.value, 123)
+        with self.assertRaisesRegexp(AttributeError, "noting is not writable"):
+            m.noting = 1
+        self.assertFalse(hasattr(m, "noting"))

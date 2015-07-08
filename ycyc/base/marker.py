@@ -3,14 +3,21 @@
 
 
 class Marker(object):
-    def __init__(self, name=NotImplemented):
-        self.name = "Mark[%s]" % id(self) if name is NotImplemented else name
-        self.__freezed = True
+    AllowAttrs = ["name", "value"]
+
+    def __init__(self, name=NotImplemented, value=NotImplemented):
+        self.name = (
+            "Mark[%s]" % id(self) if name is NotImplemented else name
+        )
+        self.value = value
 
     def __setattr__(self, name, val):
-        if getattr(self, "__freezed", False):
+        if name not in self.AllowAttrs or hasattr(self, name):
             raise AttributeError("attribute %s is not writable" % name)
-        super(Marker, self).__setattr__(name, val)
+        return super(Marker, self).__setattr__(name, val)
+
+    def __nonzero__(self):
+        return bool(self.value)
 
     def __eq__(self, other):
         if not isinstance(other, Marker):
@@ -23,9 +30,9 @@ class Marker(object):
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, repr(self.name))
 
-Marker.Undefined = Marker("undefined")
-Marker.Missed = Marker("missed")
-Marker.Disabled = Marker("disabled")
+Marker.Undefined = Marker("undefined", None)
+Marker.Missed = Marker("missed", None)
+Marker.Disabled = Marker("disabled", None)
 
 try:
     from ycyc.base.lazyutils import lazy_init
