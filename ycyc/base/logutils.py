@@ -80,3 +80,30 @@ def log_with_label(log_method, label):
         return log_method(label, *args, **kwargs)
 
     return logger_method
+
+
+class LogFunctionCall(object):
+    def __init__(self, func=None, args=None, kwargs=None, returned=None):
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+        self.returned = returned
+
+    def __str__(self):
+        s_returned = (
+            "" if self.returned is None
+            else "-> %s" % str(self.returned)
+        )
+
+        args = map(str, self.args or ())
+        args.extend(
+            "{k}={v}".format(k=str(k), v=str(v))
+            for k, v in self.kwargs.items() or ()
+        )
+
+        return "{f}({args}){returned}".format(
+            f=self.func.__name__ if self.func else "",
+            args=", ".join(args),
+            returned="" if self.returned is None
+            else "-> %s" % str(self.returned)
+        )
