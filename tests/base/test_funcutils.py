@@ -81,3 +81,9 @@ class TestStringUtils(TestCase):
             funcutils.drop_postfix("file.tmp", ".txt"),
             "file.tmp"
         )
+
+    def test_split_and_strip(self):
+        self.assertListEqual(
+            funcutils.split_and_strip("a,b ,c, d , e"),
+            ["a", "b", "c", "d", "e"]
+        )
