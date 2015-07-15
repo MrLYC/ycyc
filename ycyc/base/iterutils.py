@@ -149,3 +149,14 @@ def dict_merge(dicts):
                 result[k] = v
 
     return result
+
+
+def flatten(sequence_list, cls=list):
+    """
+    Flatten one level of nesting
+    :param sequence_list: list of sequence
+    :param cls: create instance of cls by flatten_gen
+    :return: cls instance or generator
+    """
+    flatten_gen = itertools.chain.from_iterable(sequence_list)
+    return cls(flatten_gen) if cls else flatten_gen

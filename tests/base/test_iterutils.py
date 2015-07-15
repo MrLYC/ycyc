@@ -3,10 +3,11 @@
 
 from unittest import TestCase
 from collections import namedtuple
+import types
 
 from ycyc.base.iterutils import (
     getitems, getattrs, iterable, getnext, getfirst, mkparts,
-    get_single_item, dict_merge
+    get_single_item, dict_merge, flatten
 )
 
 import mock
@@ -161,3 +162,9 @@ class TestDictMerge(TestCase):
             ]),
             {1: 2, 2: 3, 3: 4, 4: 5}
         )
+
+
+class TestFlatten(TestCase):
+    def test_usage(self):
+        seq_list = [range(0, 3), range(3, 7), (i for i in range(7, 9))]
+        self.assertListEqual(flatten(seq_list, list), range(0, 9))
