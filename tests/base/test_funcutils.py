@@ -62,22 +62,22 @@ class TestCoding(TestCase):
 
 
 class TestStringUtils(TestCase):
-    def test_str_remove_left(self):
+    def test_drop_prefix(self):
         self.assertEqual(
-            funcutils.str_remove_left("root/file.txt", "root/"),
+            funcutils.drop_prefix("root/file.txt", "root/"),
             "file.txt"
         )
         self.assertEqual(
-            funcutils.str_remove_left("dir/file.txt", "root/"),
+            funcutils.drop_prefix("dir/file.txt", "root/"),
             "dir/file.txt"
         )
 
-    def test_str_remove_right(self):
+    def test_drop_postfix(self):
         self.assertEqual(
-            funcutils.str_remove_right("file.txt", ".txt"),
+            funcutils.drop_postfix("file.txt", ".txt"),
             "file"
         )
         self.assertEqual(
-            funcutils.str_remove_right("file.tmp", ".txt"),
+            funcutils.drop_postfix("file.tmp", ".txt"),
             "file.tmp"
         )
