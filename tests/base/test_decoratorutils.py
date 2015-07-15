@@ -148,12 +148,15 @@ class TestOnErrorReturn(TestCase):
 
 class TestCallImmediately(TestCase):
     def test_usage(self):
-        @decoratorutils.call_immediately(10, init_val=0)
-        def val_lst(num, init_val):
+        num = 10
+        init_val=0
+
+        @decoratorutils.call_immediately()
+        def val_lst():
             return [init_val for i in range(num)]
 
         self.assertListEqual(val_lst, [
-            0 for i in range(10)
+            init_val for i in range(num)
         ])
 
 
