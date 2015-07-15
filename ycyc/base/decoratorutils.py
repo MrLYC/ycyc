@@ -146,15 +146,20 @@ def onerror_return(default_val, errors=Exception, callback=logger.warning):
     return foo
 
 
-def call_immediately(*args, **kwg):
+def call_immediately(checker=True):
     """
     Call func immediately and return the result instead func name.
 
     :param args: position arguments
     :param kwg: key word arguments
     """
+    if isinstance(checker, types.BooleanType):
+        checker = lambda: checker
+
     def invoker(func):
-        return func(*args, **kwg)
+        if checker():
+            return func()
+        return func
     return invoker
 
 
