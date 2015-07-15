@@ -107,3 +107,18 @@ def drop_postfix(s, pattern):
     if s.endswith(pattern):
         return s[:-len(pattern)]
     return s
+
+
+def split_and_strip(val_str, sep=","):
+    """
+    Simple split val_str by sep and drop strip the space chars for each items.
+
+    :param val_str: string
+    :param sep: split separator
+    """
+    return [
+        i for i in (
+            i.strip() for i in val_str.split(sep)
+        )
+        if i
+    ]
