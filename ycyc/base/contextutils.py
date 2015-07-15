@@ -33,9 +33,8 @@ def subprocessor(*args, **kwg):
     :param kwg: key word argument pass to subprocess.Popen
     """
     from subprocess import Popen
-    processor = None
+    processor = Popen(*args, **kwg)
     try:
-        processor = Popen(*args, **kwg)
         yield processor
     finally:
         if processor.poll() is None:
