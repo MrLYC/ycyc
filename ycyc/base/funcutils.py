@@ -85,9 +85,9 @@ def strcat(s1, s2, encoding1="utf-8", encoding2=None):
     return decode(s1, encoding1) + decode(s2, encoding2)
 
 
-def str_remove_left(s, pattern):
+def drop_prefix(s, pattern):
     """
-    Remove left part which equal to pattern of a string.
+    Remove prefix pattern of a string.
 
     :param s: string
     :param pattern: string pattern
@@ -97,9 +97,9 @@ def str_remove_left(s, pattern):
     return s
 
 
-def str_remove_right(s, pattern):
+def drop_postfix(s, pattern):
     """
-    Remove right part which equal to pattern of a string.
+    Remove postfix pattern of a string.
 
     :param s: string
     :param pattern: string pattern
