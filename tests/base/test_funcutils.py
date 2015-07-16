@@ -87,3 +87,30 @@ class TestStringUtils(TestCase):
             funcutils.split_and_strip("a,b ,c, d , e"),
             ["a", "b", "c", "d", "e"]
         )
+
+
+class TestObjectHelper(TestCase):
+    def test_is_magic_method(self):
+        class Foo(object):
+            def __str__(self):
+                return "foo"
+
+        foo = Foo()
+        self.assertTrue(funcutils.is_magic_method(Foo.__str__))
+        self.assertTrue(funcutils.is_magic_method(foo.__str__))
+
+    def test_set_default_attr(self):
+        class Foo(object):
+            def __str__(self):
+                return "foo"
+
+        foo = Foo()
+        self.assertFalse(hasattr(foo, "foobarbaz"))
+        self.assertTrue(funcutils.set_default_attr(
+            foo, "foobarbaz", True
+        ))
+        self.assertTrue(foo.foobarbaz)
+        self.assertTrue(funcutils.set_default_attr(
+            foo, "foobarbaz", False
+        ))
+        self.assertTrue(foo.foobarbaz)
