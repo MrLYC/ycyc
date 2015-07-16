@@ -7,6 +7,7 @@ funcutils provided some useful functions.
 
 import re
 import operator
+import inspect
 
 
 def template_render(template, model):
@@ -122,3 +123,31 @@ def split_and_strip(val_str, sep=","):
         )
         if i
     ]
+
+
+def is_magic_method(method):
+    """
+    Check a method if is magic method
+
+    :param method: method of a class
+    """
+    if not inspect.ismethod(method):
+        return False
+    func_name = method.im_func.func_name
+    if func_name.startswith("__") and func_name.endswith("__"):
+        return True
+    return False
+
+
+def set_default_attr(obj, name, value):
+    """
+    Set attribute to obj if attribute is not exists
+
+    :param obj: object
+    :param name: attribure name
+    :param value: attribure value
+    :return: if is attribute not exists
+    """
+    if not hasattr(obj, name):
+        setattr(obj, name, value)
+    return getattr(obj, name, value)
