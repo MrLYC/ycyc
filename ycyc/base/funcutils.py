@@ -151,3 +151,29 @@ def set_default_attr(obj, name, value):
     if not hasattr(obj, name):
         setattr(obj, name, value)
     return getattr(obj, name, value)
+
+
+def iter_attrs(obj, include_fields=(), exclude_fields=(), public_only=True,
+               exclude_methods=True):
+    """
+    iter attributes of obj
+
+    :param obj: object
+    :param include_fields: include all this fields if exists
+    :param exclude_fields: exclude this fields
+    :param public_only: choice public attr only
+    :param exclude_methods: exclude methods
+    """
+    obj_type = type(obj)
+    obj_type_name = obj_type.__name__
+    for attr, val in inspect.getmembers(obj):
+        if attr not in include_fields:
+            if (
+                attr in exclude_fields
+                or attr.startswith("__")
+                or attr.startswith("_%s__" % obj_type_name)
+                or (public_only and attr.startswith("_"))
+                or (exclude_methods and inspect.ismethod(val))
+            ):
+                continue
+        yield attr, val
