@@ -114,3 +114,61 @@ class TestObjectHelper(TestCase):
             foo, "foobarbaz", False
         ))
         self.assertTrue(foo.foobarbaz)
+
+    def test_iter_attrs(self):
+        class Foo(object):
+            Public = 0
+            _Protected = 1
+            __Privated = 2
+
+            def __init__(self):
+                self.public = 4
+                self._protected = 5
+                self.__privated = 6
+
+            def get_privated(self):
+                return self.__privated
+
+            @property
+            def protected(self):
+                return self._protected
+
+        foo = Foo()
+
+        self.assertDictEqual(
+            dict(funcutils.iter_attrs(foo)),
+            {
+                "Public": 0, "public": 4, "protected": 5,
+            }
+        )
+        self.assertDictEqual(
+            dict(funcutils.iter_attrs(foo, public_only=False)),
+            {
+                "Public": 0, "_Protected": 1, "public": 4,
+                "protected": 5, "_protected": 5,
+            }
+        )
+        self.assertDictEqual(
+            dict(funcutils.iter_attrs(foo, include_fields={"_Protected"})),
+            {
+                "Public": 0, "_Protected": 1, "public": 4,
+                "protected": 5,
+            }
+        )
+        self.assertDictEqual(
+            dict(funcutils.iter_attrs(foo, exclude_fields={"protected"})),
+            {
+                "Public": 0, "public": 4,
+            }
+        )
+        result = dict(funcutils.iter_attrs(foo, exclude_methods=False))
+        self.assertEqual(result["get_privated"], foo.get_privated)
+
+        self.assertIn(
+            "_Protected",
+            dict(funcutils.iter_attrs(
+                foo,
+                include_fields={"_Protected"},
+                exclude_fields={"_Protected"}
+            ))
+        )
