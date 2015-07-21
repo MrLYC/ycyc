@@ -143,3 +143,24 @@ def cd(path):
     finally:
         with contextutils.catch():
             os.chdir(current_dir)
+
+
+def bytes_from(path):
+    """
+    Return the bytes from a file.
+
+    :param path: file path string
+    """
+    with open(path, "rb") as fp:
+        return fp.read()
+
+
+def text_from(path, encoding="utf-8"):
+    """
+    Return the text from a file.
+
+    :param path: file path string
+    :param encoding: file encoding
+    """
+    with codecs.open(path, "r", encoding) as fp:
+        return fp.read()
