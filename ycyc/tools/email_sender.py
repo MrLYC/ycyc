@@ -11,7 +11,7 @@ import os
 import six
 
 from ycyc.base.typeutils import SimpleExceptions
-
+from ycyc.base.filetools import bytes_from
 
 SimpleExceptions = SimpleExceptions()
 EMailSendFailed = SimpleExceptions.EMailSendFailed
@@ -45,14 +45,13 @@ class EMail(object):
         mail.attach(MIMEText(self.content, self.subtype, self.charset))
 
         for i in self.attachment_paths:
-            with open(i.path, "rb") as fp:
-                attachment = MIMEApplication(fp.read())
-                attachment.add_header(
-                    "Content-Disposition",
-                    "attachment",
-                    filename=i.name.strip(),
-                )
-                mail.attach(attachment)
+            attachment = MIMEApplication(bytes_from(i.path))
+            attachment.add_header(
+                "Content-Disposition",
+                "attachment",
+                filename=i.name.strip(),
+            )
+            mail.attach(attachment)
         return mail
 
     def send(self, passwd=None, user=None):
