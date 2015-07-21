@@ -16,8 +16,8 @@ class ARange(object):
 
         self.start = start
         self.end = end
-        self.include_start = include_start
-        self.include_end = include_end
+        self.include_start = bool(include_start)
+        self.include_end = bool(include_end)
 
     def __str__(self):
         return "{lb}{start}..{end}{rb}".format(
@@ -127,6 +127,13 @@ class ARange(object):
         if self.is_before_of(other.end):
             if other.end != self.end or other.include_end:
                 return False
+        return True
+
+    def is_follow_by(self, other):
+        if self.end != other.start:
+            return False
+        if self.include_end == other.include_start:
+            return False
         return True
 
     def sampling(self, step):

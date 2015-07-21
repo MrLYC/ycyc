@@ -93,6 +93,21 @@ class TestARange(TestCase):
         self.assertTrue(r5.has_sub_range(r3))
         self.assertFalse(r5.has_sub_range(r4))
 
+    def test_is_follow_by(self):
+        r1 = rangecls.ARange(0, 3)
+        r2 = rangecls.ARange(0, 3, include_end=False)
+        r3 = rangecls.ARange(3, 6)
+        r4 = rangecls.ARange(3, 6, include_start=False)
+        r5 = rangecls.ARange(4, 6)
+
+        self.assertFalse(r1.is_follow_by(r3))
+        self.assertTrue(r1.is_follow_by(r4))
+        self.assertFalse(r1.is_follow_by(r5))
+
+        self.assertTrue(r2.is_follow_by(r3))
+        self.assertFalse(r2.is_follow_by(r4))
+        self.assertFalse(r2.is_follow_by(r5))
+
     def test_sampling(self):
         r = rangecls.ARange(0, 4)
         self.assertListEqual(list(r.sampling(1)), [0, 1, 2, 3, 4])
