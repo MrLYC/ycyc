@@ -6,7 +6,7 @@ import os
 import textwrap
 import six
 
-from ycyc.base.funcutils import str_remove_left
+from ycyc.base.funcutils import drop_prefix
 
 
 class FileExisted(Exception):
@@ -77,7 +77,7 @@ def main():
             continue
         try:
             if args.anchor:
-                p = str_remove_left(p, args.anchor)
+                p = drop_prefix(p, args.anchor)
             mk_unittest_script(p, args.target)
         except FileExisted as err:
             six.print_("file is existed:", err)
