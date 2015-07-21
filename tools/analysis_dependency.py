@@ -5,24 +5,23 @@ import ast
 import importlib
 import inspect
 
-DependencyModules = set()
-ScriptPaths = None
-
 
 class Analysis(ast.NodeTransformer):
-    def __init__(self, paths):
-        self.modules = set()
+    def __init__(self, paths, recursion):
+        self.modules = list()
         self.paths = list(paths)
+        self.recursion = recursion
 
     def add_module(self, module):
         if module and module not in self.modules:
-            self.modules.add(module)
-            try:
-                path = inspect.getsourcefile(importlib.import_module(module))
-                if path:
-                    self.paths.append(path)
-            except:
-                pass
+            self.modules.append(module)
+            if self.recursion:
+                try:
+                    path = inspect.getsourcefile(importlib.import_module(module))
+                    if path:
+                        self.paths.append(path)
+                except:
+                    pass
 
     def visit_Import(self, node):
         for i in node.names:
@@ -41,9 +40,13 @@ class Analysis(ast.NodeTransformer):
         return tuple(self.modules)
 
 if __name__ == "__main__":
-    import sys
-    paths = sys.argv[1:]
+    import argparse
 
-    analysisor = Analysis(paths)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("paths", nargs="+")
+    parser.add_argument("-r", "--recursion", action="store_true", default=False)
+    args = parser.parse_args()
+
+    analysisor = Analysis(args.paths, args.recursion)
     for m in analysisor.analysis():
         print m
