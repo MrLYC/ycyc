@@ -19,7 +19,7 @@ def oserror_format(func):
     @wraps(func)
     def foo(*args, **kwargs):
         with contextutils.catch(
-            getattr(exceptions, "WindowsError", NotImplementedError),
+            getattr(exceptions, "WindowsError", exceptions.OSError),
             reraise=exceptions.OSError,
         ):
             return func(*args, **kwargs)
