@@ -41,22 +41,22 @@ class RichTypeJSONEncoder(object):
         import types
 
         return {
-            set: list,
-            frozenset: list,
-
-            types.GeneratorType: list,
-            types.XRangeType: list,
-
-            collections.deque: list,
-            collections.defaultdict: dict,
-            collections.Counter: dict,
-            collections.OrderedDict: dict,
+            (
+                set, frozenset,
+                types.GeneratorType,
+                types.XRangeType,
+                collections.deque,
+            ): list,
+            (
+                collections.Mapping,
+                collections.defaultdict,
+                collections.Counter,
+                collections.OrderedDict,
+            ): dict,
 
             datetime.date: datetime.date.isoformat,
             datetime.datetime: datetime.datetime.isoformat,
             decimal.Decimal: float,
-
-            (collections.Mapping, ): dict,
         }
 
 
