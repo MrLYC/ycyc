@@ -20,8 +20,8 @@ def oserror_format(func):
     @wraps(func)
     def foo(*args, **kwargs):
         with contextutils.catch(
-            getattr(exceptions, "WindowsError", exceptions.OSError),
-            reraise=exceptions.OSError,
+            getattr(exceptions, "WindowsError", OSError),
+            reraise=OSError,
         ):
             return func(*args, **kwargs)
     return foo
@@ -81,7 +81,8 @@ def make_sure_not_exists(path):
         return
     if os.path.isdir(path):
         remove_dir(path, recursion=True)
-    os.remove(path)
+    else:
+        os.remove(path)
 
 
 def safe_open_for_write(fn, encoding="utf-8"):
