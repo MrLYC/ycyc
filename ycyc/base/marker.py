@@ -3,7 +3,7 @@
 
 
 class Marker(object):
-    AllowAttrs = ["name", "value"]
+    __slots__ = ["name", "value"]
 
     def __init__(self, name=NotImplemented, value=NotImplemented):
         self.name = (
@@ -12,7 +12,7 @@ class Marker(object):
         self.value = value
 
     def __setattr__(self, name, val):
-        if name not in self.AllowAttrs or hasattr(self, name):
+        if hasattr(self, name):
             raise AttributeError("attribute %s is not writable" % name)
         return super(Marker, self).__setattr__(name, val)
 
