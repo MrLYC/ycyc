@@ -83,3 +83,27 @@ class TestFreezedAttrs(TestCase):
         with self.assertRaisesRegexp(AttributeError, "noting is not writable"):
             m.noting = 1
         self.assertFalse(hasattr(m, "noting"))
+
+
+class TestConstants(TestCase):
+    def test_usage(self):
+        const = typeutils.constants(
+            Name="TestConstants",
+            Function="test_usage",
+        )
+
+        self.assertIsInstance(const, typeutils.Constants)
+        self.assertEqual(const.Name, "TestConstants")
+        self.assertEqual(const.Function, "test_usage")
+
+        with self.assertRaisesRegexp(
+            AttributeError,
+            "attribute Name is not writable",
+        ):
+            const.Name = "error"
+
+        with self.assertRaisesRegexp(
+            AttributeError,
+            "attribute Function is not writable",
+        ):
+            const.Function = "error"
