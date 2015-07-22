@@ -38,6 +38,6 @@ class TestMarker(TestCase):
         with self.assertRaisesRegexp(AttributeError, "value is not writable"):
             m.value = 1
         self.assertEqual(m.value, 123)
-        with self.assertRaisesRegexp(AttributeError, "noting is not writable"):
-            m.noting = 1
-        self.assertFalse(hasattr(m, "noting"))
+        with self.assertRaisesRegexp(AttributeError, "has no attribute 'foo'"):
+            m.foo = 1
+        self.assertFalse(hasattr(m, "foo"))
