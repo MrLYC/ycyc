@@ -10,7 +10,7 @@ from email.header import Header
 import os
 import six
 
-from ycyc.base.typeutils import SimpleExceptions
+from ycyc.base.typeutils import SimpleExceptions, constants
 from ycyc.base.filetools import bytes_from
 
 SimpleExceptions = SimpleExceptions()
@@ -20,6 +20,11 @@ Attachments = namedtuple("Attachments", ["name", "path"])
 
 
 class EMail(object):
+    SubType = constants(
+        Plain="plain",
+        HTML="html",
+    )
+
     def __init__(
         self, server, sender=None, receiver=None, subject="", content="",
         subtype="plain", charset="utf-8",
