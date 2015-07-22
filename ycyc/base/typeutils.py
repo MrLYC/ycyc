@@ -103,3 +103,23 @@ def freezed_attrs(attrs):
             }
         )
     return setattr_hook
+
+
+class Constants(object):
+    """
+    The base class of constants
+    """
+    pass
+
+
+def constants(**kwg):
+    """
+    Declare some constants.
+    """
+    @freezed_attrs(kwg.keys())
+    class ConstantSet(Constants):
+        def __init__(self):
+            for k, v in kwg.items():
+                setattr(self, k, v)
+
+    return ConstantSet()
