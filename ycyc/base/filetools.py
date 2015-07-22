@@ -8,6 +8,7 @@ import shutil
 from contextlib import contextmanager
 import exceptions
 from functools import wraps
+import hashlib
 
 from ycyc.base import contextutils
 
@@ -164,3 +165,32 @@ def text_from(path, encoding="utf-8"):
     """
     with codecs.open(path, "r", encoding) as fp:
         return fp.read()
+
+
+def hash_of(path, hash_name):
+    """
+    Return the hash of a file
+
+    :param path: file path string
+    :param hash_name: hash algorithm name(md5/sha1/sha256/sha512)
+    """
+    hash = hashlib.new(hash_name, bytes_from(path))
+    return hash.hexdigest()
+
+
+def sha1_of(path):
+    """
+    Return the sha1 hash of a file
+
+    :param path: file path string
+    """
+    return hash_of(path, "sha1")
+
+
+def md5_of(path):
+    """
+    Return the md5 hash of a file
+
+    :param path: file path string
+    """
+    return hash_of(path, "md5")
