@@ -12,7 +12,7 @@ import mock
 @contextmanager
 def mock_patches(*patches, **named_patches):
     """
-    A context manager to helpe create mock patches.
+    A context manager to help create mock patches.
     >>> with mock_patches("package.module.cls", cls2="package.cls") as mocks:
     ...     mocks.cls() #=> package.module.cls
     ...     mocks.cls2() #=> package.cls
