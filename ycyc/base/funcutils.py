@@ -125,6 +125,30 @@ def split_and_strip(val_str, sep=","):
     ]
 
 
+def left_part_of(txt, sub_txt, n=1):
+    """
+    Return the left part before the nth of sub_txt appeared in txt.
+
+    :param txt: text
+    :param sub_txt: separate text
+    :param n: the nth of sub_txt(default:1)
+    """
+    parts = txt.split(sub_txt)
+    return sub_txt.join(parts[:n])
+
+
+def right_part_of(txt, sub_txt, n=-1):
+    """
+    Return the right part after the nth of sub_txt appeared in txt.
+
+    :param txt: text
+    :param sub_txt: separate text
+    :param n: the nth of sub_txt(default:-1)
+    """
+    parts = txt.split(sub_txt)
+    return sub_txt.join(parts[n:])
+
+
 def is_magic_method(method):
     """
     Check a method if is magic method
@@ -153,8 +177,10 @@ def set_default_attr(obj, name, value):
     return getattr(obj, name, value)
 
 
-def iter_attrs(obj, include_fields=(), exclude_fields=(), public_only=True,
-               exclude_methods=True):
+def iter_attrs(
+    obj, include_fields=(), exclude_fields=(),
+    public_only=True, exclude_methods=True,
+):
     """
     iter attributes of obj
 
