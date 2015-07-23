@@ -203,3 +203,23 @@ def iter_attrs(
             ):
                 continue
         yield attr, val
+
+
+def filter_n(func_or_none, sequence, n=1):
+    """
+    Return n items in sequence which match func_or_none.
+
+    :param func_or_none: judge function or None to choice items that are True
+    :param sequence: iterable sequence
+    :param n: choice n items at most
+    """
+    func = func_or_none or (lambda x: x)
+    result = []
+    cnt = 0
+    for i in sequence:
+        if cnt >= n:
+            break
+        if func(i):
+            result.append(i)
+            cnt += 1
+    return result
