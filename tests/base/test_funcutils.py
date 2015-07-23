@@ -88,6 +88,24 @@ class TestStringUtils(TestCase):
             ["a", "b", "c", "d", "e"]
         )
 
+    def test_left_part_of(self):
+        txt = "xxx.avi.part1.rar"
+        self.assertEqual(funcutils.left_part_of(txt, "."), "xxx")
+        self.assertEqual(funcutils.left_part_of(txt, ".", 0), "")
+        self.assertEqual(funcutils.left_part_of(txt, ".", 1), "xxx")
+        self.assertEqual(funcutils.left_part_of(txt, ".", 2), "xxx.avi")
+        self.assertEqual(funcutils.left_part_of(txt, ".", -1), "xxx.avi.part1")
+        self.assertEqual(funcutils.left_part_of(txt, ".", -2), "xxx.avi")
+
+    def test_right_part_of(self):
+        txt = "xxx.avi.part1.rar"
+        self.assertEqual(funcutils.right_part_of(txt, "."), "rar")
+        self.assertEqual(funcutils.right_part_of(txt, ".", 0), txt)
+        self.assertEqual(funcutils.right_part_of(txt, ".", -1), "rar")
+        self.assertEqual(funcutils.right_part_of(txt, ".", -2), "part1.rar")
+        self.assertEqual(funcutils.right_part_of(txt, ".", 1), "avi.part1.rar")
+        self.assertEqual(funcutils.right_part_of(txt, ".", 2), "part1.rar")
+
 
 class TestObjectHelper(TestCase):
     def test_is_magic_method(self):
