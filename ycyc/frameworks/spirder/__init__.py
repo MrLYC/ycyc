@@ -7,6 +7,7 @@ import logging
 import requests
 
 from ycyc.base.decoratorutils import cachedproperty
+from ycyc.base.iterutils import dict_merge
 
 logger = logging.getLogger(__name__)
 
@@ -45,10 +46,11 @@ class Response(object):
 
 
 class Spirder(object):
-    def __init__(self, target=None, opener=None, worker=None):
+    def __init__(self, target=None, opener=None, worker=None, headers=()):
         self.worker = worker or self.worker_factory()
         self.opener = opener or requests.Session()
         self.target = target
+        self.default_headers = dict(headers)
 
     def on_request(self, request):
         logger.debug("Spirder on_request, url: %s", request.url)
@@ -73,6 +75,7 @@ class Spirder(object):
     def add_tasks(self, requests):
         for request in requests or ():
             logger.debug("Spirder add a new task: %s", request.url)
+            request.headers = dict_merge((request.headers, self.default_headers))
             self.worker.apply_async(
                 self.on_request,
                 args=(request,),
