@@ -58,3 +58,11 @@ class TestSafeCalc(TestCase):
         calc = calctools.SafeCalc({"sleep": time.sleep}, 0.01, 0.01)
         with self.assertRaisesRegexp(RuntimeError, "timeout"):
             calc("sleep(1)")
+
+
+class TesstSafeCalcFunc(TestCase):
+    def test_usage(self):
+        self.assertEqual(calctools.safecalc("1+1"), 2)
+        self.assertEqual(calctools.safecalc("1+a", a=1), 2)
+        self.assertEqual(calctools.safecalc("1+a", dict(a=1)), 2)
+        self.assertEqual(calctools.safecalc("1+a", dict(a=1), a=2), 3)
