@@ -7,6 +7,7 @@ A adapter tool module
 
 import collections
 import sys
+import functools
 
 
 class ObjAsDictAdapter(collections.Mapping):
@@ -36,13 +37,16 @@ def main_entry(main):
     """
     Call function `main` immediately if is in __main__ and exit
     """
-    if main.__module__ != "__main__":
-        return main
+    @functools.wraps(main)
+    def wraped_main(*args, **kwg):
+        result = main(*args, **kwg)
+        return int(0 if result is None else result)
 
-    result = main() if main.func_code.co_argcount == 0 else main(sys.argv)
-    if result is None:
-        result = 0
-    else:
-        result = int(result)
+    if main.__module__ == "__main__":
+        sys.exit(
+            wraped_main()
+            if main.func_code.co_argcount == 0
+            else wraped_main(sys.argv)
+        )
 
-    sys.exit(result)
+    return wraped_main
