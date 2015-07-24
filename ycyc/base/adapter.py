@@ -6,6 +6,7 @@ A adapter tool module
 """
 
 import collections
+import sys
 
 
 class ObjAsDictAdapter(collections.Mapping):
@@ -29,3 +30,19 @@ class ObjAsDictAdapter(collections.Mapping):
 
     def __len__(self):
         return len(dir(self.__object))
+
+
+def main_entry(main):
+    """
+    Call function `main` immediately if is in __main__ and exit
+    """
+    if main.__module__ != "__main__":
+        return main
+
+    result = main() if main.func_code.co_argcount == 0 else main(sys.argv)
+    if result is None:
+        result = 0
+    else:
+        result = int(result)
+
+    sys.exit(result)

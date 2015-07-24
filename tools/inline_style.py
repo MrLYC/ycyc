@@ -8,6 +8,7 @@ import argparse
 
 from ycyc.base.iterutils import dict_merge
 from ycyc.base.filetools import safe_open_for_read, safe_open_for_write
+from ycyc.base.adapter import main_entry
 
 
 class InlineStyleConvertor(HTMLParser):
@@ -116,6 +117,7 @@ class InlineStyleConvertor(HTMLParser):
         self.output.write(data)
 
 
+@main_entry
 def main():
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument("base_file")
@@ -145,7 +147,3 @@ def main():
     with safe_open_for_write(args.output or args.base_file) as fp:
         parser = InlineStyleConvertor(fp, style, args.ignore)
         parser.feed(html)
-
-
-if __name__ == '__main__':
-    main()

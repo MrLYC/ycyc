@@ -3,6 +3,9 @@
 
 from unittest import TestCase
 
+import mock
+
+from tests import mock_patches
 from ycyc.base import adapter
 
 
@@ -73,3 +76,41 @@ class TestObjAsDictAdapter(TestCase):
         self.assertEqual(parent_dict.values(), list(parent_dict.itervalues()))
         self.assertEqual(parent_dict.items(), list(parent_dict.iteritems()))
         self.assertEqual(len(parent_dict), len(list(parent_dict)))
+
+
+class TestMainEntry(TestCase):
+    def test_usage(self):
+        with mock_patches(
+            "ycyc.base.adapter.sys",
+        ) as patches:
+            main_mock = mock.MagicMock()
+            main_mock.__module__ = "__test__"
+
+            self.assertIs(adapter.main_entry(main_mock), main_mock)
+
+        with mock_patches(
+            "ycyc.base.adapter.sys",
+        ) as patches:
+            main_mock = mock.MagicMock()
+            main_mock.__module__ = "__main__"
+            main_mock.func_code.co_argcount = 0
+            main_mock.return_value = 1
+
+            self.assertIsNot(adapter.main_entry(main_mock), main_mock)
+
+            main_mock.assert_called_once_with()
+            patches.sys.exit.assert_called_once_with(main_mock.return_value)
+
+        with mock_patches(
+            "ycyc.base.adapter.sys",
+        ) as patches:
+            patches.sys.argv = [id(patches)]
+            main_mock = mock.MagicMock()
+            main_mock.__module__ = "__main__"
+            main_mock.func_code.co_argcount = 1
+            main_mock.return_value = None
+
+            self.assertIsNot(adapter.main_entry(main_mock), main_mock)
+
+            main_mock.assert_called_once_with(patches.sys.argv)
+            patches.sys.exit.assert_called_once_with(0)

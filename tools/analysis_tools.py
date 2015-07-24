@@ -7,6 +7,7 @@ import logging
 from ycyc.collections.tagmaps import TagMaps
 from ycyc.libs.txtgen import TxtGenerator
 from ycyc.base.iterutils import getfirst, mkparts
+from ycyc.base.adapter import main_entry
 
 logger = logging.getLogger(__name__)
 
@@ -129,9 +130,10 @@ class Analysis(object):
                 self.analysis_result.write("+ ")
                 method(self, node)
 
-if __name__ == "__main__":
-    import sys
-    _, paths = mkparts(sys.argv, [1])
+
+@main_entry
+def main(argv):
+    _, paths = mkparts(argv, [1])
 
     analysisor = Analysis()
     for p in paths:
