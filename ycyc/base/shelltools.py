@@ -11,7 +11,7 @@ class Commnad(object):
     @classmethod
     def subprocess_args(cls, name, cmd_args, popen_kwargs):
         cmds = [name]
-        cmds.extend(cmd_args)
+        cmds.extend(map(str, cmd_args))
         popen_kwargs.setdefault("shell", False)
         return cmds, popen_kwargs
 
