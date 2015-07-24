@@ -7,6 +7,7 @@ import textwrap
 import six
 
 from ycyc.base.funcutils import drop_prefix
+from ycyc.base.adapter import main_entry
 
 
 class FileExisted(Exception):
@@ -55,6 +56,7 @@ def mk_unittest_script(script_relative_path, root):
         ''').lstrip())
 
 
+@main_entry
 def main():
     working_dir = os.getcwd()
     arg_parser = argparse.ArgumentParser()
@@ -81,7 +83,3 @@ def main():
             mk_unittest_script(p, args.target)
         except FileExisted as err:
             six.print_("file is existed:", err)
-
-
-if __name__ == '__main__':
-    main()
