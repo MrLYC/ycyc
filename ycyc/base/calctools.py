@@ -4,6 +4,7 @@
 import ast
 
 from ycyc.base.contextutils import timeout
+from ycyc.base.iterutils import dict_merge
 
 NameParseError = type("NameParseError", (NameError,), {})
 
@@ -47,12 +48,14 @@ class SafeCalc(ast.NodeTransformer):
             return eval(code, self.globals, self.locals)
 
 
-def safecalc(expr, **locals):
+def safecalc(expr, locals=None, **vars):
     """
     A quick function to calculate Python expression
+
     :param expr: Python expression
-    :param locals: variables
+    :param locals: local env
+    :param vars: variables
     :return: value
     """
-    calc = SafeCalc(locals)
+    calc = SafeCalc(dict_merge((vars, locals or {})))
     return calc(expr)
