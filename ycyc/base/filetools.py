@@ -10,6 +10,7 @@ from contextlib import contextmanager
 import exceptions
 from functools import wraps
 import hashlib
+from datetime import datetime
 
 from ycyc.base import contextutils
 
@@ -196,3 +197,79 @@ def md5_of(path):
     :param path: file path string
     """
     return hash_of(path, "md5")
+
+
+class PathInfo(object):
+    def __init__(self, path):
+        self.path = os_path.realpath(path)
+
+    @property
+    def is_exists(self):
+        return os_path.exists(self.path)
+
+    @property
+    def is_file(self):
+        return os_path.isfile(self.path)
+
+    @property
+    def is_dir(self):
+        return os_path.isdir(self.path)
+
+    @property
+    def is_link(self):
+        return os_path.islink(self.path)
+
+    @property
+    def dir_path(self):
+        return os_path.dirname(self.path)
+
+    @property
+    def directory(self):
+        return self.__class__(self.dir_path)
+
+    @property
+    def full_name(self):
+        dir, name = os_path.split(self.path)
+        return name
+
+    @property
+    def name(self):
+        name, ext = os_path.splitext(self.full_name)
+        return name
+
+    @property
+    def extension(self):
+        name, ext = os_path.splitext(self.full_name)
+        return ext
+
+    @property
+    def stat(self):
+        return os.stat(self.path)
+
+    @property
+    def length(self):
+        return self.stat.st_size
+
+    @property
+    def last_access_timestamp(self):
+        return self.stat.st_atime
+
+    @property
+    def last_access_time(self):
+        return datetime.fromtimestamp(self.last_access_timestamp)
+
+    @property
+    def last_write_timestamp(self):
+        return self.stat.st_mtime
+
+    @property
+    def last_write_time(self):
+        return datetime.fromtimestamp(self.last_write_timestamp)
+
+    @property
+    def creation_timestamp(self):
+        return self.stat.st_ctime
+
+    @property
+    def creation_time(self):
+        return datetime.fromtimestamp(self.creation_timestamp)
