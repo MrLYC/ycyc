@@ -11,6 +11,7 @@ import exceptions
 from functools import wraps
 import hashlib
 from datetime import datetime
+import re
 
 from ycyc.base import contextutils
 
@@ -197,6 +198,20 @@ def md5_of(path):
     :param path: file path string
     """
     return hash_of(path, "md5")
+
+
+def available_file_name(name, replaces="_"):
+    """
+    Return a available file name that replace some forbidden chars
+
+    :param name: file name
+    :param replaces: replaces char
+    """
+    return re.sub(
+        r"[\<\>/\\\|:\"\*\?]",
+        replaces,
+        name,
+    )
 
 
 class PathInfo(object):
