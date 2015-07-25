@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import os
+from os import path as os_path
 import codecs
 import tempfile
 import shutil
@@ -34,7 +35,7 @@ def make_sure_dir_exists(path):
 
     :param path: path string
     """
-    if not os.path.exists(path):
+    if not os_path.exists(path):
         os.makedirs(path)
 
 
@@ -59,12 +60,12 @@ def make_sure_dir_empty(path):
 
     :param path: path string
     """
-    if not os.path.exists(path):
+    if not os_path.exists(path):
         make_sure_dir_exists(path)
     else:
         for i in os.listdir(path):
-            i_path = os.path.join(path, i)
-            if os.path.isdir(i_path):
+            i_path = os_path.join(path, i)
+            if os_path.isdir(i_path):
                 remove_dir(i_path)
             else:
                 os.remove(i_path)
@@ -77,9 +78,9 @@ def make_sure_not_exists(path):
 
     :param path: path string
     """
-    if not os.path.exists(path):
+    if not os_path.exists(path):
         return
-    if os.path.isdir(path):
+    if os_path.isdir(path):
         remove_dir(path, recursion=True)
     else:
         os.remove(path)
@@ -92,7 +93,7 @@ def safe_open_for_write(fn, encoding="utf-8"):
     :param fn: file path string
     :param encoding: file encoding
     """
-    make_sure_dir_exists(os.path.dirname(fn))
+    make_sure_dir_exists(os_path.dirname(fn))
     return codecs.open(fn, "w+", encoding)
 
 
@@ -113,7 +114,7 @@ def safe_open_for_update(fn, encoding="utf-8"):
     :param fn: file path string
     :param encoding: file encoding
     """
-    if not os.path.exists(fn):
+    if not os_path.exists(fn):
         return safe_open_for_write(fn, encoding)
     return codecs.open(fn, "r+", encoding)
 
@@ -125,7 +126,7 @@ def safe_open_for_read(fn, encoding="utf-8"):
     :param fn: file path string
     :param encoding: file encoding
     """
-    if os.path.exists(fn):
+    if os_path.exists(fn):
         return codecs.open(fn, "r", encoding)
     return tempfile.TemporaryFile("r")
 
