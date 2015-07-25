@@ -203,6 +203,18 @@ class PathInfo(object):
     def __init__(self, path):
         self.path = os_path.realpath(path)
 
+    def __str__(self):
+        return "<{cls}: {path}>".format(
+            cls=self.__class__.__name__,
+            path=self.path,
+        )
+
+    def __repr__(self):
+        return "{cls}('{path}')".format(
+            cls=self.__class__.__name__,
+            path=self.path,
+        )
+
     @property
     def is_exists(self):
         return os_path.exists(self.path)
@@ -225,7 +237,16 @@ class PathInfo(object):
 
     @property
     def directory(self):
-        return self.__class__(self.dir_path)
+        return PathInfo(self.dir_path)
+
+    @property
+    def children(self):
+        if not self.is_dir:
+            return []
+        return [
+            PathInfo(os_path.join(self.path, i))
+            for i in os.listdir(self.path)
+        ]
 
     @property
     def full_name(self):
