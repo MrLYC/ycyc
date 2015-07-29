@@ -114,7 +114,7 @@ def mkparts(sequence, indices=None):
         result_list.append(sequence[start:end])
         start = end
     result_list.append(sequence[start:])
-    return result_list
+    return tuple(result_list)
 
 
 def get_single_item(obj, default=None, logger=logger):
