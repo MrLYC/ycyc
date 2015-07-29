@@ -147,3 +147,44 @@ def right_part_of(txt, sub_txt, n=-1):
     """
     parts = txt.split(sub_txt)
     return sub_txt.join(parts[n:])
+
+
+class TxtDistance(object):
+    @classmethod
+    def simple_distance(cls, s1, s2):
+        """
+        Simple algorithm to calculate the distance between two str
+
+        :param s1: string 1
+        :param s2: string 2
+        :return: distance number
+        """
+        len1 = len(s1)
+        len2 = len(s2)
+        if (len1 <= 0) or (len2 <= 0):
+            return len1 or len2
+
+        if s1[0] == s2[0]:
+            return cls.simple_distance(s1[1:], s2[1:])
+        else:
+            return min(
+                cls.simple_distance(s1[1:], s2),
+                cls.simple_distance(s1, s2[1:]),
+                cls.simple_distance(s1[1:], s2[1:]),
+            ) + 1
+
+
+def look_like(target, candidates):
+    """
+    choice one of string in candidates that target is looks like
+
+    :param target: string
+    :param candidates: string list
+    :return: item in candidates
+    """
+    results = [
+        (TxtDistance.simple_distance(target, i), i)
+        for i in candidates
+    ]
+    result = min(*results, key=lambda x: x[0])
+    return result[1]
