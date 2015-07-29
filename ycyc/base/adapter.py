@@ -8,6 +8,7 @@ A adapter tool module
 import collections
 import sys
 import functools
+import types
 
 
 class ObjAsDictAdapter(collections.Mapping):
@@ -31,6 +32,11 @@ class ObjAsDictAdapter(collections.Mapping):
 
     def __len__(self):
         return len(dir(self.__object))
+
+
+class MappingMixin:
+    def attrs_dict(self):
+        return ObjAsDictAdapter(self)
 
 
 def main_entry(main):

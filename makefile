@@ -43,7 +43,7 @@ ipy:
 	$(PYENV) ipython
 
 author-config:
-	git config user.email saber_zodiac@sohu.com --local
+	git config user.email imyikong@gmail.com --local
 	git config user.name MrLYC --local
 
 publish:
