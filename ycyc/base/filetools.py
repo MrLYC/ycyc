@@ -133,6 +133,34 @@ def safe_open_for_read(fn, encoding="utf-8"):
     return tempfile.TemporaryFile("r")
 
 
+def choice_one_if_exists(paths, default=None):
+    """
+    Choice the first path in paths which is exists.
+    You can use this to choice application configuration files.
+    Example:
+        there are some configuration files:
+            /etc/conf/lyc.conf -> for production
+            ~/conf/lyc.debug.conf -> for developing
+            ./conf/demo.conf -> for default configuration
+        so you can put you real configuration files to this places
+        to identify your real environment for this application.
+
+    >>> real_conf = choice_one_if_exists([
+    ...     "/etc/conf/lyc.conf",
+    ...     "~/conf/lyc.conf",
+    ...     "./conf/demo.conf",
+    ... ])
+
+    :param fn: file path string
+    :param encoding: file encoding
+    """
+    isexists = os_path.exists
+    for p in paths:
+        if isexists(p):
+            return p
+    return default
+
+
 @contextmanager
 @oserror_format
 def cd(path):
