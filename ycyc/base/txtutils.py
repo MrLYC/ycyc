@@ -151,7 +151,7 @@ def right_part_of(txt, sub_txt, n=-1):
 
 class TxtDistance(object):
     @classmethod
-    def simple_distance(cls, s1, s2):
+    def edit_distance(cls, s1, s2):
         """
         Simple algorithm to calculate the distance between two str
 
@@ -165,12 +165,12 @@ class TxtDistance(object):
             return len1 or len2
 
         if s1[0] == s2[0]:
-            return cls.simple_distance(s1[1:], s2[1:])
+            return cls.edit_distance(s1[1:], s2[1:])
         else:
             return min(
-                cls.simple_distance(s1[1:], s2),
-                cls.simple_distance(s1, s2[1:]),
-                cls.simple_distance(s1[1:], s2[1:]),
+                cls.edit_distance(s1[1:], s2),
+                cls.edit_distance(s1, s2[1:]),
+                cls.edit_distance(s1[1:], s2[1:]),
             ) + 1
 
 
@@ -183,7 +183,7 @@ def look_like(target, candidates):
     :return: item in candidates
     """
     results = [
-        (TxtDistance.simple_distance(target, i), i)
+        (TxtDistance.edit_distance(target, i), i)
         for i in candidates
     ]
     result = min(*results, key=lambda x: x[0])
