@@ -6,12 +6,26 @@ import re
 import six
 import sys
 from os import path as os_path
+import os
 from textwrap import dedent
+import logging
+from subprocess import CalledProcessError
 
 from ycyc.base.adapter import main_entry
 from ycyc.base.resources import Regex
 from ycyc.base.filetools import cd
 from ycyc.base.shelltools import ShellCommands
+from ycyc.base.typeutils import constants
+from ycyc.base.logutils import console_only_config
+
+console_only_config()
+logger = logging.getLogger(__name__)
+ErrorNo = constants(
+    UserErr=-1,
+    EnvErr=-2,
+    SysErr=-3,
+    UnknownErr=-4,
+)
 
 
 class Validater(object):
@@ -32,11 +46,6 @@ class Validater(object):
         return True
 
 
-def error_exit(msg, errno=-1):
-    six.print_("[x]", msg)
-    sys.exit(errno)
-
-
 @main_entry
 def main():
     arg_parser = argparse.ArgumentParser()
@@ -47,16 +56,20 @@ def main():
 
     args = arg_parser.parse_args()
     if not Validater.is_avaliable_email(args.email):
-        error_exit("%s is not a avaliable email address" % args.email)
+        logger.error("[*] %s is not a avaliable email address", args.email)
+        return ErrorNo.UserErr
     if not Validater.is_avaliable_repo(args.repo):
-        error_exit("%s is not a avaliable repository path" % args.repo)
+        logger.error("[*] %s is not a avaliable repository path", args.repo)
+        return ErrorNo.UserErr
     new_email = args.new_email or args.email
     if not Validater.is_avaliable_email(new_email):
-        error_exit("%s is not a avaliable email address" % new_email)
+        logger.error("[*] %s is not a avaliable email address", new_email)
+        return ErrorNo.UserErr
 
     with cd(args.repo):
+        logger.info("[-] change directory to: %s" % os.getcwd())
         try:
-            status = ShellCommands.git.check_call(
+            return ShellCommands.git.check_call(
                 "filter-branch", "-f", "--env-filter",
                 dedent("""
                     if [ "$GIT_COMMITTER_EMAIL" = "{old_email}" ]; then
@@ -74,6 +87,9 @@ def main():
                 "--tag-name-filter", "cat", "--",
                 "--branches", "--tags"
             )
-            sys.exit(status)
+        except CalledProcessError as err:
+            logger.error("[x] returned code of git: %s", err.returncode)
+            return ErrorNo.EnvErr
         except Exception as err:
-            error_exit(str(err), -2)
+            logger.error("[?] %s", str(err))
+            return ErrorNo.UnknownErr
