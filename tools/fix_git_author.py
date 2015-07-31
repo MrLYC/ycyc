@@ -5,36 +5,13 @@ import argparse
 import re
 import six
 import sys
-import tempfile
 from os import path as os_path
-import os
+from textwrap import dedent
 
 from ycyc.base.adapter import main_entry
 from ycyc.base.resources import Regex
-from ycyc.base.filetools import cd, mk_not_existed_path, safe_open_for_write
+from ycyc.base.filetools import cd
 from ycyc.base.shelltools import ShellCommands
-
-FIXCMD_TEMPLATE = '''
-#!/bin/sh
-
-git filter-branch -f --env-filter '
-
-OLD_EMAIL="{old_email}"
-CORRECT_NAME="{new_author}"
-CORRECT_EMAIL="{new_email}"
-
-if [ "$GIT_COMMITTER_EMAIL" = "$OLD_EMAIL" ]
-then
-export GIT_COMMITTER_NAME="$CORRECT_NAME"
-export GIT_COMMITTER_EMAIL="$CORRECT_EMAIL"
-fi
-if [ "$GIT_AUTHOR_EMAIL" = "$OLD_EMAIL" ]
-then
-export GIT_AUTHOR_NAME="$CORRECT_NAME"
-export GIT_AUTHOR_EMAIL="$CORRECT_EMAIL"
-fi
-' --tag-name-filter cat -- --branches --tags
-'''
 
 
 class Validater(object):
@@ -78,17 +55,25 @@ def main():
         error_exit("%s is not a avaliable email address" % new_email)
 
     with cd(args.repo):
-        path = mk_not_existed_path("./fix_git_author.sh")
-        with safe_open_for_write(path) as fp:
-            try:
-                fp.write(FIXCMD_TEMPLATE.format(
+        try:
+            status = ShellCommands.git.check_call(
+                "filter-branch", "-f", "--env-filter",
+                dedent("""
+                    if [ "$GIT_COMMITTER_EMAIL" = "{old_email}" ]; then
+                        export GIT_COMMITTER_NAME="{new_author}"
+                        export GIT_COMMITTER_EMAIL="{new_email}"
+                    fi
+                    if [ "$GIT_AUTHOR_EMAIL" = "{old_email}" ]; then
+                        export GIT_AUTHOR_NAME="{new_author}"
+                        export GIT_AUTHOR_EMAIL="{new_email}"
+                    fi""".format(
                     old_email=args.email,
                     new_author=args.author,
-                    new_email=args.new_email,
-                ))
-                status = ShellCommands.sh.check_call(path)
-                sys.exit(status)
-            except Exception as err:
-                error_exit(str(err), -2)
-            finally:
-                os.remove(path)
+                    new_email=new_email,
+                )),
+                "--tag-name-filter", "cat", "--",
+                "--branches", "--tags"
+            )
+            sys.exit(status)
+        except Exception as err:
+            error_exit(str(err), -2)
