@@ -181,7 +181,7 @@ class TxtDistance(object):
         return f_table[row_n - 1][col_n - 1]
 
     @classmethod
-    def edit_distance2(cls, s1, s2):
+    def edit_distance2(cls, str1, str2):
         """
         Simple algorithm to calculate the distance between two str
 
@@ -189,20 +189,31 @@ class TxtDistance(object):
         :param s2: string 2
         :return: distance number
         """
-        self_func = cls.edit_distance2
-        len1 = len(s1)
-        len2 = len(s2)
-        if (len1 <= 0) or (len2 <= 0):
-            return len1 or len2
+        called_result = {}
 
-        if s1[0] == s2[0]:
-            return self_func(s1[1:], s2[1:])
-        else:
-            return min(
-                self_func(s1[1:], s2),
-                self_func(s1, s2[1:]),
-                self_func(s1[1:], s2[1:]),
-            ) + 1
+        def edit_distance(s1, s2):
+            result = called_result.get((s1, s2))
+            if result:
+                return result
+
+            len1 = len(s1)
+            len2 = len(s2)
+            ss1 = s1[1:]
+            ss2 = s2[1:]
+            if (len1 <= 0) or (len2 <= 0):
+                result = len1 or len2
+            elif s1[0] == s2[0]:
+                result = edit_distance(ss1, s2[1:])
+            else:
+                result = 1 + min(
+                    edit_distance(ss1, s2),
+                    edit_distance(s1, ss2),
+                    edit_distance(ss1, ss2),
+                )
+            called_result[(s1, s2)] = result
+            return result
+
+        return edit_distance(str1, str2)
 
 
 def look_like(target, candidates):
