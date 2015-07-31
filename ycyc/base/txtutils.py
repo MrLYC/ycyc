@@ -215,6 +215,22 @@ class TxtDistance(object):
 
         return edit_distance(str1, str2)
 
+    @classmethod
+    def hamming_distance(cls, s1, s2):
+        """
+        Reutrn hamming distance between s1 and s2.
+        This function assert that len(s1) == len(s2).
+
+        :param s1: string 1
+        :param s2: string 2
+        :return: distance number
+        """
+        distance = 0
+        for i, j in zip(s1, s2):
+            if i != j:
+                distance += 1
+        return distance
+
 
 def look_like(target, candidates):
     """
