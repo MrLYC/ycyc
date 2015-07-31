@@ -48,6 +48,32 @@ def quick_config(log_file="application.log"):
     logging.config.dictConfig(config)
 
 
+def console_only_config(level='DEBUG', format='%(message)s'):
+    config = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'simple': {
+                'format': format,
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple'
+            },
+        },
+        'loggers': {
+            '': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+        },
+    }
+    logging.config.dictConfig(config)
+
+
 @contextlib.contextmanager
 def log_disable(level=logging.CRITICAL):
     """
