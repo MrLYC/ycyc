@@ -242,6 +242,23 @@ def available_file_name(name, replaces="_"):
     )
 
 
+def mk_not_existed_path(path):
+    """
+    Return a new file name based on path, and make sure the new name
+    is not existed.
+
+    :param path: file name
+    """
+    name_without_ext, ext = os_path.splitext(path)
+
+    n = 1
+    while os_path.exists(path):
+        n += 1
+        path = name_without_ext + "(%d)" % n + ext
+
+    return path
+
+
 class PathInfo(object):
     def __init__(self, path):
         self.path = os_path.realpath(path)
