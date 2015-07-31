@@ -159,18 +159,49 @@ class TxtDistance(object):
         :param s2: string 2
         :return: distance number
         """
+        row_n = len(s1) + 1
+        col_n = len(s2) + 1
+
+        f_table = map(lambda x: [0] * row_n, range(col_n))
+        for i in range(row_n):
+            f_table[i][0] = i
+        for i in range(col_n):
+            f_table[i][0] = i
+
+        for i in range(1, row_n):
+            for j in range(1, col_n):
+                if s1[i - 1] == s2[j - 1]:
+                    f_table[i][j] = f_table[i - 1][j - 1]
+                else:
+                    f_table[i][j] = min([
+                        f_table[i - 1][j] + 1,
+                        f_table[i][j - 1] + 1,
+                        f_table[i - 1][j - 1] + 1
+                    ])
+        return f_table[row_n - 1][col_n - 1]
+
+    @classmethod
+    def edit_distance2(cls, s1, s2):
+        """
+        Simple algorithm to calculate the distance between two str
+
+        :param s1: string 1
+        :param s2: string 2
+        :return: distance number
+        """
+        self_func = cls.edit_distance2
         len1 = len(s1)
         len2 = len(s2)
         if (len1 <= 0) or (len2 <= 0):
             return len1 or len2
 
         if s1[0] == s2[0]:
-            return cls.edit_distance(s1[1:], s2[1:])
+            return self_func(s1[1:], s2[1:])
         else:
             return min(
-                cls.edit_distance(s1[1:], s2),
-                cls.edit_distance(s1, s2[1:]),
-                cls.edit_distance(s1[1:], s2[1:]),
+                self_func(s1[1:], s2),
+                self_func(s1, s2[1:]),
+                self_func(s1[1:], s2[1:]),
             ) + 1
 
 
