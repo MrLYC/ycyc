@@ -6,7 +6,7 @@ import os
 import textwrap
 import six
 
-from ycyc.base.funcutils import drop_prefix
+from ycyc.base.txtutils import drop_prefix
 from ycyc.base.adapter import main_entry
 
 
