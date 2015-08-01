@@ -209,7 +209,7 @@ class TxtDistance(object):
             if (len1 <= 0) or (len2 <= 0):
                 result = len1 or len2
             elif s1[0] == s2[0]:
-                result = edit_distance(ss1, s2[1:])
+                result = edit_distance(ss1, ss2)
             else:
                 result = 1 + min(
                     edit_distance(ss1, s2),
