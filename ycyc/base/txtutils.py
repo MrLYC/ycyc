@@ -252,3 +252,12 @@ def look_like(target, candidates):
     ]
     result = min(*results, key=lambda x: x[0])
     return result[1]
+
+
+def reversed_txt(txt):
+    """
+    Reverse a txt
+    :param: string
+    :return: reversed string
+    """
+    return txt[::-1]
