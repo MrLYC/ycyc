@@ -252,17 +252,3 @@ def look_like(target, candidates):
     ]
     result = min(*results, key=lambda x: x[0])
     return result[1]
-
-
-def wildcard_to_rex(pattern, p_match1="?", p_matchn="*"):
-    """
-    Convert wildcard pattern to regex
-
-    :param pattern: pattern string
-    :param p_match1: wildcard to match 1 char
-    :param p_matchn: wildcard to match at least 1 char
-    :return: regex string
-    """
-    pattern = pattern.replace(p_match1, r".{1}")
-    pattern = pattern.replace(p_matchn, r".+")
-    return "^%s$" % pattern
