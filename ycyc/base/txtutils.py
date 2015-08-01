@@ -159,14 +159,20 @@ class TxtDistance(object):
         :param s2: string 2
         :return: distance number
         """
-        row_n = len(s1) + 1
-        col_n = len(s2) + 1
+        len1 = len(s1)
+        len2 = len(s2)
 
-        f_table = map(lambda x: [0] * row_n, range(col_n))
+        if (len1 <= 0) or (len2 <= 0):
+            result = len1 or len2
+
+        row_n = len1 + 1
+        col_n = len2 + 1
+
+        f_table = map(lambda x: [0] * col_n, range(row_n))
         for i in range(row_n):
             f_table[i][0] = i
         for i in range(col_n):
-            f_table[i][0] = i
+            f_table[0][i] = i
 
         for i in range(1, row_n):
             for j in range(1, col_n):

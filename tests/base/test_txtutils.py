@@ -105,3 +105,40 @@ class TestStringUtils(TestCase):
         self.assertEqual(txtutils.right_part_of(txt, ".", -2), "part1.rar")
         self.assertEqual(txtutils.right_part_of(txt, ".", 1), "avi.part1.rar")
         self.assertEqual(txtutils.right_part_of(txt, ".", 2), "part1.rar")
+
+
+class TestTxtDistance(TestCase):
+    def test_edit_distance(self):
+        test_cases = {
+            ("ABC", "CBCD"): 2,
+            ("FOOD", "MONEY"): 4,
+            ("ISLANDER", "SLANDER"): 1,
+            ("MART", "KARMA"): 3,
+            ("SITTING", "SITTING"): 0,
+            ("INTENTION", "EXECUTION"): 5,
+            ("", "AA"): 2,
+            ("B", ""): 1,
+        }
+        edit_distance = txtutils.TxtDistance.edit_distance
+        edit_distance2 = txtutils.TxtDistance.edit_distance2
+
+        for case, result in test_cases.items():
+            s1, s2 = case
+            self.assertEqual(edit_distance(s1, s2), result)
+            self.assertEqual(edit_distance2(s1, s2), result)
+
+    def test_hamming_distance(self):
+        test_cases = {
+            ("12345", "54321"): 4,
+            ("karolin", "kathrin"): 3,
+            ("karolin", "kerstin"): 3,
+            ("1011101", "1001001 "): 2,
+            ("2173896", "2233796"): 3,
+        }
+
+        for case, result in test_cases.items():
+            s1, s2 = case
+            self.assertEqual(
+                txtutils.TxtDistance.hamming_distance(s1, s2),
+                result,
+            )
