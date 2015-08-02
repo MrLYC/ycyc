@@ -7,7 +7,7 @@ import types
 
 from ycyc.base.iterutils import (
     getitems, getattrs, iterable, getnext, getfirst, mkparts,
-    get_single_item, dict_merge, flatten
+    get_single_item, dict_merge, flatten, find_peak_item,
 )
 
 import mock
@@ -168,3 +168,22 @@ class TestFlatten(TestCase):
     def test_usage(self):
         seq_list = [range(0, 3), range(3, 7), (i for i in range(7, 9))]
         self.assertListEqual(flatten(seq_list, list), range(0, 9))
+
+
+class TestFindPeakItem(TestCase):
+    def test_usage(self):
+        self.assertListEqual(
+            list(find_peak_item([13, 4, 5, 3, 6, 9, 4])),
+            [(1, 4), (2, 5), (3, 3), (5, 9)]
+        )
+        self.assertListEqual(list(find_peak_item([13])), [])
+        self.assertListEqual(list(find_peak_item([1, 2])), [])
+        self.assertListEqual(list(find_peak_item([1, 2, 3])), [])
+        self.assertListEqual(list(find_peak_item([1, 2, 1])), [(1, 2)])
+        self.assertListEqual(list(find_peak_item([13], True)), [(0, 13)])
+        self.assertListEqual(
+            list(find_peak_item([1, 2], True)), [(0, 1), (1, 2)],
+        )
+        self.assertListEqual(
+            list(find_peak_item([1, 2, 3], True)), [(0, 1), (2, 3)],
+        )

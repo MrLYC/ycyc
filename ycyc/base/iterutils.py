@@ -160,3 +160,29 @@ def flatten(sequence_list, cls=list):
     """
     flatten_gen = itertools.chain.from_iterable(sequence_list)
     return cls(flatten_gen) if cls else flatten_gen
+
+
+def find_peak_item(sequence, include_extremes=False):
+    """
+    Find peak item in sequence, yield each peak item with index.
+    Example:
+        >>> list(find_peak_item([13, 4, 5, 3, 6, 9, 4]))
+        [(1, 4), (2, 5), (3, 3), (5, 9)]
+
+    :param sequence: sequence
+    :param include_extremes: include extreme points
+    """
+    iters = enumerate(sequence)
+    index, left_p = next(iters)
+    if include_extremes:
+        yield index, left_p
+
+    index, cur_p = next(iters)
+    right_p = cur_p
+    for r_idx, right_p in iters:
+        if cmp(left_p, cur_p) * cmp(cur_p, right_p) < 0:
+            yield index, cur_p
+        left_p, cur_p, index = cur_p, right_p, r_idx
+
+    if include_extremes:
+        yield index, right_p
