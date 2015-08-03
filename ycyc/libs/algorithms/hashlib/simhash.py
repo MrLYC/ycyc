@@ -17,7 +17,7 @@ def simhash_of(tokens, bits):
 
     # iterate each item of tokens
     for weight, word in tokens:
-        # calc the simple of word
+        # calc the simple hash of word
         word_hash = hash(word)
         # mask to check each bit of word_hash
         bmask = 1
