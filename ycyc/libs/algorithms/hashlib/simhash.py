@@ -12,10 +12,10 @@ def simhash_of(tokens, bits):
     :param bits: bits of simhash
     """
     # init the vector
-    v_range = range(bits)
+    v_range = tuple(range(bits))
     v_result = [0 for i in v_range]
 
-    # iterate each item of tokens
+    # iterate every item of tokens
     for weight, word in tokens:
         # calc the simple hash of word
         word_hash = hash(word)
