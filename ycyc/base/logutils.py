@@ -4,6 +4,28 @@
 import contextlib
 import logging.config
 import logging
+import sys
+import thread
+
+logger = logging.getLogger(__name__)
+
+
+class LoggerInfo(object):
+    def __init__(self, frame=None):
+        if frame is None:
+            frames = sys._current_frames()
+            frame = frames[thread.get_ident()]
+            self.frame = frame.f_back
+        else:
+            self.frame = frame
+
+    @property
+    def line_no(self):
+        return self.frame.f_lineno
+
+    @property
+    def code_name(self):
+        return self.frame.f_code.co_name
 
 
 def quick_config(log_file="application.log"):
@@ -80,11 +102,24 @@ def log_disable(level=logging.CRITICAL):
     A context manager to disable all logging calls of
     severity 'level' and below in block
     """
+    cur_frames = sys._current_frames()
+    cur_frame = cur_frames[thread.get_ident()]
+    pre_frame = cur_frame.f_back
+
+    logger.info(
+        "with logger disabled from %s to %s in %s[%s], id: %s",
+        logging.root.manager.disable, level,
+        pre_frame.f_code.co_name, pre_frame.f_lineno,
+        id(cur_frame),
+    )
+
     level, logging.root.manager.disable = logging.root.manager.disable, level
     try:
         yield
     finally:
         level, logging.root.manager.disable = logging.root.manager.disable, level
+
+        logger.info("logger reseted, id: %s", id(cur_frame))
 
 
 def log_with_label(log_method, label):
