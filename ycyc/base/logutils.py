@@ -6,6 +6,7 @@ import logging.config
 import logging
 import sys
 import thread
+import inspect
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,26 @@ class LoggerInfo(object):
     @property
     def code_name(self):
         return self.frame.f_code.co_name
+
+    @property
+    def is_top_frame(self):
+        if self.frame.f_back is None:
+            return True
+        return False
+
+    @property
+    def func_args(self):
+        args = inspect.getargvalues(self.frame)
+        code_locals = args.locals
+        result = {
+            i: code_locals[i]
+            for i in args.args
+        }
+        if args.varargs:
+            result[args.varargs] = code_locals[args.varargs]
+        if args.keywords:
+            result[args.keywords] = code_locals[args.keywords]
+        return result
 
 
 def quick_config(log_file="application.log"):
