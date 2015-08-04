@@ -4,6 +4,16 @@
 import os
 
 
+def simple_table(row, col, cell_factory):
+    """
+    Create and return a simple table, like: [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    """
+    return [
+        [cell_factory(i, j) for j in range(col)]
+        for i in range(row)
+    ]
+
+
 class BaseTable(object):
     def __init__(self, row, col):
         self.height = row
