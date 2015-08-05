@@ -3,6 +3,7 @@
 
 import types
 import functools
+import importlib
 
 
 class LazyEnv(object):
@@ -74,3 +75,16 @@ def lazy_init(func):
         return value
 
     return lazy_get
+
+
+def lazy_import(module_name):
+    """
+    Lazy to import a module
+    """
+    class FakeModule(object):
+        def __getattribute__(self, attr):
+            module = importlib.import_module(module_name)
+            self.__dict__ = module.__dict__
+            return getattr(module, attr)
+
+    return FakeModule()
