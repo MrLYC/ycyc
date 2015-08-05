@@ -204,3 +204,12 @@ class AllowUnboundMethod(DescriptorBase):
             return types.MethodType(self.func, instance, cls)
         return types.UnboundMethodType(self.func, cls, cls)
 allow_unbound_method = AllowUnboundMethod
+
+
+class ClassProperty(DescriptorBase):
+    """
+    A class property
+    """
+    def __get__(self, instance, cls):
+        return types.UnboundMethodType(self.func, cls, cls)()
+classproperty = ClassProperty

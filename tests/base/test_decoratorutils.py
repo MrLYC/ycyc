@@ -206,3 +206,16 @@ class TestAllowUnboundMethod(TestCase):
         test_obj = TestCls()
         test_obj.save_invoker()
         self.assertEqual(test_obj, invokers.pop())
+
+
+class TestClassProperty(TestCase):
+    def test_usage(self):
+        class Model(object):
+            @decoratorutils.classproperty
+            def val(cls):
+                return 1
+
+        self.assertEqual(Model.val, 1)
+        model = Model()
+        self.assertEqual(model.val, 1)
+
