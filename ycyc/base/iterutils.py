@@ -197,10 +197,6 @@ def filter_n(func_or_none, sequence, n=1):
     :param n: choice n items at most
     """
     func = func_or_none or (lambda x: x)
-    cnt = 0
-    for i in sequence:
-        if cnt >= n:
-            break
-        if func(i):
-            yield i
-            cnt += 1
+    i_seq = iter(i for i in sequence if func(i))
+    for i in range(n):
+        yield next(i_seq)

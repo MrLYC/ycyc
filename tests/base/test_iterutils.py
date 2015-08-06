@@ -200,3 +200,7 @@ class TestFilterN(TestCase):
             [1],
             list(filter_n(None, range(10), 1))
         )
+        self.assertListEqual(
+            [0, 4, 8],
+            list(filter_n(lambda x: x % 4 == 0, range(10), 20))
+        )
