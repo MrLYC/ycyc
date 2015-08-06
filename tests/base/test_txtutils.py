@@ -142,3 +142,27 @@ class TestTxtDistance(TestCase):
                 txtutils.TxtDistance.hamming_distance(s1, s2),
                 result,
             )
+
+
+class TestSepJoin(TestCase):
+    def test_usage(self):
+        self.assertEqual(
+            txtutils.sep_join("|", map(str, range(3))),
+            "0|1|2"
+        )
+        self.assertEqual(
+            txtutils.sep_join("|", map(str, range(3)), True),
+            "|0|1|2"
+        )
+        self.assertEqual(
+            txtutils.sep_join("|", map(str, range(3)), True, True),
+            "|0|1|2|"
+        )
+        self.assertEqual(
+            txtutils.sep_join(" | ", map(str, range(3)), "| ", " |"),
+            "| 0 | 1 | 2 |"
+        )
+        self.assertEqual(
+            txtutils.sep_join(",", map(str, range(3)), "x="),
+            "x=0,1,2"
+        )

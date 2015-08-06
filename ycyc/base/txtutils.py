@@ -257,7 +257,33 @@ def look_like(target, candidates):
 def reversed_txt(txt):
     """
     Reverse a txt
-    :param: string
+    :param txt: string
     :return: reversed string
     """
     return txt[::-1]
+
+
+def sep_join(sep, sequence, begin="", end=""):
+    """
+    Separator join each elements of sequence,
+    if begin/end is True, insert the sep after
+    or before the txt.you can also given some
+    txt as head/tail of txt.
+
+    :param sep: separator string
+    :param sequence: string sequence
+    :param begin: head of txt
+    :param end: tail of txt
+    :return: reversed string
+    """
+    txt = sep.join(sequence)
+    if begin is True:
+        txt = "%s%s" % (sep, txt)
+    else:
+        txt = "%s%s" % (begin, txt)
+
+    if end is True:
+        txt = "%s%s" % (txt, sep)
+    else:
+        txt = "%s%s" % (txt, end)
+    return txt
