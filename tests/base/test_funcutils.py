@@ -90,15 +90,3 @@ class TestObjectHelper(TestCase):
             ))
         )
 
-
-class TestFilterN(TestCase):
-    def test_filter_n(self):
-        self.assertListEqual(
-            [1, 3],
-            funcutils.filter_n(lambda x: x % 2, range(10), 2)
-        )
-        self.assertListEqual(
-            [1],
-            funcutils.filter_n(None, range(10), 1)
-        )
-

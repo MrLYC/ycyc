@@ -8,6 +8,7 @@ import types
 from ycyc.base.iterutils import (
     getitems, getattrs, iterable, getnext, getfirst, mkparts,
     get_single_item, dict_merge, flatten, find_peak_item,
+    filter_n,
 )
 
 import mock
@@ -186,4 +187,16 @@ class TestFindPeakItem(TestCase):
         )
         self.assertListEqual(
             list(find_peak_item([1, 2, 3], True)), [(0, 1), (2, 3)],
+        )
+
+
+class TestFilterN(TestCase):
+    def test_filter_n(self):
+        self.assertListEqual(
+            [1, 3],
+            list(filter_n(lambda x: x % 2, range(10), 2))
+        )
+        self.assertListEqual(
+            [1],
+            list(filter_n(None, range(10), 1))
         )
