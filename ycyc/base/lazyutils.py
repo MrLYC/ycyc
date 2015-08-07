@@ -4,6 +4,7 @@
 import types
 import functools
 import importlib
+import sys
 
 
 class LazyEnv(object):
@@ -77,14 +78,28 @@ def lazy_init(func):
     return lazy_get
 
 
+class FakeModule(object):
+    @classmethod
+    def reload(cls, module):
+        """
+        Reload the fake module
+        """
+        real_module = sys.modules[module.__name__]
+        reload(real_module)
+        return module
+
+
 def lazy_import(module_name):
     """
     Lazy to import a module
     """
-    class FakeModule(object):
-        def __getattribute__(self, attr):
-            module = importlib.import_module(module_name)
-            self.__dict__ = module.__dict__
-            return getattr(module, attr)
+    def getattribute(self, attr):
+        module = importlib.import_module(module_name)
+        self.__dict__ = module.__dict__
+        return getattr(module, attr)
 
-    return FakeModule()
+    return type(
+        FakeModule.__name__,
+        (FakeModule,),
+        {"__getattribute__": getattribute}
+    )()
