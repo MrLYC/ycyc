@@ -4,7 +4,7 @@
 from unittest import TestCase
 import mock
 
-from ycyc.frameworks.events import models
+from ycyc.frameworks.events import helpers
 
 
 class TestEvent(TestCase):
@@ -12,7 +12,7 @@ class TestEvent(TestCase):
         callback1 = mock.MagicMock()
         callback2 = mock.MagicMock()
 
-        test_event = models.Event()
+        test_event = helpers.Event()
         test_event.notify("test1")
 
         test_event.register(callback1)
