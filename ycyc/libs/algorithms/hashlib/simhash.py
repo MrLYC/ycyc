@@ -4,38 +4,67 @@
 import re
 
 
-def simhash_of(tokens, bits):
-    """
-    Return simhash for n bits by tokens.
+class SimHash(object):
+    @classmethod
+    def hash_of(cls, tokens, bits):
+        """
+        Return simhash for n bits by tokens.
 
-    :param tokens: token with weight:[(weight, token), ...]
-    :param bits: bits of simhash
-    """
-    # init the vector
-    v_range = tuple(range(bits))
-    v_result = [0 for i in v_range]
+        :param tokens: token with weight:[(weight, token), ...]
+        :param bits: bits of simhash
+        """
+        # init the vector
+        v_range = tuple(range(bits))
+        v_result = [0 for i in v_range]
 
-    # iterate every item of tokens
-    for weight, word in tokens:
-        # calc the simple hash of word
-        word_hash = hash(word)
-        # mask to check each bit of word_hash
-        bmask = 1
-        for i in v_range:
-            # when there is 1 on this bit then add
-            # the weight of this word to the v_result
-            if word_hash & bmask:
-                v_result[i] += weight
-            else:
-                v_result[i] -= weight
-            # left shift the bmask to check next bit
-            bmask <<= 1
+        # iterate every item of tokens
+        for weight, word in tokens:
+            # calc the simple hash of word
+            word_hash = hash(word)
+            # mask to check each bit of word_hash
+            bmask = 1
+            for i in v_range:
+                # when there is 1 on this bit then add
+                # the weight of this word to the v_result
+                if word_hash & bmask:
+                    v_result[i] += weight
+                else:
+                    v_result[i] -= weight
+                # left shift the bmask to check next bit
+                bmask <<= 1
 
-    # make fingerprint from v_result
-    return "".join(
-        "1" if i > 0 else "0"
-        for i in v_result
-    )
+        # make fingerprint from v_result
+        return tuple(
+            1 if i > 0 else 0
+            for i in v_result
+        )
+
+    def __init__(self, tokens, bits):
+        self.hash_result = self.hash_of(tokens, bits)
+        self.tokens = tokens
+        self.bits = bits
+
+    def raw(self):
+        return "".join(self.hash_result)
+
+    def hex(self):
+        hex_step = 4
+        hex_numbers = "0123456789ABCDEF"
+        additional_bits = hex_step - self.bits % hex_step
+        if additional_bits < hex_step:
+            hash_result = [0] * additional_bits
+        else:
+            hash_result = []
+        hash_result.extend(self.hash_result)
+
+        str_result = []
+        for i in range(0, self.bits, hex_step):
+            nums = hash_result[i: i + hex_step]
+            str_result.append(hex_numbers[reduce(
+                lambda n, i: n << 1 | i,
+                nums, 0
+            )])
+        return "".join(str_result)
 
 
 def simhash(words, bits=128, spliter=None):
@@ -48,7 +77,7 @@ def simhash(words, bits=128, spliter=None):
     """
     if spliter is not None:
         words = spliter(words)
-    return simhash_of(((1, i) for i in words), bits)
+    return SimHash(((1, i) for i in words), bits).raw()
 
 
 class Spliter(object):
