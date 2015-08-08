@@ -7,6 +7,7 @@ from ycyc.base.typeutils import SimpleExceptions
 EventsExceptions = SimpleExceptions()
 ListenerDuplicatedError = EventsExceptions.ListenerDuplicatedError
 ListenerNoExistedError = EventsExceptions.ListenerNoExistedError
+EventNoExistedError = EventsExceptions.EventNoExistedError
 
 
 class Event(object):
@@ -37,3 +38,16 @@ class Event(object):
         """
         with catch(ValueError, ListenerNoExistedError):
             self.listeners.remove(callback)
+
+
+class EventsCenter(dict):
+    """
+    Event center to manage some events as a dict
+    """
+    def __init__(self, event_factory=None):
+        super(EventsCenter, self).__init__()
+        self.event_factory = event_factory or Event
+
+    def __missing__(self, name):
+        event = self[name] = self.event_factory()
+        return event

@@ -41,3 +41,13 @@ class TestEvent(TestCase):
             callback1.assert_called_with("test6")
         with self.assertRaises(AssertionError):
             callback2.assert_called_with("test6")
+
+
+class TestEventsCenter(TestCase):
+    def test_usage(self):
+        callback = mock.MagicMock()
+        center = helpers.EventsCenter()
+
+        center["test"].notify()
+        center["test", "begin"].register(callback)
+        center[("test", "begin")].unregister(callback)
