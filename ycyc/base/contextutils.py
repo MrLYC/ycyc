@@ -16,11 +16,18 @@ def catch(errors=Exception, reraise=None, callback=logger.warning):
     :param reraise: reraise a new exception from catched exception(default: None)
     :param callback: callback when catched a exception(default: logger.warning)
     """
+    exec_info = {
+        "callback_returned": None,
+        "exception": None,
+        "ok": True,
+    }
     try:
-        yield
+        yield exec_info
     except errors as err:
+        exec_info["exception"] = err
+        exec_info["ok"] = False
         if callback:
-            callback(err)
+            exec_info["callback_returned"] = callback(err)
         if reraise:
             six.raise_from(reraise, err)
 

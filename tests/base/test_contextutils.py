@@ -59,6 +59,24 @@ class TestCatch(TestCase):
             list()[1]
         self.assertIsInstance(results.pop(), IndexError)
 
+    def test_exec_info(self):
+        with catch() as exec_info:
+            self.assertTrue(exec_info["ok"])
+            self.assertIsNone(exec_info["exception"])
+            self.assertIsNone(exec_info["callback_returned"])
+
+        self.assertTrue(exec_info["ok"])
+        self.assertIsNone(exec_info["exception"])
+        self.assertIsNone(exec_info["callback_returned"])
+
+        callback = mock.MagicMock(return_value=1)
+        with catch(NotImplementedError, callback=callback) as exec_info:
+            raise NotImplementedError
+
+        self.assertFalse(exec_info["ok"])
+        self.assertIsInstance(exec_info["exception"], NotImplementedError)
+        self.assertEqual(exec_info["callback_returned"], callback.return_value)
+
 
 class TestTimeout(TestCase):
     def test_usage(self):
