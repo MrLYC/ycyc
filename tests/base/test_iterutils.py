@@ -8,7 +8,7 @@ import types
 from ycyc.base.iterutils import (
     getitems, getattrs, iterable, getnext, getfirst, mkparts,
     get_single_item, dict_merge, flatten, find_peak_item,
-    filter_n,
+    filter_n, every_n
 )
 
 import mock
@@ -203,4 +203,16 @@ class TestFilterN(TestCase):
         self.assertListEqual(
             [0, 4, 8],
             list(filter_n(lambda x: x % 4 == 0, range(10), 20))
+        )
+
+
+class TestEveryN(TestCase):
+    def test_every_n(self):
+        self.assertListEqual(
+            [(0, 1), (2, 3)],
+            list(every_n(range(4), 2))
+        )
+        self.assertListEqual(
+            [(0, 1, 2)],
+            list(every_n(range(4), 3))
         )

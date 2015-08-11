@@ -200,3 +200,14 @@ def filter_n(func_or_none, sequence, n=1):
     i_seq = iter(i for i in sequence if func(i))
     for i in range(n):
         yield next(i_seq)
+
+
+def every_n(sequence, n=1):
+    """
+    Iterate every n items in sequence.
+
+    :param sequence: iterable sequence
+    :param n: n items to iterate
+    """
+    i_sequence = iter(sequence)
+    return zip(*[i_sequence for i in range(n)])
