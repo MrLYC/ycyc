@@ -109,7 +109,8 @@ class Constants(object):
     """
     The base class of constants
     """
-    pass
+    def __getitem__(self, key):
+        return getattr(self, key)
 
 
 def constants(**kwg):

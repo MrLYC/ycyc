@@ -94,7 +94,9 @@ class TestConstants(TestCase):
 
         self.assertIsInstance(const, typeutils.Constants)
         self.assertEqual(const.Name, "TestConstants")
+        self.assertIs(const["Name"], const.Name)
         self.assertEqual(const.Function, "test_usage")
+        self.assertIs(const["Function"], const.Function)
 
         with self.assertRaisesRegexp(
             AttributeError,
