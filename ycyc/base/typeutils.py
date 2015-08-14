@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from collections import Mapping
-
 
 def get_real_bases(bases):
     """
@@ -114,26 +112,15 @@ class Constants(object):
     def __getitem__(self, key):
         return getattr(self, key)
 
-    def __setitem__(self, key, val):
-        return setattr(self, key, val)
-
-    def __iter__(self):
-        return iter([])
-
 
 def constants(**kwg):
     """
     Declare some constants.
     """
-    keys = kwg.keys()
-
-    @freezed_attrs(keys)
+    @freezed_attrs(kwg.keys())
     class ConstantSet(Constants):
         def __init__(self):
             for k, v in kwg.items():
                 setattr(self, k, v)
-
-        def __iter__(self):
-            return iter(keys)
 
     return ConstantSet()
