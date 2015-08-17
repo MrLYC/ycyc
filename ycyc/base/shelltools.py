@@ -7,7 +7,7 @@ from ycyc.base import decoratorutils
 from ycyc.base import contextutils
 
 
-class Commnad(object):
+class Command(object):
     @classmethod
     def subprocess_args(cls, name, cmd_args, popen_kwargs):
         cmds = [name]
@@ -45,4 +45,4 @@ class ShellCommands(object):
     hello lyc
     """
     def __getattr__(self, name):
-        return Commnad(name)
+        return Command(name)

@@ -13,8 +13,8 @@ class TestCommands(TestCase):
     def test_shell_commands_usage(self):
         self.assertIsInstance(shelltools.ShellCommands, object)
         command = shelltools.ShellCommands.echo
-        self.assertIsInstance(command, shelltools.Commnad)
-        self.assertIsInstance(command, shelltools.Commnad)
+        self.assertIsInstance(command, shelltools.Command)
+        self.assertIsInstance(command, shelltools.Command)
         self.assertEqual(command.name, "echo")
 
     def test_command_usage(self):
@@ -27,7 +27,7 @@ class TestCommands(TestCase):
             patches.check_call.return_value = 0
             patches.check_output.return_value = "hello lyc"
 
-            command = shelltools.Commnad("echo")
+            command = shelltools.Command("echo")
 
             self.assertEqual(
                 command.check_output("hello", "lyc"),
