@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import sys
+import os
+from os import path as os_path
+sys.path.append(os_path.dirname(os_path.dirname(__file__)))
+
 import argparse
 import re
-import six
-import sys
-from os import path as os_path
-import os
 from textwrap import dedent
 import logging
 from subprocess import CalledProcessError
