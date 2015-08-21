@@ -3,6 +3,7 @@
 
 from unittest import TestCase
 from collections import namedtuple
+from textwrap import dedent
 
 from ycyc.base import calctools
 
@@ -58,6 +59,9 @@ class TestSafeCalc(TestCase):
         calc = calctools.SafeCalc({"sleep": time.sleep}, 0.01, 0.01)
         with self.assertRaisesRegexp(RuntimeError, "timeout"):
             calc("sleep(1)")
+
+        with self.assertRaisesRegexp(SyntaxError, "invalid syntax"):
+            calc("while True: pass")
 
 
 class TesstSafeCalcFunc(TestCase):
