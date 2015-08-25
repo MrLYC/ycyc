@@ -6,6 +6,7 @@ funcutils provided some useful functions.
 """
 
 import inspect
+import sys
 
 
 def is_magic_method(method):
@@ -62,3 +63,27 @@ def iter_attrs(
             ):
                 continue
         yield attr, val
+
+
+def export_module(name):
+    """
+    Export module's attributes to invoker's locals
+
+    :param name: module name
+    """
+    import importlib
+    import thread
+
+    frames = sys._current_frames()
+    frame = frames[thread.get_ident()].f_back
+    env_locals = frame.f_locals
+    module = importlib.import_module(name)
+    all_attrs = list(
+        getattr(module, "__all__", None) or
+        (i for i in dir(module) if not i.startswith("_"))
+    )
+
+    for i in all_attrs:
+        env_locals[i] = getattr(module, i)
+
+    return len(all_attrs)
