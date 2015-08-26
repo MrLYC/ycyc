@@ -152,9 +152,6 @@ class TestGetSingleItem(TestCase):
 
 class TestDictMerge(TestCase):
     def test_usage(self):
-        with self.assertRaises(IndexError):
-            dict_merge([])
-
         self.assertDictEqual(
             dict_merge([
                 {1: 2, 2: 3},

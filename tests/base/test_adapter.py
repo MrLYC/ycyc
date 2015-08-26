@@ -129,6 +129,23 @@ class TestMainEntry(TestCase):
             patches.sys.exit.assert_called_once_with(0)
 
 
+class TestpProxy(TestCase):
+    def test_usage(self):
+        mock_object = mock.MagicMock()
+        mock_object.value = "lyc"
+        proxy_object = adapter.proxy(mock_object)
+
+        self.assertEqual(mock_object.value, proxy_object.value)
+
+        value = proxy_object.value = 123
+        self.assertNotEqual(mock_object.value, value)
+        self.assertEqual(mock_object.value, proxy_object.value)
+
+        value = mock_object.value = 123
+        self.assertEqual(mock_object.value, value)
+        self.assertEqual(mock_object.value, proxy_object.value)
+
+
 class TestDynamicClosure(TestCase):
     def test_usage(self):
         def check(env):

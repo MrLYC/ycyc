@@ -74,6 +74,16 @@ def main_entry(main):
     return wraped_main
 
 
+def proxy(obj):
+    """
+    A proxy to protect obj attributes will not be reassign
+    """
+    return type(
+        "ProxyObject", (obj.__class__,),
+        {"__getattribute__": lambda _, k: getattr(obj, k)}
+    )()
+
+
 class DynamicClosure(object):
     def __init__(self, envs=()):
         from ycyc.base.iterutils import dict_merge

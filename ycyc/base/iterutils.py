@@ -138,9 +138,6 @@ def dict_merge(dicts):
     :param dicts: dict list
     :return: dict
     """
-    if not dicts:
-        raise IndexError()
-
     result = {}
 
     for d in dicts:
