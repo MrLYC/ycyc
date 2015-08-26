@@ -35,6 +35,7 @@ def set_default_attr(obj, name, value):
     """
     if not hasattr(obj, name):
         setattr(obj, name, value)
+        return value
     return getattr(obj, name, value)
 
 
@@ -73,14 +74,13 @@ def parent_frame():
     frames = sys._current_frames()
     current_frame = frames[thread.get_ident()]
     invoker_frame = current_frame.f_back
-    if not invoker_frame:
-        return None
-    return invoker_frame.f_back
+    return invoker_frame and invoker_frame.f_back
 
 
 def export_module(name, env_locals=None):
     """
-    Export module's attributes to invoker's locals
+    Export module's attributes to invoker's locals, like:
+        from xxx import *
 
     :param name: module name
     :param env_locals: invoker locals
@@ -92,10 +92,10 @@ def export_module(name, env_locals=None):
         env_locals = frame.f_locals
 
     module = importlib.import_module(name)
-    all_attrs = list(
-        getattr(module, "__all__", None) or
+    all_attrs = list(getattr(
+        module, "__all__",
         (i for i in dir(module) if not i.startswith("_"))
-    )
+    ))
 
     for i in all_attrs:
         env_locals[i] = getattr(module, i)
