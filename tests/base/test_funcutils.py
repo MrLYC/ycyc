@@ -105,16 +105,17 @@ class TestParentFrame(TestCase):
 
 class TestExportModule(TestCase):
     def test_funcutils(self):
-        global_env = globals()
-        export_module = funcutils.export_module(funcutils.__name__, global_env)
-        print global_env.keys()
+        locals_env = locals()
+        export_module = funcutils.export_module(funcutils.__name__)
         for attr in dir(funcutils):
             if not attr.startswith("_"):
-                self.assertIs(getattr(funcutils, attr), global_env[attr])
+                self.assertIs(getattr(funcutils, attr), locals_env[attr])
+            else:
+                self.assertNotIn(attr, locals_env)
 
     def test_os(self):
         import os
-        global_env = globals()
-        funcutils.export_module("os", global_env)
+        locals_env = locals()
+        funcutils.export_module("os")
         for attr in os.__all__:
-            self.assertIs(getattr(os, attr), global_env[attr])
+            self.assertIs(getattr(os, attr), locals_env[attr])
