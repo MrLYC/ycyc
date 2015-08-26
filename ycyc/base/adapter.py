@@ -10,6 +10,8 @@ import sys
 import functools
 import types
 
+from ycyc.base import funcutils
+
 
 class ObjAsDictAdapter(collections.Mapping):
     """
@@ -34,6 +36,20 @@ class ObjAsDictAdapter(collections.Mapping):
         return len(dir(self.__object))
 
 
+class DictAsObjAdapter(object):
+    """
+    Provided a adapter that allow visit a dict as object
+    """
+    def __init__(self, dct):
+        self.__dict = dct
+
+    def __getattr__(self, name):
+        return self.__dict[name]
+
+    def __setattr__(self, name, value):
+        self.__dict[name] = value
+
+
 class MappingMixin:
     def attrs_dict(self):
         return ObjAsDictAdapter(self)
@@ -56,3 +72,19 @@ def main_entry(main):
         )
 
     return wraped_main
+
+
+class DynamicClosure(object):
+    def __init__(self, envs=()):
+        from ycyc.base.iterutils import dict_merge
+
+        self.environment = dict_merge(envs)
+
+    def __call__(self, func, args, kwg):
+        return func(self.environment.copy(), *args, **kwg)
+
+
+def dynamic_closure(func, *args, **kwg):
+    frame = funcutils.parent_frame()
+    closure = DynamicClosure([frame.f_locals, frame.f_globals])
+    return closure(func, args, kwg)

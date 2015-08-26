@@ -127,3 +127,18 @@ class TestMainEntry(TestCase):
 
             main_mock.assert_called_once_with(patches.sys.argv)
             patches.sys.exit.assert_called_once_with(0)
+
+
+class TestDynamicClosure(TestCase):
+    def test_usage(self):
+        def check(env):
+            self.assertEqual(env["l_value"], g_value)
+
+        def invoker(value):
+            l_value = value
+            adapter.dynamic_closure(check)
+
+        g_value = 1
+        invoker(g_value)
+        g_value = 2
+        invoker(g_value)
