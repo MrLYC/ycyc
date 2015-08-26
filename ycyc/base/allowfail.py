@@ -36,7 +36,7 @@ class AllowFail(object):
     >>> if result.exception is not None:
     ...     do_rockball_operator()
     """
-    logger = logging.getLogger("AllowFail")
+    logger = logging.root
 
     def __init__(self, label, on_error=None, logger=None, exc_info=False):
         """
