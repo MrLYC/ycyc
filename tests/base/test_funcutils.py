@@ -90,3 +90,31 @@ class TestObjectHelper(TestCase):
             ))
         )
 
+
+class TestParentFrame(TestCase):
+    def test_usage(self):
+        import sys
+        import thread
+
+        frames = sys._current_frames()
+        current_frame = frames[thread.get_ident()]
+        frame = current_frame.f_back
+
+        self.assertIs(frame, funcutils.parent_frame())
+
+
+class TestExportModule(TestCase):
+    def test_funcutils(self):
+        global_env = globals()
+        export_module = funcutils.export_module(funcutils.__name__, global_env)
+        print global_env.keys()
+        for attr in dir(funcutils):
+            if not attr.startswith("_"):
+                self.assertIs(getattr(funcutils, attr), global_env[attr])
+
+    def test_os(self):
+        import os
+        global_env = globals()
+        funcutils.export_module("os", global_env)
+        for attr in os.__all__:
+            self.assertIs(getattr(os, attr), global_env[attr])

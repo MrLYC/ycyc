@@ -7,6 +7,7 @@ funcutils provided some useful functions.
 
 import inspect
 import sys
+import thread
 
 
 def is_magic_method(method):
@@ -65,18 +66,31 @@ def iter_attrs(
         yield attr, val
 
 
-def export_module(name):
+def parent_frame():
+    """
+    Return parent frame of invoker.
+    """
+    frames = sys._current_frames()
+    current_frame = frames[thread.get_ident()]
+    invoker_frame = current_frame.f_back
+    if not invoker_frame:
+        return None
+    return invoker_frame.f_back
+
+
+def export_module(name, env_locals=None):
     """
     Export module's attributes to invoker's locals
 
     :param name: module name
+    :param env_locals: invoker locals
     """
     import importlib
-    import thread
 
-    frames = sys._current_frames()
-    frame = frames[thread.get_ident()].f_back
-    env_locals = frame.f_locals
+    if env_locals is None:
+        frame = parent_frame()
+        env_locals = frame.f_locals
+
     module = importlib.import_module(name)
     all_attrs = list(
         getattr(module, "__all__", None) or
