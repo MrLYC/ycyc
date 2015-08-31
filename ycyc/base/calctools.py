@@ -19,10 +19,11 @@ class SafeCalc(ast.NodeTransformer):
         "False": False,
     }
 
-    def __init__(self, locals, timeout=0, interval=None):
+    def __init__(self, locals, allow_attr=True, timeout=0, interval=None):
         self.locals = locals
         self.timeout = timeout
         self.interval = interval
+        self.allow_attr = allow_attr
 
     def visit_Call(self, node):
         if isinstance(node.func, ast.Name):
@@ -34,7 +35,7 @@ class SafeCalc(ast.NodeTransformer):
 
     def visit_Attribute(self, node):
         name = node.attr
-        if name.startswith("__"):
+        if not self.allow_attr or name.startswith("__"):
             raise NameParseError("%s not allow" % name)
         self.generic_visit(node)
         return node

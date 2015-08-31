@@ -5,6 +5,8 @@ from unittest import TestCase
 from collections import namedtuple
 from textwrap import dedent
 
+import mock
+
 from ycyc.base import calctools
 
 ObjModel = namedtuple("ObjModel", ["key"])
@@ -56,12 +58,29 @@ class TestSafeCalc(TestCase):
     def test_timeout(self):
         import time
 
-        calc = calctools.SafeCalc({"sleep": time.sleep}, 0.01, 0.01)
+        calc = calctools.SafeCalc(
+            {"sleep": time.sleep},
+            timeout=0.01, interval=0.01,
+        )
         with self.assertRaisesRegexp(RuntimeError, "timeout"):
             calc("sleep(1)")
 
         with self.assertRaisesRegexp(SyntaxError, "invalid syntax"):
             calc("while True: pass")
+
+    def test_allow_attr(self):
+        m = mock.MagicMock()
+        m.value = 1
+
+        calc = calctools.SafeCalc({"model": m})
+        self.assertEqual(calc("model.value + 1"), 2)
+
+        calc = calctools.SafeCalc(
+            {"model": m, "value": m.value}, allow_attr=False
+        )
+        with self.assertRaisesRegexp(NameError, "value not allow"):
+            calc("model.value + 1")
+        self.assertEqual(calc("value + 1"), 2)
 
 
 class TesstSafeCalcFunc(TestCase):
