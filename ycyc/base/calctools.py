@@ -3,8 +3,9 @@
 
 import ast
 from itertools import chain
+from functools import partial
 
-from ycyc.base.contextutils import timeout
+from ycyc.base import contextutils
 from ycyc.base.iterutils import dict_merge, getitems
 
 NameParseError = type("NameParseError", (NameError,), {})
@@ -22,8 +23,10 @@ class SafeCalc(ast.NodeTransformer):
 
     def __init__(self, locals, allow_attr=True, timeout=0, interval=None):
         self.locals = locals
-        self.timeout = timeout
-        self.interval = interval
+        if timeout:
+            self.timeout = partial(contextutils.timeout, timeout, interval)
+        else:
+            self.timeout = contextutils.nothing
         self.allow_attr = allow_attr
 
     def visit_Call(self, node):
@@ -46,7 +49,7 @@ class SafeCalc(ast.NodeTransformer):
         ast_node = self.visit(ast_node)
         ast_node = ast.fix_missing_locations(ast_node)
         code = compile(ast_node, "<string>", mode="eval")
-        with timeout(self.timeout, self.interval):
+        with self.timeout():
             return eval(code, self.globals, self.locals)
 
 
