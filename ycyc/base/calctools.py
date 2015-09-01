@@ -2,9 +2,10 @@
 # encoding: utf-8
 
 import ast
+from itertools import chain
 
 from ycyc.base.contextutils import timeout
-from ycyc.base.iterutils import dict_merge
+from ycyc.base.iterutils import dict_merge, getitems
 
 NameParseError = type("NameParseError", (NameError,), {})
 
@@ -60,3 +61,13 @@ def safecalc(expr, locals=None, **vars):
     """
     calc = SafeCalc(dict_merge((vars, locals or {})))
     return calc(expr)
+
+
+def select(dct_object, *args, **kwg):
+    """
+    Select some items from complex dict object.
+    """
+    return {
+        k: getitems(dct_object, i)
+        for k, i in chain(enumerate(args), kwg.iteritems())
+    }

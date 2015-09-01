@@ -89,3 +89,24 @@ class TesstSafeCalcFunc(TestCase):
         self.assertEqual(calctools.safecalc("1+a", a=1), 2)
         self.assertEqual(calctools.safecalc("1+a", dict(a=1)), 2)
         self.assertEqual(calctools.safecalc("1+a", dict(a=1), a=2), 3)
+
+
+class TestSelect(TestCase):
+    def test_usage(self):
+        obj = {
+            "key": {"name": "test"},
+            "value": [123],
+        }
+        self.assertDictEqual(
+            calctools.select(obj, ("key", "name"), ("value", 0)),
+            {0: obj["key"]["name"], 1: obj["value"][0]}
+        )
+        self.assertDictEqual(
+            calctools.select(obj, key=("key", "name"), value=("value", 0)),
+            {"key": obj["key"]["name"], "value": obj["value"][0]}
+        )
+        self.assertDictEqual(
+            calctools.select(obj, noting=("key", "noting")),
+            {"noting": None}
+        )
+
