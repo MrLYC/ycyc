@@ -88,15 +88,18 @@ class TestFreezedAttrs(TestCase):
 class TestConstants(TestCase):
     def test_usage(self):
         const = typeutils.constants(
+            Id = "TestConstants",
             Name="TestConstants",
             Function="test_usage",
         )
 
         self.assertIsInstance(const, typeutils.Constants)
+        self.assertEqual(const.Id, "TestConstants")
         self.assertEqual(const.Name, "TestConstants")
-        self.assertIs(const["Name"], const.Name)
+        self.assertTupleEqual(const["TestConstants"], ("Id", "Name"))
         self.assertEqual(const.Function, "test_usage")
-        self.assertIs(const["Function"], const.Function)
+        self.assertTupleEqual(const["test_usage"], ("Function",))
+        self.assertIsNone(const["noting"])
 
         with self.assertRaisesRegexp(
             AttributeError,

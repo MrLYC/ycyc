@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from itertools import groupby
+from operator import itemgetter
+
 
 def get_real_bases(bases):
     """
@@ -109,18 +112,25 @@ class Constants(object):
     """
     The base class of constants
     """
-    def __getitem__(self, key):
-        return getattr(self, key)
+    pass
 
 
 def constants(**kwg):
     """
     Declare some constants.
     """
+    consts_index = {
+        val: tuple(i[0] for i in item)
+        for val, item in groupby(kwg.items(), itemgetter(1))
+    }
+
     @freezed_attrs(kwg.keys())
     class ConstantSet(Constants):
         def __init__(self):
             for k, v in kwg.items():
                 setattr(self, k, v)
+
+        def __getitem__(self, val):
+            return consts_index.get(val)
 
     return ConstantSet()
