@@ -49,7 +49,7 @@ class LoggerInfo(object):
         return result
 
 
-def quick_config(log_file="application.log"):
+def quick_config(log_file="application.log", loggers=()):
     """
     a quick config for logging
 
@@ -82,10 +82,11 @@ def quick_config(log_file="application.log"):
             },
         },
         'loggers': {
-            '': {
+            name: {
                 'handlers': ['console', 'file'],
                 'level': 'DEBUG',
-            },
+            }
+            for name in loggers or ("")
         },
     }
     logging.config.dictConfig(config)
