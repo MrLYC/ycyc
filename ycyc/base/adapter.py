@@ -79,7 +79,7 @@ def proxy(obj):
     A proxy to protect obj attributes will not be reassign
     """
     return type(
-        "ProxyObject", (obj.__class__,),
+        "ProxyObject", (object,),
         {"__getattribute__": lambda _, k: getattr(obj, k)}
     )()
 
