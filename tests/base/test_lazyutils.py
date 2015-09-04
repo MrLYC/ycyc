@@ -65,3 +65,13 @@ class TestLazyImport(TestCase):
             ImportError, "No module named noting.akulamatata"
         ):
             lazy_akulamatata.fail()
+
+
+def TestLazyKit(TestCase):
+    def test_usage(self):
+        gen = (i for i in range(3))
+        lazy_list = lazyutils.LazyKit(lambda: list(gen))
+        self.assertEqual(next(gen), 0)
+        self.assertEqual(lazy_list[1], 1)
+        self.assertEqual(lazy_list[2], 2)
+        self.assertSetEqual(set(dir([])) - set(dir(lazy_list)), set())

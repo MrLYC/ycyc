@@ -103,3 +103,13 @@ def lazy_import(module_name):
         (FakeModule,),
         {"__getattribute__": getattribute}
     )()
+
+
+class LazyKit(object):
+    def __init__(self, factory):
+        self.__factory = factory
+
+    def __getattr__(self, name):
+        if not hasattr(self, "__object"):
+            self.__object = self.__factory()
+        return getattr(self.__object, name)
