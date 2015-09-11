@@ -88,7 +88,7 @@ class TestFreezedAttrs(TestCase):
 class TestConstants(TestCase):
     def test_usage(self):
         const = typeutils.constants(
-            Id = "TestConstants",
+            Id="TestConstants",
             Name="TestConstants",
             Function="test_usage",
         )
@@ -112,3 +112,32 @@ class TestConstants(TestCase):
             "attribute Function is not writable",
         ):
             const.Function = "error"
+
+        self.assertDictEqual(dict(const), {
+            "Id": "TestConstants",
+            "Name": "TestConstants",
+            "Function": "test_usage",
+        })
+
+
+class TestEnums(TestCase):
+    def test_usage(self):
+        enums = typeutils.enums(["a", "b", "c"])
+
+        self.assertEqual(enums.a, 0)
+        self.assertEqual(enums.b, 1)
+        self.assertEqual(enums.c, 2)
+
+        self.assertEqual(enums[0], "a")
+        self.assertEqual(enums[1], "b")
+        self.assertEqual(enums[2], "c")
+
+        with self.assertRaisesRegexp(
+            AttributeError,
+            "attribute a is not writable",
+        ):
+            enums.a = 2
+
+        self.assertDictEqual(dict(enums), {
+            "a": 0, "b": 1, "c": 2,
+        })
