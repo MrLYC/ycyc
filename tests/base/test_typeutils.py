@@ -122,7 +122,7 @@ class TestConstants(TestCase):
 
 class TestEnums(TestCase):
     def test_usage(self):
-        enums = typeutils.enums(["a", "b", "c"])
+        enums = typeutils.enums("a", "b", "c")
 
         self.assertEqual(enums.a, 0)
         self.assertEqual(enums.b, 1)

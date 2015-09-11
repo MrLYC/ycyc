@@ -177,7 +177,7 @@ def _enums_getitem_hook(method):
     return getitem
 
 
-def enums(values):
+def enums(*values):
     """
     Declare some enumerations.
     """
