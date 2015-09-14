@@ -86,7 +86,7 @@ def quick_config(log_file="application.log", loggers=()):
                 'handlers': ['console', 'file'],
                 'level': 'DEBUG',
             }
-            for name in loggers or ("")
+            for name in loggers or [""]
         },
     }
     logging.config.dictConfig(config)
