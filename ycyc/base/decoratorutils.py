@@ -181,9 +181,9 @@ def withattr(**kwg):
     """
     Set attributes to a func, example:
     >>> Class Model(DjangoModel):
-    ... @withattr(alters_data=True)
-    ... def delete(self):
-    ...     delete(self)
+    ...     @withattr(alters_data=True)
+    ...     def delete(self):
+    ...         delete(self)
 
     :param kwg: attributes dict
     """
