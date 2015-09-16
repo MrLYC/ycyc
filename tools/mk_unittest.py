@@ -38,11 +38,21 @@ def mk_unittest_script(script_relative_path, root):
     real_dir = os.path.join(root, path)
     real_path = os.path.join(real_dir, "test_%s" % script)
 
+    init_module = os.path.join(real_dir, "__init__.py")
+    if not os.path.exists(init_module):
+        with open(init_module, "wt") as fp:
+            fp.write(textwrap.dedent('''
+            #!/usr/bin/env python
+            # encoding: utf-8
+            __author__ = "LYC"
+            ''').lstrip())
+
     if os.path.exists(real_path):
         raise FileExisted(real_path)
 
     if not os.path.exists(real_dir):
         os.makedirs(real_dir)
+
     with open(real_path, "wt") as fp:
         fp.write(textwrap.dedent('''
         #!/usr/bin/env python

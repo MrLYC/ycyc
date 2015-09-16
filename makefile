@@ -55,6 +55,3 @@ publish:
 	git checkout dev
 	git rebase master
 	git push origin master dev --tags
-
-update_unittest:
-	$(PYTHON) tools/mk_unittest.py ycyc/ -a ycyc/ -r 10 -t tests/
