@@ -3,7 +3,6 @@
 
 import argparse
 import os
-import textwrap
 import six
 
 from ycyc.base.txtutils import drop_prefix
@@ -12,6 +11,24 @@ from ycyc.base.adapter import main_entry
 
 class FileExisted(Exception):
     pass
+
+TeseCaseTemplate = '''
+#!/usr/bin/env python
+# encoding: utf-8
+
+from unittest import TestCase
+
+
+class {test_name}(TestCase):
+    def test_usage(self):
+        pass
+'''.lstrip()
+
+PackageInitModule = '''
+#!/usr/bin/env python
+# encoding: utf-8
+__author__ = "LYC"
+'''.lstrip()
 
 
 def is_script_file(file):
@@ -33,37 +50,44 @@ def get_all_scripts(path, recursion=0):
     return results
 
 
+def try_init_package(dir_name):
+    init_module = os.path.join(dir_name, "__init__.py")
+
+    if not os.path.exists(init_module):
+        with open(init_module, "wt") as fp:
+            fp.write(PackageInitModule)
+
+
+def make_test_dirs(dir_name):
+    if os.path.exists(dir_name):
+        return
+
+    dir_name = dir_name.rstrip(os.sep)
+    parent_dir = os.path.dirname(dir_name.rstrip(os.sep))
+    make_test_dirs(parent_dir)
+    os.mkdir(dir_name)
+    try_init_package(dir_name)
+
+
 def mk_unittest_script(script_relative_path, root):
     path, script = os.path.split(script_relative_path)
     real_dir = os.path.join(root, path)
     real_path = os.path.join(real_dir, "test_%s" % script)
+    module_name, _ = os.path.splitext(script)
 
-    init_module = os.path.join(real_dir, "__init__.py")
-    if not os.path.exists(init_module):
-        with open(init_module, "wt") as fp:
-            fp.write(textwrap.dedent('''
-            #!/usr/bin/env python
-            # encoding: utf-8
-            __author__ = "LYC"
-            ''').lstrip())
+    try_init_package(real_dir)
 
+    make_test_dirs(real_dir)
     if os.path.exists(real_path):
         raise FileExisted(real_path)
 
-    if not os.path.exists(real_dir):
-        os.makedirs(real_dir)
 
     with open(real_path, "wt") as fp:
-        fp.write(textwrap.dedent('''
-        #!/usr/bin/env python
-        # encoding: utf-8
-
-        from unittest import TestCase
-
-
-        class Test1(TestCase):
-            pass
-        ''').lstrip())
+        fp.write(TeseCaseTemplate.format(
+            test_name=(
+                "Test%s" % module_name.title().replace("_", "")
+            ),
+        ))
 
 
 @main_entry
