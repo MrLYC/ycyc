@@ -60,7 +60,7 @@ class TestSafeCalc(TestCase):
 
         calc = calctools.SafeCalc(
             {"sleep": time.sleep},
-            timeout=0.01, interval=0.001,
+            timeout=0.05, interval=0.001,
         )
         try:
             calc("sleep(1)")
