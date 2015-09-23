@@ -60,7 +60,7 @@ class TestSafeCalc(TestCase):
 
         calc = calctools.SafeCalc(
             {"sleep": time.sleep},
-            timeout=0.01, interval=0.01,
+            timeout=0.1, interval=0.001,
         )
         with self.assertRaisesRegexp(RuntimeError, "timeout"):
             calc("sleep(1)")
