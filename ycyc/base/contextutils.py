@@ -4,6 +4,8 @@
 from contextlib import contextmanager
 import six
 import logging
+import threading
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +52,27 @@ def subprocessor(*args, **kwg):
 
 
 @contextmanager
+def companion(
+    target, auto_start=True, auto_join=True, process=threading.Thread,
+):
+    """
+    Run the target function as block companion.
+    :param target: callable object
+    :param auto_start: start thread immediately
+    :param auto_join: join thread when exit
+    """
+    processor = process(target=target)
+    processor.daemon = True
+    if auto_start:
+        processor.start()
+    try:
+        yield processor
+    finally:
+        if processor.is_alive():
+            processor.join()
+
+
+@contextmanager
 def timeout(seconds, interval=None, ticks=None):
     """
     Send KeyboardInterrupt to main thread to terminate it and
@@ -58,8 +81,6 @@ def timeout(seconds, interval=None, ticks=None):
     :param interval: poll interval
     :param ticks: CPU-Bound thread check interval
     """
-    import threading
-    import time
     import os
     import signal
     import sys
@@ -80,28 +101,23 @@ def timeout(seconds, interval=None, ticks=None):
         if not signal_finished:
             os.kill(os.getpid(), signal.SIGINT)
 
-    if seconds > 0:
-        poll_thread = threading.Thread(target=poll_signal)
-        poll_thread.daemon = True
-        poll_thread.start()
-    else:
-        poll_thread = None
+    with companion(poll_signal, auto_start=False) as poll_thread:
+        if seconds > 0:
+            poll_thread.start()
 
-    if ticks is not None:
-        sys.setcheckinterval(ticks)
-    try:
-        yield
-    except KeyboardInterrupt:
-        now = time.time()
-        if now - start >= seconds > 0:
-            raise RuntimeError("timeout")
-        raise
-    finally:
-        signal_finished = True
         if ticks is not None:
-            sys.setcheckinterval(old_ticks)
-        if poll_thread and poll_thread.is_alive():
-            poll_thread.join()
+            sys.setcheckinterval(ticks)
+        try:
+            yield
+        except KeyboardInterrupt:
+            now = time.time()
+            if now - start >= seconds > 0:
+                raise RuntimeError("timeout")
+            raise
+        finally:
+            signal_finished = True
+            if ticks is not None:
+                sys.setcheckinterval(old_ticks)
 
 
 @contextmanager

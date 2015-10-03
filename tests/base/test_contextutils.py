@@ -5,7 +5,7 @@ from unittest import TestCase
 import mock
 
 from ycyc.base.contextutils import (
-    catch, timeout, atlast
+    catch, timeout, atlast, companion,
 )
 
 
@@ -76,6 +76,19 @@ class TestCatch(TestCase):
         self.assertFalse(exec_info["ok"])
         self.assertIsInstance(exec_info["exception"], NotImplementedError)
         self.assertEqual(exec_info["callback_returned"], callback.return_value)
+
+
+class TestCompanion(TestCase):
+    def test_usage(self):
+        mock_target = mock.MagicMock()
+        with companion(mock_target) as thread:
+            mock_target.assert_called_once_with()
+
+        mock_target = mock.MagicMock()
+        with companion(mock_target, auto_start=False) as thread:
+            self.assertEqual(mock_target.call_count, 0)
+            thread.start()
+            self.assertEqual(mock_target.call_count, 1)
 
 
 class TestTimeout(TestCase):
