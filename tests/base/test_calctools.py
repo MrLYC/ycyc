@@ -60,10 +60,15 @@ class TestSafeCalc(TestCase):
 
         calc = calctools.SafeCalc(
             {"sleep": time.sleep},
-            timeout=0.1, interval=0.001,
+            timeout=0.01, interval=0.001,
         )
-        with self.assertRaisesRegexp(RuntimeError, "timeout"):
+        try:
             calc("sleep(1)")
+            self.assertTrue(False)
+        except KeyboardInterrupt:
+            pass
+        except RuntimeError:
+            pass
 
         with self.assertRaisesRegexp(SyntaxError, "invalid syntax"):
             calc("while True: pass")
