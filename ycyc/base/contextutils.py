@@ -140,3 +140,28 @@ def atlast(func, force=False):
         if force:
             func()
         raise
+
+
+@contextmanager
+def heartbeat(target, interval, auto_start=True, auto_join=True):
+    """
+    Run target as heartbeat.
+    :param target: callable object
+    :param interval: sleep interval
+    :param auto_start: start thread immediately
+    :param auto_join: join thread when exit
+    """
+    enable = True
+
+    def check():
+        while enable:
+            target()
+            time.sleep(interval)
+
+    with companion(
+        check, auto_start=auto_start, auto_join=auto_join,
+    ) as processor:
+        try:
+            yield processor
+        finally:
+            enable = False
