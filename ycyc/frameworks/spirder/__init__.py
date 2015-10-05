@@ -109,12 +109,3 @@ def redirect_to(url, callback, **kwg):
         logger.info("redirect to %s", url)
         yield Request(url=url, callback=callback, **kwg)
     return redirect
-
-
-def save_to(path, data, mode="ab"):
-    with open(path, mode) as fp:
-        fp.write(data)
-
-
-def flow_return():
-    raise StopIteration
