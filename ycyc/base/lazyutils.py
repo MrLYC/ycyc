@@ -88,6 +88,9 @@ class FakeModule(object):
         reload(real_module)
         return module
 
+    def __getattr__(self, name):
+        raise NotImplementedError
+
 
 def lazy_import(module_name):
     """
