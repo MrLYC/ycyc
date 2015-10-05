@@ -8,7 +8,9 @@ import requests
 
 from ycyc.base.decoratorutils import cachedproperty
 from ycyc.base.iterutils import dict_merge
+from ycyc.base.lazyutils import lazy_import
 
+pyquery = lazy_import("pyquery")
 logger = logging.getLogger(__name__)
 
 
@@ -37,9 +39,20 @@ class Response(object):
 
     @cachedproperty
     def selector(self):
-        import pyquery
         pq = pyquery.PyQuery(self.html)
         return pq
+
+    def parse_form_data(self, selector="form:first"):
+        data = {}
+        form_node = self.selector.find(selector)
+        for i in form_node.find("input"):
+            input_node = pyquery.PyQuery(i)
+            name = input_node.attr("name")
+            type_ = input_node.attr("type")
+            if not name or type_ in ["submit", "button"]:
+                continue
+            data[name] = input_node.val()
+        return data
 
     def make_links_absolute(self):
         self.selector.make_links_absolute(self.raw_response.url)
