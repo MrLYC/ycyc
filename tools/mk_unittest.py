@@ -54,6 +54,7 @@ def try_init_package(dir_name):
     init_module = os.path.join(dir_name, "__init__.py")
 
     if not os.path.exists(init_module):
+        os.mkdir(dir_name)
         with open(init_module, "wt") as fp:
             fp.write(PackageInitModule)
 
