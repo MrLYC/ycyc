@@ -58,7 +58,7 @@ class Response(object):
         self.selector.make_links_absolute(self.raw_response.url)
 
 
-class Spirder(object):
+class Spider(object):
     def __init__(self, target=None, opener=None, worker=None, headers=()):
         self.worker = worker or self.worker_factory()
         self.opener = opener or requests.Session()
@@ -66,7 +66,7 @@ class Spirder(object):
         self.default_headers = dict(headers)
 
     def on_request(self, request):
-        logger.debug("Spirder on_request, url: %s", request.url)
+        logger.debug("Spider on_request, url: %s", request.url)
         self.worker.apply_async(
             self.opener.send,
             args=(request.prepare(),),
@@ -79,7 +79,7 @@ class Spirder(object):
 
     def on_response(self, response, request, callback):
         logger.debug(
-            "Spirder on_response, url: %s, status: %s, reason: %s",
+            "Spider on_response, url: %s, status: %s, reason: %s",
             response.url, response.status_code, response.reason,
         )
         real_response = Response(request, response)
@@ -87,7 +87,7 @@ class Spirder(object):
 
     def add_tasks(self, requests):
         for request in requests or ():
-            logger.debug("Spirder add a new task: %s", request.url)
+            logger.debug("Spider add a new task: %s", request.url)
             request.headers = dict_merge((request.headers, self.default_headers))
             self.worker.apply_async(
                 self.on_request,
@@ -95,12 +95,12 @@ class Spirder(object):
             )
 
     def start(self):
-        logger.info("Spirder start to run")
+        logger.info("Spider start to run")
         requests = self.run()
         self.add_tasks(requests)
 
     def join(self):
-        logger.info("Spirder start to join")
+        logger.info("Spider start to join")
         if hasattr(self.worker, "close"):
             # for multiprocessing.pool
             self.worker.close()
