@@ -32,11 +32,9 @@ def markdown_to_moin(text):
             if s == "text":
                 text_blocks.append(t)
             else:
-                title = "\n%s %s %s" % (repl, t.strip("\n"), repl)
+                title = "%s %s %s\n" % (repl, t.strip("\n"), repl)
                 if t.startswith("\n"):
                     title = "\n" + title
-                if t.endswith("\n"):
-                    title = title + "\n"
                 text_blocks.append(title)
         text = "".join(text_blocks)
 
