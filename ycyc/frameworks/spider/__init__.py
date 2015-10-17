@@ -58,7 +58,7 @@ class Response(object):
         self.selector.make_links_absolute(self.raw_response.url)
 
 
-class Spider(object):
+class AsyncSpider(object):
     def __init__(self, target=None, opener=None, worker=None, headers=()):
         self.worker = worker or self.worker_factory()
         self.opener = opener or requests.Session()
