@@ -2,24 +2,27 @@
 # encoding: utf-8
 
 from collections import MutableMapping
+import cPickle
 
 from .base import RedisCollection
 
 
 class RedisHashDict(MutableMapping):
+    Convertor = cPickle
+
     def __init__(self, connection, name, *args, **kwargs):
         self.connection = connection
         self.name = name
         super(RedisHashDict, self).__init__(*args, **kwargs)
 
     def __setitem__(self, key, value):
-        self.connection.hset(self.name, key, value)
+        self.connection.hset(self.name, key, self.Convertor.dumps(value))
 
     def __getitem__(self, key):
         value = self.connection.hget(self.name, key)
         if value is None:
             raise KeyError("%s not found" % key)
-        return value
+        return self.Convertor.loads(value)
 
     def __delitem__(self, key):
         if self.connection.hdel(self.name, key) == 0:
