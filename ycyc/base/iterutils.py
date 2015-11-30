@@ -87,12 +87,11 @@ def groupby(iterable, keyfunc):
     :param keyfunc: group by keyfunc
     :return: dict {<keyfunc result>: [item1, item2]}
     """
-    grouper = itertools.groupby(iterable, keyfunc)
-    group_dict = collections.defaultdict(list)
-    for k, r in grouper:
-        group = group_dict[k]
-        group.extend(r)
-    return dict(group_dict)
+    data = sorted(iterable, key=keyfunc)
+    return {
+        k: list(g)
+        for k, g in itertools.groupby(data, keyfunc)
+    }
 
 
 def mkparts(sequence, indices=None):

@@ -4,9 +4,10 @@
 from unittest import TestCase
 from collections import namedtuple
 import types
+import operator
 
 from ycyc.base.iterutils import (
-    getitems, getattrs, iterable, getnext, getfirst, mkparts,
+    getitems, getattrs, iterable, getnext, getfirst, groupby, mkparts,
     get_single_item, dict_merge, flatten, find_peak_item,
     filter_n, every_n
 )
@@ -84,6 +85,23 @@ class TestIterObj(TestCase):
         self.assertEqual(getnext(gen), 1)
         self.assertEqual(getnext(gen), None)
         self.assertEqual(getnext(gen, 2), 2)
+
+
+class TestGroupBy(TestCase):
+    def test_usage(self):
+        data = [
+            {"name": "int", "val": 1},
+            {"name": "float", "val": 2.3},
+            {"name": "float", "val": 4.5},
+            {"name": "int", "val": 6},
+            {"name": "str", "val": "7"},
+        ]
+
+        self.assertDictEqual(groupby(data, operator.itemgetter("name")), {
+            "int": [{"name": "int", "val": 1}, {"name": "int", "val": 6}],
+            "float": [{"name": "float", "val": 2.3}, {"name": "float", "val": 4.5}],
+            "str": [{"name": "str", "val": "7"}],
+        })
 
 
 class TestMakeParts(TestCase):
