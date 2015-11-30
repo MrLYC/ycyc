@@ -4,10 +4,10 @@
 from collections import MutableMapping
 import cPickle
 
-from .base import RedisCollection
+from .base import RedisKit
 
 
-class RedisHashDict(MutableMapping):
+class RedisHashDict(MutableMapping, RedisKit):
     Convertor = cPickle
 
     def __init__(self, connection, name, *args, **kwargs):

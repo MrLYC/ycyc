@@ -3,7 +3,7 @@
 from itertools import chain
 
 
-class RedisCollection(object):
+class RedisKit(object):
     @classmethod
     def factory(cls, *base_args, **base_kwargs):
         def constructor(*args, **kwargs):
