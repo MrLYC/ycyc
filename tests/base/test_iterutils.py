@@ -9,7 +9,7 @@ import operator
 from ycyc.base.iterutils import (
     getitems, getattrs, iterable, getnext, getfirst, groupby, mkparts,
     get_single_item, dict_merge, flatten, find_peak_item,
-    filter_n, every_n
+    filter_n, every_n, iter_chunk,
 )
 
 import mock
@@ -231,3 +231,23 @@ class TestEveryN(TestCase):
             [(0, 1, 2)],
             list(every_n(range(4), 3))
         )
+
+
+class TestIterChunk(TestCase):
+    def test_usage(self):
+        seq = ""
+        self.assertListEqual(list(iter_chunk(seq, 1)), [])
+        self.assertListEqual(list(iter_chunk(seq, 2)), [])
+
+        seq = "a"
+        self.assertListEqual(list(iter_chunk(seq, 1)), ["a"])
+        self.assertListEqual(list(iter_chunk(seq, 2)), ["a"])
+
+        seq = "ab"
+        self.assertListEqual(list(iter_chunk(seq, 1)), ["a", "b"])
+        self.assertListEqual(list(iter_chunk(seq, 2)), ["ab"])
+
+        seq = "abcde"
+        self.assertListEqual(list(iter_chunk(seq, 1)), ["a", "b", "c", "d", "e"])
+        self.assertListEqual(list(iter_chunk(seq, 2)), ["ab", "cd", "e"])
+        self.assertListEqual(list(iter_chunk(seq, 3)), ["abc", "de"])

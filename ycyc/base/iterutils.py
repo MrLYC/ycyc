@@ -207,3 +207,15 @@ def every_n(sequence, n=1):
     """
     i_sequence = iter(sequence)
     return zip(*[i_sequence for i in range(n)])
+
+
+def iter_chunk(sequence, size):
+    """
+    Iterate sequence as chunks
+
+    :param sequence: iterable sequence
+    :param size: size of every chunk
+    """
+    length = len(sequence)
+    for i in range(0, length, size):
+        yield sequence[i: i + size]
