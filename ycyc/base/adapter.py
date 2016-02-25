@@ -17,6 +17,7 @@ class ObjAsDictAdapter(collections.Mapping):
     """
     Provided a adapter that allow visit a object as dict
     """
+
     def __init__(self, obj):
         self.__object = obj
 
@@ -40,6 +41,7 @@ class DictAsObjAdapter(object):
     """
     Provided a adapter that allow visit a dict as object
     """
+
     def __init__(self, dct):
         self.__dict = dct
 
@@ -51,6 +53,7 @@ class DictAsObjAdapter(object):
 
 
 class MappingMixin:
+
     def attrs_dict(self):
         return ObjAsDictAdapter(self)
 
@@ -85,6 +88,7 @@ def proxy(obj):
 
 
 class DynamicClosure(object):
+
     def __init__(self, envs=()):
         from ycyc.base.iterutils import dict_merge
 
@@ -98,3 +102,16 @@ def dynamic_closure(func, *args, **kwg):
     frame = funcutils.parent_frame()
     closure = DynamicClosure([frame.f_locals, frame.f_globals])
     return closure(func, args, kwg)
+
+
+def attr_link(name):
+    def getter(self):
+        return getattr(self, name)
+
+    def setter(self, value):
+        return setattr(self, name, value)
+
+    def deleter(self):
+        return delattr(self, name)
+
+    return property(getter, setter, deleter)

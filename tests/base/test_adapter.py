@@ -11,6 +11,7 @@ from ycyc.base import adapter
 
 
 class TestObjAsDictAdapter(TestCase):
+
     class Parent(object):
         pclsval = 1
 
@@ -80,6 +81,7 @@ class TestObjAsDictAdapter(TestCase):
 
 
 class TestMainEntry(TestCase):
+
     @property
     def main_mock(self):
         main_mock = mock.MagicMock()
@@ -130,6 +132,7 @@ class TestMainEntry(TestCase):
 
 
 class TestProxy(TestCase):
+
     def test_usage(self):
         mock_object = mock.MagicMock()
         mock_object.value = "lyc"
@@ -158,6 +161,7 @@ class TestProxy(TestCase):
 
 
 class TestDynamicClosure(TestCase):
+
     def test_usage(self):
         def check(env):
             self.assertEqual(env["l_value"], g_value)
@@ -170,3 +174,18 @@ class TestDynamicClosure(TestCase):
         invoker(g_value)
         g_value = 2
         invoker(g_value)
+
+
+class TestAttrLink(TestCase):
+
+    def test_usage(self):
+        class A(object):
+            a = 1
+            b = adapter.attr_link("a")
+
+        a = A()
+        self.assertIs(a.a, a.b)
+        a.a = 2
+        self.assertIs(a.b, 2)
+        a.b = 3
+        self.assertIs(a.a, 3)
