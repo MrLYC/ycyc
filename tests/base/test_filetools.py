@@ -84,8 +84,8 @@ class TestDirHelper(TestCase):
 
             filetools.make_sure_dir_empty(self.Path)
 
-            patches.exists.assert_call_once_with(self.Path)
-            patches.make_sure_dir_exists.assert_call_once_with(self.Path)
+            patches.exists.assert_called_once_with(self.Path)
+            patches.make_sure_dir_exists.assert_called_once_with(self.Path)
 
         with mock_patches(
             "ycyc.base.filetools.os.path.exists",
@@ -100,10 +100,10 @@ class TestDirHelper(TestCase):
 
             filetools.make_sure_dir_empty(self.Path)
 
-            patches.exists.assert_call_once_with(self.Path)
-            patches.listdir.assert_call_once_with(self.Path)
-            patches.remove_dir.assert_call_once_with(self.Path + "a")
-            patches.remove.assert_call_once_with(self.Path + "b/")
+            patches.exists.assert_called_once_with(self.Path)
+            patches.listdir.assert_called_once_with(self.Path)
+            patches.remove.assert_called_once_with(self.Path + "a")
+            patches.remove_dir.assert_called_once_with(self.Path + "b/")
 
     def test_make_sure_not_exists(self):
         with mock_patches(
@@ -113,7 +113,7 @@ class TestDirHelper(TestCase):
 
             filetools.make_sure_not_exists(self.Path)
 
-            patches.exists.assert_call_once_with(self.Path)
+            patches.exists.assert_called_once_with(self.Path)
 
         with mock_patches(
             "ycyc.base.filetools.os.path.exists",
@@ -125,9 +125,9 @@ class TestDirHelper(TestCase):
 
             filetools.make_sure_not_exists(self.Path)
 
-            patches.exists.assert_call_once_with(self.Path)
-            patches.isdir.assert_call_once_with(self.Path)
-            patches.remove_dir.assert_call_once_with(self.Path, recursion=True)
+            patches.exists.assert_called_once_with(self.Path)
+            patches.isdir.assert_called_once_with(self.Path)
+            patches.remove_dir.assert_called_once_with(self.Path, recursion=True)
 
         with mock_patches(
             "ycyc.base.filetools.os.path.exists",
@@ -139,9 +139,9 @@ class TestDirHelper(TestCase):
 
             filetools.make_sure_not_exists(self.Path)
 
-            patches.exists.assert_call_once_with(self.Path)
-            patches.isdir.assert_call_once_with(self.Path)
-            patches.remove.assert_call_once_with(self.Path)
+            patches.exists.assert_called_once_with(self.Path)
+            patches.isdir.assert_called_once_with(self.Path)
+            patches.remove.assert_called_once_with(self.Path)
 
 
 class TestChangeDir(TestCase):

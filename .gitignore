@@ -64,3 +64,6 @@ ycyc.psproj
 # virtualenv
 ycyc-venv/
 .dev/activate
+
+.tags
+.tags1

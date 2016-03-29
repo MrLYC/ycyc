@@ -17,14 +17,10 @@ class TestCommands(TestCase):
         self.assertIsInstance(command, shelltools.Command)
         self.assertEqual(command.name, "echo")
 
-    def test_command_usage(self):
+    def test_check_output(self):
         with mock_patches(
-            "ycyc.base.shelltools.subprocess.Popen",
-            "ycyc.base.shelltools.subprocess.check_call",
             "ycyc.base.shelltools.subprocess.check_output",
-            "ycyc.base.shelltools.contextutils.subprocessor",
         ) as patches:
-            patches.check_call.return_value = 0
             patches.check_output.return_value = "hello lyc"
 
             command = shelltools.Command("echo")
@@ -33,22 +29,45 @@ class TestCommands(TestCase):
                 command.check_output("hello", "lyc"),
                 patches.check_output.return_value
             )
-            patches.check_output.assert_call_with("hello", "lyc")
+            call_args = patches.check_output.call_args[0]
+            self.assertListEqual(call_args[0], ["echo", "hello", "lyc"])
+
+    def test_check_call(self):
+        with mock_patches(
+            "ycyc.base.shelltools.subprocess.check_call",
+        ) as patches:
+            patches.check_call.return_value = 0
+
+            command = shelltools.Command("echo")
 
             self.assertEqual(
                 command.check_call("lyc"),
                 patches.check_call.return_value
             )
-            patches.check_call.assert_call_with("lyc")
+            call_args = patches.check_call.call_args[0]
+            self.assertListEqual(call_args[0], ["echo", "lyc"])
+
+    def test_call(self):
+        with mock_patches(
+            "ycyc.base.shelltools.subprocess.Popen",
+        ) as patches:
+            command = shelltools.Command("echo")
 
             self.assertIs(
                 command("hello", "lyc"),
                 patches.Popen.return_value
             )
 
-            subprocessor = command.subprocessor("hello", "lyc")
-            subprocessor.assert_call_with(
-                "hello", "lyc",
-                stdout=shelltools.subprocess.PIPE,
-                stderr=shelltools.subprocess.PIPE,
-            )
+    def test_subprocessor(self):
+        with mock_patches(
+            "subprocess.Popen",
+        ) as patches:
+            command = shelltools.Command("echo")
+
+            with command.subprocessor("hello", "lyc") as subprocessor:
+                patches.Popen.assert_called_once_with(
+                    ["echo", "hello", "lyc"],
+                    stdout=shelltools.subprocess.PIPE,
+                    stderr=shelltools.subprocess.PIPE,
+                    shell=False,
+                )

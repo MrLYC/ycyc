@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class Request(requests.Request):
+
     def __init__(
             self, url, callback, headers=None, params=None, data=None,
             json=None, method="GET", **kwg):
@@ -26,6 +27,7 @@ class Request(requests.Request):
 
 
 class Response(object):
+
     def __init__(self, raw_request, response):
         self.raw_response = response
         self.raw_request = raw_request
@@ -44,7 +46,7 @@ class Response(object):
 
     def parse_form_data(self, selector="form:first"):
         data = {}
-        form_node = self.selector.find(selector)
+        form_node = self.selector.find(selector)  # pylint: disable=E1101
         for i in form_node.find("input"):
             input_node = pyquery.PyQuery(i)
             name = input_node.attr("name")
@@ -55,10 +57,13 @@ class Response(object):
         return data
 
     def make_links_absolute(self):
-        self.selector.make_links_absolute(self.raw_response.url)
+        self.selector.make_links_absolute(  # pylint: disable=E1101
+            self.raw_response.url
+        )
 
 
 class AsyncSpider(object):
+
     def __init__(self, target=None, opener=None, worker=None, headers=()):
         self.worker = worker or self.worker_factory()
         self.opener = opener or requests.Session()

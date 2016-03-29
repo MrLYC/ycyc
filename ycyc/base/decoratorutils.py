@@ -13,6 +13,7 @@ logger = logging.getLogger(__file__)
 
 
 class DescriptorBase(object):
+
     def __init__(self, func):
         self.func = func
 
@@ -60,6 +61,7 @@ class CachedProperty(DescriptorBase):
     Call func at first time and cached the result, return result
     immediately later.
     """
+
     def __get__(self, instance, cls):
         if not hasattr(self, "cached_result"):
             result = types.MethodType(self.func, instance, cls)()
@@ -154,7 +156,7 @@ def call_immediately(checker=True):
     :param kwg: key word arguments
     """
     if isinstance(checker, types.BooleanType):
-        checker = lambda: checker
+        checker = (lambda: checker)
 
     def invoker(func):
         if checker():
@@ -199,6 +201,7 @@ class AllowUnboundMethod(DescriptorBase):
     """
     Allow a method called by class
     """
+
     def __get__(self, instance, cls):
         if instance is not None:
             return types.MethodType(self.func, instance, cls)
@@ -210,6 +213,7 @@ class ClassProperty(DescriptorBase):
     """
     A class property
     """
+
     def __get__(self, instance, cls):
         return types.UnboundMethodType(self.func, cls, cls)()
 classproperty = ClassProperty

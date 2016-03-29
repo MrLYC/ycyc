@@ -57,11 +57,11 @@ def iter_attrs(
     for attr, val in inspect.getmembers(obj):
         if attr not in include_fields:
             if (
-                attr in exclude_fields
-                or attr.startswith("__")
-                or attr.startswith("_%s__" % obj_type_name)
-                or (public_only and attr.startswith("_"))
-                or (exclude_methods and inspect.ismethod(val))
+                attr in exclude_fields or
+                attr.startswith("__") or
+                attr.startswith("_%s__" % obj_type_name) or
+                (public_only and attr.startswith("_")) or
+                (exclude_methods and inspect.ismethod(val))
             ):
                 continue
         yield attr, val
