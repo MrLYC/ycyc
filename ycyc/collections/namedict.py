@@ -27,7 +27,7 @@ class NamedDictMeta(type):
 
 
 class NamedDict(six.with_metaclass(NamedDictMeta, dict)):
-    def __init__(self, *args, **kwg):
+    def __init__(self, *args, **kwg):  # pylint: disable=E1002
         requires = self.__Requires__
         fields = self.__Fields__.copy()
         field_keys = fields.viewkeys()
