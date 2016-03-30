@@ -3,13 +3,12 @@
 
 from unittest import TestCase
 from collections import namedtuple
-import types
 import operator
 
 from ycyc.base.iterutils import (
     getitems, getattrs, iterable, getnext, getfirst, groupby, mkparts,
     get_single_item, dict_merge, flatten, find_peak_item,
-    filter_n, every_n, iter_chunk,
+    filter_n, every_n, iter_chunk, safe_max, safe_min,
 )
 
 import mock
@@ -251,3 +250,17 @@ class TestIterChunk(TestCase):
         self.assertListEqual(list(iter_chunk(seq, 1)), ["a", "b", "c", "d", "e"])
         self.assertListEqual(list(iter_chunk(seq, 2)), ["ab", "cd", "e"])
         self.assertListEqual(list(iter_chunk(seq, 3)), ["abc", "de"])
+
+
+class TestSafeMax(TestCase):
+    def test_usage(self):
+        self.assertEqual(safe_max([3, 1, 5]), 5)
+        self.assertIsNone(safe_max([]))
+        self.assertEqual(safe_max([], 5), 5)
+
+
+class TestSafeMin(TestCase):
+    def test_usage(self):
+        self.assertEqual(safe_min([3, 1, 5]), 1)
+        self.assertIsNone(safe_min([]))
+        self.assertEqual(safe_min([], 5), 5)

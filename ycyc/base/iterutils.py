@@ -219,3 +219,37 @@ def iter_chunk(sequence, size):
     length = len(sequence)
     for i in range(0, length, size):
         yield sequence[i: i + size]
+
+
+def safe_max(sequence, default=None):
+    """
+    Return the max value from sequence, if sequence is empty,
+    return the default value.
+
+    :param sequence: iterable sequence
+    :param default: default value
+    """
+    i_seq = iter(sequence)
+    try:
+        value = next(i_seq)
+    except StopIteration:
+        return default
+
+    return max(itertools.chain(sequence, [value]))
+
+
+def safe_min(sequence, default=None):
+    """
+    Return the min value from sequence, if sequence is empty,
+    return the default value.
+
+    :param sequence: iterable sequence
+    :param default: default value
+    """
+    i_seq = iter(sequence)
+    try:
+        value = next(i_seq)
+    except StopIteration:
+        return default
+
+    return min(itertools.chain(sequence, [value]))
