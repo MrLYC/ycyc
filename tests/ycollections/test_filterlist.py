@@ -3,7 +3,7 @@
 
 from unittest import TestCase
 
-from ycyc.collections import filterlist
+from ycyc.ycollections import filterlist
 
 
 class TestFilterList(TestCase):

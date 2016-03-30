@@ -5,7 +5,7 @@ from unittest import TestCase
 import mock
 import time
 
-from ycyc.collections.namedict import namedict, RequireFieldsMissError
+from ycyc.ycollections.namedict import namedict, RequireFieldsMissError
 
 
 class TestNamedDict(TestCase):
@@ -106,8 +106,8 @@ class TestNamedDict(TestCase):
         self.assertEqual(params.value, 2)
 
     def test_logging(self):
-        with mock.patch("ycyc.collections.namedict.logger"):
-            from ycyc.collections.namedict import logger
+        with mock.patch("ycyc.ycollections.namedict.logger"):
+            from ycyc.ycollections.namedict import logger
             TestDict = namedict("TestDict", {"val": None})
 
             tdict = TestDict(1)

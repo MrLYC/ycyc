@@ -3,7 +3,7 @@
 
 from unittest import TestCase
 
-from ycyc.collections import table
+from ycyc.ycollections import table
 
 
 class TestSimpleTable(TestCase):

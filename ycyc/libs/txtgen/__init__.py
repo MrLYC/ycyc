@@ -3,7 +3,7 @@
 
 import collections
 from ycyc.base.iterutils import getfirst
-from ycyc.collections.tagmaps import TagMaps
+from ycyc.ycollections.tagmaps import TagMaps
 
 __all__ = TagMaps()
 

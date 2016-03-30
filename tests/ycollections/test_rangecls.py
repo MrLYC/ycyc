@@ -4,7 +4,7 @@
 from unittest import TestCase
 from datetime import datetime, timedelta
 
-from ycyc.collections import rangecls
+from ycyc.ycollections import rangecls
 
 
 class TestARange(TestCase):

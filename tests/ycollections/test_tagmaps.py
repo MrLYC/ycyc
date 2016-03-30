@@ -3,7 +3,7 @@
 
 from unittest import TestCase
 
-from ycyc.collections import tagmaps
+from ycyc.ycollections import tagmaps
 
 
 class TestTagMaps(TestCase):
