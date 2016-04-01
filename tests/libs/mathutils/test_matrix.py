@@ -123,6 +123,34 @@ class TestMatrix(TestCase):
             [-1, -2],
         ])
 
+    def test_addition(self):
+        m1 = Matrix.from_table([
+            [2, -4, 0],
+            [3, -2, 2],
+        ])
+        m2 = Matrix.from_table([
+            [1, 0, 3],
+            [2, -1, 1],
+        ])
+        self.assertMatrixEqualAs(m1 + m2, [
+            [3, -4, 3],
+            [5, -3, 3],
+        ])
+
+    def test_subduction(self):
+        m1 = Matrix.from_table([
+            [2, -4, 0],
+            [3, -2, 2],
+        ])
+        m2 = Matrix.from_table([
+            [1, 0, 3],
+            [2, -1, 1],
+        ])
+        self.assertMatrixEqualAs(m1 - m2, [
+            [1, -4, -3],
+            [1, -1, 1],
+        ])
+
     def test_transpose_matrix(self):
         m = Matrix.from_table([
             [1, 2],

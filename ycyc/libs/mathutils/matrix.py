@@ -23,6 +23,13 @@ class Matrix(object):
 
         return cls(row_n=row_n, col_n=col_n, matrix=data, init_val=init_val)
 
+    @classmethod
+    def check_size(cls, matrix, row_checker=lambda x: True, col_checker=lambda x: True):
+        if not row_checker(matrix.row_n) or not col_checker(matrix.col_n):
+            raise ValueError("matrix size error: [%d, %d]" % (
+                matrix.row_n, matrix.col_n,
+            ))
+
     def __init__(self, row_n, col_n, matrix=None, init_val=0):
         self.init_val = init_val
         self.row_n = int(row_n)
@@ -45,8 +52,11 @@ class Matrix(object):
         init_val = self.init_val
         data = self.data
 
-        if row_n <= 0 or col_n <= 0:
-            raise ValueError("illegal size: [%d, %d]" % (self.row_n, self.row_n))
+        self.check_size(
+            self,
+            lambda x: x > 0,
+            lambda x: x > 0,
+        )
 
         for r in range(row_n):
             try:
@@ -56,6 +66,11 @@ class Matrix(object):
                     col.extend(repeat(init_val, col_n - col_len))
             except IndexError:
                 data.append(deque(repeat(init_val, col_n)))
+
+    def visit_with(self, callback):
+        for i in range(self.row_n):
+            for j in range(self.col_n):
+                callback(i, j, self[i, j])
 
     def __iter__(self):
         return iter(self.data)
@@ -112,16 +127,44 @@ class Matrix(object):
                 return False
         return True
 
+    def __add__(self, other):
+        self.check_size(
+            other,
+            lambda x: self.row_n == x,
+            lambda x: self.col_n == x,
+        )
+
+        matrix = Matrix(self.row_n, self.col_n)
+
+        def add(i, j, val):
+            matrix[i, j] = val + other[i, j]
+
+        self.visit_with(add)
+        return matrix
+
+    def __sub__(self, other):
+        self.check_size(
+            other,
+            lambda x: self.row_n == x,
+            lambda x: self.col_n == x,
+        )
+
+        matrix = Matrix(self.row_n, self.col_n)
+
+        def sub(i, j, val):
+            matrix[i, j] = val - other[i, j]
+
+        self.visit_with(sub)
+        return matrix
+
     def __repr__(self):
         return str(self)
 
     def __mul__(self, other):
-        if self.col_n != other.row_n:
-            raise ValueError(
-                "matrix size error:  [%d, %d] and [%d, %d]" % (
-                    self.row_n, self.col_n, other.row_n, other.col_n,
-                )
-            )
+        self.check_size(
+            other,
+            lambda x: self.col_n == x,
+        )
 
         matrix = Matrix(self.row_n, other.col_n)
         for i in range(self.row_n):
