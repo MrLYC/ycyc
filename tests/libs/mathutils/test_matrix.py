@@ -4,6 +4,7 @@ from ycyc.libs.mathutils.matrix import Matrix
 
 
 class TestMatrix(TestCase):
+
     def assertMatrixEqualAs(self, matrix, table):
         for mr, tr, r in zip(matrix, table, range(matrix.row_n)):
             for mc, tc, c in zip(mr, tr, range(matrix.col_n)):
@@ -15,7 +16,6 @@ class TestMatrix(TestCase):
 
     def test_construction(self):
         m = Matrix(1, 1)
-        self.assertEqual(m[0, 0], m[0][0])
         self.assertEqual(m[0, 0], 0)
 
         m = Matrix(3, 2, [[1], [2, 3]])
@@ -51,6 +51,23 @@ class TestMatrix(TestCase):
             [7, 0, 0],
         ])
 
+    def test_index(self):
+        m = Matrix.from_table([
+            [1, 2],
+            [3, 4],
+        ])
+        self.assertIs(m[0], m.data[0])
+        self.assertEqual(m[0, 0], m[0][0])
+
+        m[1, 1] = 5
+        self.assertEqual(m[1][1], 5)
+
+        with self.assertRaisesRegexp(ValueError, "index type error"):
+            m[0] = 5
+
+        with self.assertRaisesRegexp(IndexError, "index error"):
+            m[2, 2] = 5
+
     def test_equal(self):
         m1 = Matrix.from_table([
             [1, 2, 3],
@@ -64,7 +81,41 @@ class TestMatrix(TestCase):
             [7, 8, 9],
             [10, 11, 12],
         ])
+        m3 = Matrix.from_table([
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+            [10, 11, 0],
+        ])
+        m4 = Matrix.from_table([
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9],
+            [10, 11, 12],
+            [13, 14, 15],
+        ])
+        m5 = Matrix.from_table([
+            [1, 2, 3, 0],
+            [4, 5, 6, 0],
+            [7, 8, 9, 0],
+            [10, 11, 12, 0],
+        ])
         self.assertEqual(m1, m2)
+        self.assertNotEqual(m1, m3)
+        self.assertNotEqual(m1, m4)
+        self.assertNotEqual(m1, m5)
+
+        m4.row_n -= 1
+        self.assertEqual(m1, m4)
+
+        m5.col_n -= 1
+        self.assertEqual(m1, m5)
+
+        m4.data[0].pop()
+        self.assertNotEqual(m1, m4)
+
+        m5.data.pop()
+        self.assertNotEqual(m1, m5)
 
     def test_multiplication(self):
         m1 = Matrix.from_table([
@@ -123,6 +174,16 @@ class TestMatrix(TestCase):
             [-1, -2],
         ])
 
+        with self.assertRaisesRegexp(ValueError, "matrix size error"):
+            m1 = Matrix.from_table([
+                [1]
+            ])
+            m2 = Matrix.from_table([
+                [1, 3],
+                [2, 4],
+            ])
+            m1 * m2
+
     def test_addition(self):
         m1 = Matrix.from_table([
             [2, -4, 0],
@@ -136,6 +197,14 @@ class TestMatrix(TestCase):
             [3, -4, 3],
             [5, -3, 3],
         ])
+        with self.assertRaisesRegexp(ValueError, "matrix size error"):
+            m1 = Matrix.from_table([
+                [1],
+            ])
+            m2 = Matrix.from_table([
+                [1, 2],
+            ])
+            m1 + m2
 
     def test_subduction(self):
         m1 = Matrix.from_table([
@@ -150,6 +219,14 @@ class TestMatrix(TestCase):
             [1, -4, -3],
             [1, -1, 1],
         ])
+        with self.assertRaisesRegexp(ValueError, "matrix size error"):
+            m1 = Matrix.from_table([
+                [1],
+            ])
+            m2 = Matrix.from_table([
+                [1, 2],
+            ])
+            m1 - m2
 
     def test_transpose_matrix(self):
         m = Matrix.from_table([

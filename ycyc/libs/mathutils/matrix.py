@@ -89,8 +89,8 @@ class Matrix(object):
             raise ValueError("index type error: %s" % idx)
 
         row_n, col_n = idx
-        if row_n > self.row_n or col_n > self.col_n:
-            raise IndexError("index error: %s" % idx)
+        if row_n >= self.row_n or col_n >= self.col_n:
+            raise IndexError("index error: [%s, %s]" % (row_n, col_n))
 
         self.data[row_n][col_n] = val
 
@@ -118,6 +118,9 @@ class Matrix(object):
         )
 
     def __eq__(self, other):
+        if self.row_n != other.row_n or self.col_n != other.col_n:
+            return False
+
         for mr, tr, r in zip(self, other, range(self.row_n)):
             for mc, tc, c in zip(mr, tr, range(self.col_n)):
                 if mc != tc:
