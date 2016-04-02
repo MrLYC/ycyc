@@ -4,6 +4,7 @@ import os
 
 
 class Matrix(object):
+
     @classmethod
     def from_table(cls, table, init_val=0):
         data = []
@@ -24,7 +25,9 @@ class Matrix(object):
         return cls(row_n=row_n, col_n=col_n, matrix=data, init_val=init_val)
 
     @classmethod
-    def check_size(cls, matrix, row_checker=lambda x: True, col_checker=lambda x: True):
+    def check_size(
+        cls, matrix, row_checker=lambda x: True, col_checker=lambda x: True
+    ):
         if not row_checker(matrix.row_n) or not col_checker(matrix.col_n):
             raise ValueError("matrix size error: [%d, %d]" % (
                 matrix.row_n, matrix.col_n,
