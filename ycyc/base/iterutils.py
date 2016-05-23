@@ -37,6 +37,9 @@ def getattrs(obj, attrs, default=None):
     :param default: default value
     :return: obj attr value if existed, otherwise default value
     """
+    if not attrs:
+        return obj
+
     if isinstance(attrs, (str, unicode)):
         attrs = (attrs,)
 
