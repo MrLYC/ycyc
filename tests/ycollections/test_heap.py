@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from ycyc.ycollections.heap import Heap
+from ycyc.ycollections.heap import Heap, HeapIsEmpty
 
 
 class TestHeap(TestCase):
@@ -34,14 +34,26 @@ class TestHeap(TestCase):
             [1, 2, 3, 17, 17, 19, 25, 36, 100]
         )
 
-    def test_push_and_pop(self):
+    def test_push(self):
         heap = Heap()
         heap.push(3)
+        self.assertListEqual(list(heap), [3])
         heap.push(1)
+        self.assertListEqual(list(heap), [1, 3])
         heap.push(2)
         self.assertListEqual(list(heap), [1, 2, 3])
-        self.assertEqual(heap.pop(), 1)
+
+    def test_pop(self):
+        heap = Heap([3, 2, 1])
+        self.assertListEqual(list(heap), [1, 2, 3])
+        heap.pop()
         self.assertListEqual(list(heap), [2, 3])
+        heap.pop()
+        self.assertListEqual(list(heap), [3])
+        heap.pop()
+        self.assertListEqual(list(heap), [])
+        with self.assertRaises(HeapIsEmpty):
+            heap.pop()
 
     def test_headn(self):
         heap = Heap([3, 1, 17, 25, 19])

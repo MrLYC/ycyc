@@ -2,6 +2,10 @@ import heapq as heapq_op
 from ycyc.base.iterutils import getattrs
 
 
+class HeapIsEmpty(Exception):
+    pass
+
+
 class HeapItem(object):
 
     def __init__(self, value, heap):
@@ -50,6 +54,8 @@ class Heap(object):
         heapq_op.heappush(self.data, item)
 
     def pop(self):
+        if not self.data:
+            raise HeapIsEmpty()
         item = heapq_op.heappop(self.data)
         return item.value
 
