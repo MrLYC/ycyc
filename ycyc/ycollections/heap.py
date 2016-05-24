@@ -1,4 +1,6 @@
+from threading import RLock
 import heapq as heapq_op
+
 from ycyc.base.iterutils import getattrs
 
 
@@ -73,3 +75,21 @@ class Heap(object):
             i.value for i in heapq_op.nlargest(n, self.data)
         ]
         return values[::-1]
+
+
+class ThreadSafetyHeap(Heap):
+    def __init__(self, *args, **kwargs):
+        super(ThreadSafetyHeap, self).__init__(*args, **kwargs)
+        self.siftup_lock = RLock()
+
+    def push(self, *args, **kwargs):
+        with self.siftup_lock:
+            return super(ThreadSafetyHeap, self).push(*args, **kwargs)
+
+    def pop(self, *args, **kwargs):
+        with self.siftup_lock:
+            return super(ThreadSafetyHeap, self).pop(*args, **kwargs)
+
+    def edge_out(self, *args, **kwargs):
+        with self.siftup_lock:
+            return super(ThreadSafetyHeap, self).edge_out(*args, **kwargs)
