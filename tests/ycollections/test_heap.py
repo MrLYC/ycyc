@@ -43,29 +43,29 @@ class TestHeap(TestCase):
         self.assertEqual(heap.pop(), 1)
         self.assertListEqual(list(heap), [2, 3])
 
-    def test_topn(self):
+    def test_headn(self):
         heap = Heap([3, 1, 17, 25, 19])
         self.assertListEqual(
-            heap.topn(3),
+            heap.headn(3),
             [1, 3, 17]
         )
         heap = Heap([3, 1, 17, 25, 19], reverse=True)
         self.assertListEqual(
-            heap.topn(3),
+            heap.headn(3),
             [25, 19, 17]
         )
 
-    def test_lastn(self):
+    def test_tailn(self):
         heap = Heap([3, 1, 17, 25, 19])
         self.assertListEqual(
-            heap.lastn(3),
-            [25, 19, 17]
+            heap.tailn(3),
+            [17, 19, 25]
         )
 
         heap = Heap([3, 1, 17, 25, 19], reverse=True)
         self.assertListEqual(
-            heap.lastn(3),
-            [1, 3, 17]
+            heap.tailn(3),
+            [17, 3, 1]
         )
 
     def test_edge_out(self):

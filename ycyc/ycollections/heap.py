@@ -43,7 +43,7 @@ class Heap(object):
         return item.value
 
     def __iter__(self):
-        return iter(self.topn(len(self.data)))
+        return iter(self.headn(len(self.data)))
 
     def push(self, value):
         item = HeapItem(value, self)
@@ -57,12 +57,13 @@ class Heap(object):
         item = heapq_op.heapreplace(self.data, HeapItem(value, self))
         return item.value
 
-    def topn(self, n):
+    def headn(self, n):
         return [
             i.value for i in heapq_op.nsmallest(n, self.data)
         ]
 
-    def lastn(self, n):
-        return [
+    def tailn(self, n):
+        values = [
             i.value for i in heapq_op.nlargest(n, self.data)
         ]
+        return values[::-1]
