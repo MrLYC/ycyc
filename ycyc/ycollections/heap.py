@@ -53,6 +53,10 @@ class Heap(object):
         item = heapq_op.heappop(self.data)
         return item.value
 
+    def edge_out(self, value):
+        item = heapq_op.heapreplace(self.data, HeapItem(value, self))
+        return item.value
+
     def topn(self, n):
         return [
             i.value for i in heapq_op.nsmallest(n, self.data)
@@ -62,14 +66,3 @@ class Heap(object):
         return [
             i.value for i in heapq_op.nlargest(n, self.data)
         ]
-
-    def __and__(self, other):
-        if other.cmp_attrs != self.cmp_attrs:
-            raise ValueError()
-        return Heap(
-            (
-                i.value
-                for i in heapq_op.merge(self.data, other.data)
-            ),
-            self.cmp_attrs, self.reverse,
-        )

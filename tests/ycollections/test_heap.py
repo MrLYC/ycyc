@@ -63,3 +63,10 @@ class TestHeap(TestCase):
             heap.lastn(3),
             [1, 3, 17]
         )
+
+    def test_edge_out(self):
+        heap = Heap([3, 1, 2])
+        self.assertEqual(1, heap.edge_out(4))
+        self.assertEqual(2, heap.edge_out(5))
+        self.assertEqual(3, heap.edge_out(6))
+        self.assertEqual(4, heap.edge_out(7))
