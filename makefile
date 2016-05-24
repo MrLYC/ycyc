@@ -47,11 +47,7 @@ author-config:
 	git config user.name MrLYC --local
 
 publish:
-	git pull --rebase origin dev --tags
-	git checkout master
-	git rebase dev
+	git pull --rebase origin master --tags
 	git tag `$(PYTHON) $(ROOTPATH)/setup.py --version`
 	$(PYTHON) $(ROOTPATH)/setup.py clean bdist_egg sdist upload
-	git checkout dev
-	git rebase master
-	git push origin master dev --tags
+	git push origin master master --tags
