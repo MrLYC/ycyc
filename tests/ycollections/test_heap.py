@@ -4,6 +4,10 @@ from ycyc.ycollections.heap import Heap
 
 
 class TestHeap(TestCase):
+    class PriorityTask(object):
+        def __init__(self, priority, value):
+            self.priority = priority
+            self.value = value
 
     def test_construction(self):
         Heap()
@@ -70,3 +74,26 @@ class TestHeap(TestCase):
         self.assertEqual(2, heap.edge_out(5))
         self.assertEqual(3, heap.edge_out(6))
         self.assertEqual(4, heap.edge_out(7))
+
+    def test_cmp_attrs(self):
+        heap = Heap(cmp_attrs=["priority"])
+        heap.push(self.PriorityTask(5, 0))
+        heap.push(self.PriorityTask(8, 1))
+        heap.push(self.PriorityTask(3, 2))
+        heap.push(self.PriorityTask(4, 3))
+        heap.push(self.PriorityTask(9, 4))
+        self.assertListEqual(
+            [i.value for i in heap],
+            [2, 3, 0, 1, 4]
+        )
+
+        heap = Heap(cmp_attrs=["priority"], reverse=True)
+        heap.push(self.PriorityTask(5, 0))
+        heap.push(self.PriorityTask(8, 1))
+        heap.push(self.PriorityTask(3, 2))
+        heap.push(self.PriorityTask(4, 3))
+        heap.push(self.PriorityTask(9, 4))
+        self.assertListEqual(
+            [i.value for i in heap],
+            [4, 1, 0, 3, 2]
+        )
