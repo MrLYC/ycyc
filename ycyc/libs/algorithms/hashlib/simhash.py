@@ -45,7 +45,7 @@ class SimHash(object):
         self.bits = bits
 
     def raw(self):
-        return "".join(str(i) for i in self.hash_result)
+        return int("".join(str(i) for i in self.hash_result), 2)
 
     def hex(self):
         hex_step = 4
