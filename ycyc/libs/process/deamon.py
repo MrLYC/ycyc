@@ -33,11 +33,11 @@ class DeamonProcess(object):
         except OSError as err:
             sys.stderr.write("fork #1 failed: %s" % err)
 
-    def _wait_child_process(self, pid):
+    def _wait_child_process(self):
         """
         Wait child process to exit to avoid a zombie process.
         """
-        return os.wait(pid)
+        return os.wait()
 
     def _fork_deamon_process(self):
         """
@@ -75,7 +75,7 @@ class DeamonProcess(object):
         # move to background
         pid = self._fork_child_process()
         if pid > 0:
-            self._wait_child_process(pid)
+            self._wait_child_process()
             raise ChildForkFinished()
 
         # become session leader
