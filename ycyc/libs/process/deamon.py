@@ -13,11 +13,21 @@ class DeamonProcess(object):
         stdin=None, stdout=None, stderr=None,
     ):
         self.target = target
-        self.pid = None
+        self._pid = None
         self.pidfile = pidfile or "/tmp/DeamonProcess.pid"
         self.stdin = stdin or "/dev/null"
         self.stdout = stdout or "/dev/null"
         self.stderr = stderr or self.stdout
+
+    @property
+    def pid(self):
+        if self._pid is None:
+            try:
+                with open(self.pidfile, "rt") as fp:
+                    self._pid = int(fp.readline())
+            except (IOError, ValueError):
+                pass
+        return self._pid
 
     def run(self, *args, **kwargs):
         if not self.target:
@@ -29,9 +39,12 @@ class DeamonProcess(object):
         Fork a child process which would not collected by the init.
         """
         try:
-            return os.fork()
+            pid = os.fork()
         except OSError as err:
             sys.stderr.write("fork #1 failed: %s" % err)
+
+        if pid > 0:
+            raise ChildForkFinished()
 
     def _wait_child_process(self):
         """
@@ -52,7 +65,6 @@ class DeamonProcess(object):
 
         if pid > 0:
             sys.exit(0)
-        return pid
 
     def _redirect_standard_file_descriptors(self):
         """
@@ -73,10 +85,11 @@ class DeamonProcess(object):
 
     def _daemonize(self):
         # move to background
-        pid = self._fork_child_process()
-        if pid > 0:
+        try:
+            self._fork_child_process()
+        except ChildForkFinished as err:
             self._wait_child_process()
-            raise ChildForkFinished()
+            raise err
 
         # become session leader
         os.setsid()
@@ -86,9 +99,10 @@ class DeamonProcess(object):
         os.umask(0)
 
         # become process group leader
-        self.pid = self._fork_deamon_process()
+        self._fork_deamon_process()
         with open(self.pidfile, "w+") as fp:
-            fp.write("%s\n" % self.pid)
+            self._pid = os.getpid()
+            fp.write("%s\n" % self._pid)
 
         # redirect standard file descriptors
         self._redirect_standard_file_descriptors()
