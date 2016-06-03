@@ -94,10 +94,10 @@ class TestConstants(TestCase):
         )
 
         self.assertIsInstance(const, typeutils.Constants)
-        self.assertEqual(const.Id, "TestConstants")
-        self.assertEqual(const.Name, "TestConstants")
+        self.assertEqual(const.Id, "TestConstants")  # pylint: disable=E1101
+        self.assertEqual(const.Name, "TestConstants")  # pylint: disable=E1101
         self.assertTupleEqual(const["TestConstants"], ("Id", "Name"))
-        self.assertEqual(const.Function, "test_usage")
+        self.assertEqual(const.Function, "test_usage")  # pylint: disable=E1101
         self.assertTupleEqual(const["test_usage"], ("Function",))
         self.assertIsNone(const["noting"])
 
@@ -124,9 +124,9 @@ class TestEnums(TestCase):
     def test_usage(self):
         enums = typeutils.enums("a", "b", "c")
 
-        self.assertEqual(enums.a, 0)
-        self.assertEqual(enums.b, 1)
-        self.assertEqual(enums.c, 2)
+        self.assertEqual(enums.a, 0)  # pylint: disable=E1101
+        self.assertEqual(enums.b, 1)  # pylint: disable=E1101
+        self.assertEqual(enums.c, 2)  # pylint: disable=E1101
 
         self.assertEqual(enums[0], "a")
         self.assertEqual(enums[1], "b")

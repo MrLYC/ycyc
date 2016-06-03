@@ -39,5 +39,5 @@ class TestMarker(TestCase):
             m.value = 1
         self.assertEqual(m.value, 123)
         with self.assertRaisesRegexp(AttributeError, "has no attribute 'foo'"):
-            m.foo = 1
+            m.foo = 1  # pylint: disable=E0237
         self.assertFalse(hasattr(m, "foo"))

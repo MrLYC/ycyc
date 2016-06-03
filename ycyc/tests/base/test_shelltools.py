@@ -5,14 +5,14 @@ from unittest import TestCase
 
 import mock
 
-from tests import mock_patches
+from ycyc.tests import mock_patches
 from ycyc.base import shelltools
 
 
 class TestCommands(TestCase):
     def test_shell_commands_usage(self):
         self.assertIsInstance(shelltools.ShellCommands, object)
-        command = shelltools.ShellCommands.echo
+        command = shelltools.ShellCommands.echo  # pylint: disable=E1101
         self.assertIsInstance(command, shelltools.Command)
         self.assertIsInstance(command, shelltools.Command)
         self.assertEqual(command.name, "echo")

@@ -11,16 +11,16 @@ from ycyc.tools import rescuekit
 class TestRescue(TestCase):
     def test_usage(self):
         self.assertIsInstance(
-            rescuekit.Rescue.catch(""),
+            rescuekit.Rescue.catch(""),  # pylint: disable=E1120
             rescuekit.Rescue
         )
         self.assertIsInstance(
-            rescuekit.Rescue.meet(""),
+            rescuekit.Rescue.meet(""),  # pylint: disable=E1120
             rescuekit.Rescue
         )
 
         func_mock = mock.MagicMock()
-        rescue = rescuekit.Rescue.catch("")
+        rescue = rescuekit.Rescue.catch("")  # pylint: disable=E1120
         func_mock.return_value = 0
         self.assertEqual(rescue.call(func_mock, 1, val=2), 0)
         func_mock.assert_called_once_with(1, val=2)
@@ -50,6 +50,6 @@ class TestRescue(TestCase):
         self.assertEqual(rescue.call(func_mock), "")
 
         self.assertEqual(
-            rescuekit.Rescue.catch("nan").call(lambda: 1/0),
+            rescuekit.Rescue.catch("nan").call(lambda: 1 / 0),  # pylint: disable=E1120
             "nan"
         )

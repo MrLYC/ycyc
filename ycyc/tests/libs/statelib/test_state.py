@@ -48,6 +48,7 @@ class TestFreeState(TestCase):
         self.assertEqual(state.exception, None)
         self.assertEqual(state.last_state, "state3")
 
+
 class TestSequenceState(TestCase):
     def test_usage(self):
         class TSequenceState(SequenceState):

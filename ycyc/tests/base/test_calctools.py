@@ -114,4 +114,3 @@ class TestSelect(TestCase):
             calctools.select(obj, noting=("key", "noting")),
             {"noting": None}
         )
-

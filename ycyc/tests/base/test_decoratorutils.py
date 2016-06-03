@@ -46,7 +46,6 @@ class TestChainingMethod(TestCase):
             def free_args(self, *args, **kwg):
                 self.called.append(("free_args", args, kwg))
 
-
         mockobj = MockCls()
         mockobj.position_arg(1).keyword_arg(val=2).free_args(3, val=4)
 
@@ -149,7 +148,7 @@ class TestOnErrorReturn(TestCase):
 class TestCallImmediately(TestCase):
     def test_usage(self):
         num = 10
-        init_val=0
+        init_val = 0
 
         @decoratorutils.call_immediately()
         def val_lst():
@@ -197,10 +196,10 @@ class TestAllowUnboundMethod(TestCase):
 
         class TestCls(object):
             @decoratorutils.allow_unbound_method
-            def save_invoker(invoker):
+            def save_invoker(invoker):  # pylint: disable=E0213
                 invokers.append(invoker)
 
-        TestCls.save_invoker()
+        TestCls.save_invoker()  # pylint: disable=E1120
         self.assertEqual(TestCls, invokers.pop())
 
         test_obj = TestCls()
@@ -212,10 +211,9 @@ class TestClassProperty(TestCase):
     def test_usage(self):
         class Model(object):
             @decoratorutils.classproperty
-            def val(cls):
+            def val(cls):  # pylint: disable=E0213
                 return 1
 
         self.assertEqual(Model.val, 1)
         model = Model()
         self.assertEqual(model.val, 1)
-

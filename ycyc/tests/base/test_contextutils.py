@@ -162,4 +162,3 @@ class TestHeartbeat(TestCase):
         call_count = mock_touch.call_count
         time.sleep(0.02)
         self.assertEqual(call_count, mock_touch.call_count)
-

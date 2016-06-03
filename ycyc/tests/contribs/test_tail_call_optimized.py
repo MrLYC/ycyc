@@ -13,12 +13,12 @@ class TestTailCallOptimized(TestCase):
             "calculate a factorial"
             if n == 0:
                 return acc
-            return factorial(n-1, n*acc)
+            return factorial(n - 1, n * acc)
 
         factorial(10000)
 
         @tail_call_optimized
-        def fib(i, current = 0, next = 1):
+        def fib(i, current=0, next=1):
             if i == 0:
                 return current
             else:

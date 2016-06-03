@@ -6,7 +6,7 @@ import inspect
 
 import mock
 
-from tests import mock_patches
+from ycyc.tests import mock_patches
 from ycyc.base import adapter
 
 
@@ -138,15 +138,15 @@ class TestProxy(TestCase):
         mock_object.value = "lyc"
         proxy_object = adapter.proxy(mock_object)
 
-        self.assertEqual(mock_object.value, proxy_object.value)
+        self.assertEqual(mock_object.value, proxy_object.value)  # pylint: disable=E1101
 
         value = proxy_object.value = 123
         self.assertNotEqual(mock_object.value, value)
-        self.assertEqual(mock_object.value, proxy_object.value)
+        self.assertEqual(mock_object.value, proxy_object.value)  # pylint: disable=E1101
 
         value = mock_object.value = 123
         self.assertEqual(mock_object.value, value)
-        self.assertEqual(mock_object.value, proxy_object.value)
+        self.assertEqual(mock_object.value, proxy_object.value)  # pylint: disable=E1101
 
         @adapter.proxy
         class Consts(object):

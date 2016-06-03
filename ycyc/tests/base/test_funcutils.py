@@ -26,11 +26,11 @@ class TestObjectHelper(TestCase):
         self.assertTrue(funcutils.set_default_attr(
             foo, "foobarbaz", True
         ))
-        self.assertTrue(foo.foobarbaz)
+        self.assertTrue(foo.foobarbaz)  # pylint: disable=E1101
         self.assertTrue(funcutils.set_default_attr(
             foo, "foobarbaz", False
         ))
-        self.assertTrue(foo.foobarbaz)
+        self.assertTrue(foo.foobarbaz)  # pylint: disable=E1101
 
     def test_iter_attrs(self):
         class Foo(object):

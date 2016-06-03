@@ -5,7 +5,7 @@ from unittest import TestCase
 
 import mock
 
-from tests import mock_patches
+from ycyc.tests import mock_patches
 from ycyc.base import filetools
 
 
