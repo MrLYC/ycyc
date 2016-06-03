@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from collections import namedtuple
+
 from ycyc.base.contextutils import catch
 from ycyc.base.typeutils import SimpleExceptions
 
@@ -11,33 +13,64 @@ EventNoExistedError = EventsExceptions.EventNoExistedError
 
 
 class Event(object):
+    CallbackResult = namedtuple("CallbackResult", [
+        "callback", "result", "exception",
+    ])
+
     def __init__(self):
         super(Event, self).__init__()
-        self.listeners = []
-
-    def notify(self, *args, **kwg):
-        """
-        Notify all the listeners that event is happended.
-        """
-        listeners = tuple(self.listeners)
-        for listener in listeners:
-            with catch():
-                listener(*args, **kwg)
+        self.callbacks = []
 
     def register(self, callback):
         """
         Register a callback to this event
         """
-        if callback in self.listeners:
-            raise ListenerDuplicatedError
-        self.listeners.append(callback)
+        if callback in self.callbacks:
+            raise ListenerDuplicatedError()
+        self.callbacks.append(callback)
+        return callback
 
     def unregister(self, callback):
         """
         Unregister a callback from this event
         """
-        with catch(ValueError, ListenerNoExistedError):
-            self.listeners.remove(callback)
+        if callback not in self.callbacks:
+            raise ListenerNoExistedError()
+        self.callbacks.remove(callback)
+        return callback
+
+    def notify_iter(self, sender, args=None, kwargs=None):
+        args = args or tuple()
+        kwargs = kwargs or dict()
+
+        for callback in self.callbacks:
+            try:
+                exception = None
+                result = callback(sender, *args, **kwargs)
+            except Exception as exception:
+                result = None
+
+            yield self.CallbackResult(
+                callback=callback, result=result,
+                exception=exception,
+            )
+
+    def notify(self, sender, *args, **kwargs):
+        """
+        Notify the listeners when event is happending,
+        but stop if catch a exception.
+        """
+        for i in self.notify_iter(sender, *args, **kwargs):
+            if i.exception:
+                raise i.exception
+
+    def notify_all(self, sender, *args, **kwargs):
+        """
+        Notify all the listeners when event is happending.
+        """
+        return [
+            i for i in self.notify_iter(sender, *args, **kwargs)
+        ]
 
 
 class EventsCenter(dict):
