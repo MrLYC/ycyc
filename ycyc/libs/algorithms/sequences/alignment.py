@@ -20,7 +20,7 @@ def alignment_seq(sequences, key_func=None, cmp_func=None):
     key_func = key_func or (lambda x: x)
     cmp_func = cmp_func or (lambda x, y: cmp(key_func(x), key_func(y)))
 
-    seq_heap = [SeqHeapItem(i, cmp_func) for i in sequences if i]
+    seq_heap = [SeqHeapItem(i, cmp_func) for i in sequences]
 
     while seq_heap:
         try:
