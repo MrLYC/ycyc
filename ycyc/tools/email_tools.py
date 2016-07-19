@@ -61,12 +61,12 @@ class EMail(object):
 
     def send(self, passwd=None, user=None):
         server = smtplib.SMTP(self.server)
+        user = user or self.sender
         if passwd:
-            user = user or self.sender
             server.login(user, passwd)
 
         try:
-            server.sendmail(self.sender, self.receiver, self.mail.as_string())
+            server.sendmail(user, self.receiver, self.mail.as_string())
         except smtplib.SMTPRecipientsRefused as e:
             six.raise_from(EMailSendFailed, e)
         finally:
