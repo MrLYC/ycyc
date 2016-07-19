@@ -48,6 +48,6 @@ author-config:
 
 publish:
 	git pull --rebase origin master --tags
-	git tag `$(PYTHON) $(ROOTPATH)/setup.py --version`
 	$(PYTHON) $(ROOTPATH)/setup.py clean bdist_egg sdist upload
+	git tag `$(PYTHON) $(ROOTPATH)/setup.py --version`
 	git push origin master:master --tags
