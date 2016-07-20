@@ -45,8 +45,8 @@ class EMail(object):
     def mail(self):
         mail = MIMEMultipart()
         mail['Subject'] = Header(self.subject, self.charset)
-        mail['From'] = self.sender
-        mail['To'] = ",".join(self.receiver)
+        mail['From'] = Header(self.sender, self.charset)
+        mail['To'] = Header(",".join(self.receiver), self.charset)
         mail.attach(MIMEText(self.content, self.subtype, self.charset))
 
         for i in self.attachment_paths:
