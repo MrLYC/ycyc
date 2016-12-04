@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import weakref
+
 from collections import namedtuple
 
-from ycyc.base.contextutils import catch
 from ycyc.base.typeutils import SimpleExceptions
 
 EventsExceptions = SimpleExceptions()
@@ -34,9 +35,10 @@ class Event(object):
         """
         Unregister a callback from this event
         """
-        if callback not in self.callbacks:
+        try:
+            self.callbacks.remove(callback)
+        except ValueError:
             raise ListenerNoExistedError()
-        self.callbacks.remove(callback)
         return callback
 
     def notify_iter(self, sender, args=None, kwargs=None):
@@ -44,11 +46,14 @@ class Event(object):
         kwargs = kwargs or dict()
 
         for callback in self.callbacks:
+            result = None
             try:
                 exception = None
                 result = callback(sender, *args, **kwargs)
+            except weakref.ReferenceError as exception:
+                self.unregister(callback)  # auto unregister weakref.ProxyType object
             except Exception as exception:
-                result = None
+                pass
 
             yield self.CallbackResult(
                 callback=callback, result=result,
@@ -73,14 +78,18 @@ class Event(object):
         ]
 
 
-class EventsCenter(dict):
+class EventCenter(dict):
     """
     Event center to manage some events as a dict
     """
+
     def __init__(self, event_factory=None):
-        super(EventsCenter, self).__init__()
+        super(EventCenter, self).__init__()
         self.event_factory = event_factory or Event
 
     def __missing__(self, name):
         event = self[name] = self.event_factory()
         return event
+
+    def __getattr__(self, name):
+        return self[name]
