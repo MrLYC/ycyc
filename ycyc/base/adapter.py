@@ -8,7 +8,6 @@ A adapter tool module
 import collections
 import sys
 import functools
-import types
 
 from ycyc.base import funcutils
 

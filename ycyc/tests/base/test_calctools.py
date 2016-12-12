@@ -3,7 +3,6 @@
 
 from unittest import TestCase
 from collections import namedtuple
-from textwrap import dedent
 
 import mock
 

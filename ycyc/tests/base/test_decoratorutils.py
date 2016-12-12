@@ -55,7 +55,8 @@ class TestChainingMethod(TestCase):
 
 
 class TestRetry(TestCase):
-    def mockfunc(self, iterator):
+    @classmethod
+    def mockfunc(cls, iterator):
         try:
             n = next(iterator)
             raise ValueError("%s" % n)

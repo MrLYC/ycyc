@@ -164,10 +164,9 @@ class TestDynamicClosure(TestCase):
 
     def test_usage(self):
         def check(env):
-            self.assertEqual(env["l_value"], g_value)
+            self.assertEqual(env["value"], g_value)
 
         def invoker(value):
-            l_value = value
             adapter.dynamic_closure(check)
 
         g_value = 1

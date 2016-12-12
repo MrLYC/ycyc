@@ -163,7 +163,7 @@ class TxtDistance(object):
         len2 = len(s2)
 
         if (len1 <= 0) or (len2 <= 0):
-            result = len1 or len2
+            return len1 or len2
 
         row_n = len1 + 1
         col_n = len2 + 1

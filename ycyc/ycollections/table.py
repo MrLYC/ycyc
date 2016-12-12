@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import os
-
 
 def simple_table(row, col, cell_factory):
     """

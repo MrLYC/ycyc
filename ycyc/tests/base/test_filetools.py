@@ -3,8 +3,6 @@
 
 from unittest import TestCase
 
-import mock
-
 from ycyc.tests import mock_patches
 from ycyc.base import filetools
 

@@ -13,7 +13,7 @@ class TestRegex(TestCase):
 
     def test_num_less_than(self):
         with self.assertRaises(ValueError):
-            rex = re.compile(resources.Regex.num_less_than(0))
+            re.compile(resources.Regex.num_less_than(0))
 
         def test_num(num):
             rex = self.pattern_equal_rex(resources.Regex.num_less_than(num))

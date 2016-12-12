@@ -3,8 +3,6 @@
 
 from unittest import TestCase
 
-import mock
-
 from ycyc.tests import mock_patches
 from ycyc.base import shelltools
 
@@ -64,7 +62,7 @@ class TestCommands(TestCase):
         ) as patches:
             command = shelltools.Command("echo")
 
-            with command.subprocessor("hello", "lyc") as subprocessor:
+            with command.subprocessor("hello", "lyc"):
                 patches.Popen.assert_called_once_with(
                     ["echo", "hello", "lyc"],
                     stdout=shelltools.subprocess.PIPE,
