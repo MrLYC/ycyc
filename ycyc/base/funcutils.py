@@ -7,7 +7,13 @@ funcutils provided some useful functions.
 
 import inspect
 import sys
-import thread
+
+import six
+
+if six.PY2:
+    import thread as threading
+else:
+    import threading
 
 
 def is_magic_method(method):
@@ -72,7 +78,7 @@ def parent_frame():
     Return parent frame of invoker.
     """
     frames = sys._current_frames()
-    current_frame = frames[thread.get_ident()]
+    current_frame = frames[threading.get_ident()]
     invoker_frame = current_frame.f_back
     return invoker_frame and invoker_frame.f_back
 

@@ -67,7 +67,7 @@ def lazy_init(func):
     Decorator for __getattr__ method only, cached the real __getattr__
     method returned value and init the attribute.
     """
-    assert func.func_name == "__getattr__"
+    assert func.__name__ == "__getattr__"
 
     @functools.wraps(func)
     def lazy_get(self, name):

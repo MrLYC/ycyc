@@ -155,7 +155,7 @@ def call_immediately(checker=True):
     :param args: position arguments
     :param kwg: key word arguments
     """
-    if isinstance(checker, types.BooleanType):
+    if isinstance(checker, bool):
         checker = (lambda: checker)
 
     def invoker(func):

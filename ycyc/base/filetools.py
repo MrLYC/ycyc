@@ -7,11 +7,17 @@ import codecs
 import tempfile
 import shutil
 from contextlib import contextmanager
-import exceptions
 from functools import wraps
 import hashlib
 from datetime import datetime
 import re
+
+import six
+
+if six.PY2:
+    import exceptions
+else:
+    import builtins as exception
 
 from ycyc.base import contextutils
 

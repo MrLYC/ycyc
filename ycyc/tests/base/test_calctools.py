@@ -51,7 +51,6 @@ class TestSafeCalc(TestCase):
 
         for e in forbidden_exprs:
             with self.assertRaises(Exception):
-                print e
                 calc(e)
 
     def test_timeout(self):

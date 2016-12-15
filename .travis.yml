@@ -1,4 +1,5 @@
 language: python
+sudo: true
 python:
     - "2.7"
     - "3.2"
@@ -6,12 +7,13 @@ python:
     - "3.4"
     - "3.5"
 install:
-    - "sudo pip install -r requirements.txt"
-    - "sudo pip install -r requirements-dev.txt"
-    - "sudo pip install -r requirements-extends.txt"
+    - "pip install -r requirements.txt"
+    - "pip install -r requirements-dev.txt"
+    - "pip install -r requirements-extends.txt"
+    - "pip install codecov"
 script: make test
 branches:
     only:
         - master
 after_success:
-    - bash < (curl -s https://codecov.io/bash)
+    codecov

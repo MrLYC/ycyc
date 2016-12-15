@@ -3,7 +3,13 @@
 
 from unittest import TestCase
 import sys
-import thread
+
+import six
+
+if six.PY2:
+    import thread as threading
+else:
+    import threading
 
 from ycyc.base import logutils
 
@@ -11,7 +17,7 @@ from ycyc.base import logutils
 class TestLoggerInfo(TestCase):
     def test_usage(self):
         frames = sys._current_frames()
-        frame = frames[thread.get_ident()]
+        frame = frames[threading.get_ident()]
         loginfo = logutils.LoggerInfo()
 
         self.assertIs(frame, loginfo.frame)
