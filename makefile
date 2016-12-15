@@ -8,7 +8,7 @@ PYENV := env PYTHONPATH=$(ROOTPATH)
 PYTHON := $(PYENV) python
 PEP8 := $(PYENV) pep8 --repeat --ignore=E202,E501
 PYLINT := $(PYENV) pylint --disable=I0011 --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}"
-PYTEST := $(PYENV) py.test -v -x
+PYTEST := $(PYENV) py.test -v
 PIPINSTALL := $(PYENV) pip install -i http://pypi.douban.com/simple/
 
 -include $(DEVMKFILE)
