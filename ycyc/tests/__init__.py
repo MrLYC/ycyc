@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from contextlib import contextmanager, nested
+from contextlib import contextmanager
 
 import mock
 
@@ -21,10 +21,16 @@ def mock_patches(*patches, **named_patches):
     attrs.extend(named_patches.keys())
     patches = list(patches)
     patches.extend(named_patches.values())
+    mock_patches = []
     mocks = mock.Mock()
 
-    with nested(*map(mock.patch, patches)) as mp:
-        for k, m in zip(attrs, mp):
-            setattr(mocks, k, m)
+    for k, i in zip(attrs, patches):
+        patch = mock.patch(i)
+        mock_patches.append(patch)
+        setattr(mocks, k, patch.start())
 
+    try:
         yield mocks
+    finally:
+        for p in mock_patches:
+            p.stop()
