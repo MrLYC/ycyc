@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from collections import OrderedDict
 from unittest import TestCase
 import textwrap
 
@@ -17,18 +18,18 @@ class Test_TxtGenerator(TestCase):
             {
                 "clsname": "TestUsage",
                 "basecls": "TestCase",
-                "attrs": {
-                    "a": "1",
-                    "b": "None",
-                },
+                "attrs": OrderedDict([
+                    ("a", "1"),
+                    ("b", "None"),
+                ]),
             },
             {
                 "clsname": "Model",
                 "basecls": "BaseModel",
-                "attrs": {
-                    "name": "''",
-                    "age": "0",
-                },
+                "attrs": OrderedDict([
+                    ("age", "0"),
+                    ("name", "''"),
+                ]),
             },
             {
                 "clsname": "Tool",

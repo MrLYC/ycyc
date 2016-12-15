@@ -163,6 +163,15 @@ class Constants(object):
         for k, v in mappings.items():
             setattr(self, k, v)
 
+    def __getitem__(self, name):
+        pass
+
+    def __len__(self):
+        pass
+
+    def __iter__(self):
+        pass
+
 
 def constants(**kwg):
     """

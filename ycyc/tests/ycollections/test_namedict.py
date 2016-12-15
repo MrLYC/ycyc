@@ -112,14 +112,14 @@ class TestNamedDict(TestCase):
 
             tdict = TestDict(1)
             self.assertEqual(tdict.val, 1)
-            self.assertEqual(logger.warning.call_count, 0)
+            self.assertEqual(logger.warning.call_count, 0)  # pylint: disable=E1101
 
             tdict = TestDict(1, 2)
             self.assertEqual(tdict.val, 1)
-            self.assertEqual(logger.warning.call_count, 1)
-            self.assertListEqual(logger.warning.call_args[0][1], [2])
+            self.assertEqual(logger.warning.call_count, 1)  # pylint: disable=E1101
+            self.assertListEqual(logger.warning.call_args[0][1], [2])  # pylint: disable=E1101
 
             tdict = TestDict(1, nothing=2)
             self.assertEqual(tdict.val, 1)
-            self.assertEqual(logger.warning.call_count, 2)
-            self.assertSetEqual(logger.warning.call_args[0][1], {"nothing"})
+            self.assertEqual(logger.warning.call_count, 2)  # pylint: disable=E1101
+            self.assertSetEqual(logger.warning.call_args[0][1], {"nothing"})  # pylint: disable=E1101

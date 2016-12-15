@@ -15,7 +15,7 @@ class TestUsage(TestCase):
         def func():
             return 1
 
-        result, exception = func()
+        result, exception = func()  # pylint: disable=unpacking-non-sequence
         self.assertIsNone(exception)
         self.assertEqual(result, 1)
         self.assertIsNone(magic_mock.call_args)

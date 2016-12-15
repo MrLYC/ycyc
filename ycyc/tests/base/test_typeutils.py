@@ -96,9 +96,9 @@ class TestConstants(TestCase):
         self.assertIsInstance(const, typeutils.Constants)
         self.assertEqual(const.Id, "TestConstants")  # pylint: disable=E1101
         self.assertEqual(const.Name, "TestConstants")  # pylint: disable=E1101
-        self.assertTupleEqual(const["TestConstants"], ("Id", "Name"))
+        self.assertSetEqual(set(const["TestConstants"]), set(["Id", "Name"]))
         self.assertEqual(const.Function, "test_usage")  # pylint: disable=E1101
-        self.assertTupleEqual(const["test_usage"], ("Function",))
+        self.assertTupleEqual(const["test_usage"], ("Function",))  # pylint: unsubscriptable-object
         self.assertIsNone(const["noting"])
 
         with self.assertRaisesRegexp(

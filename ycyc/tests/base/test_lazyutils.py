@@ -72,6 +72,6 @@ def TestLazyKit(TestCase):
         gen = (i for i in range(3))
         lazy_list = lazyutils.LazyKit(lambda: list(gen))
         self.assertEqual(next(gen), 0)
-        self.assertEqual(lazy_list[1], 1)
-        self.assertEqual(lazy_list[2], 2)
+        self.assertEqual(lazy_list[1], 1)  # pylint: disable=unsubscriptable-object
+        self.assertEqual(lazy_list[2], 2)  # pylint: disable=unsubscriptable-object
         self.assertSetEqual(set(dir([])) - set(dir(lazy_list)), set())
