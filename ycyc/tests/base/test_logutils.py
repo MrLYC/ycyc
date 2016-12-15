@@ -6,12 +6,12 @@ import sys
 
 import six
 
+from ycyc.base import logutils
+
 if six.PY2:
     import thread as threading
 else:
     import threading
-
-from ycyc.base import logutils
 
 
 class TestLoggerInfo(TestCase):
@@ -21,7 +21,7 @@ class TestLoggerInfo(TestCase):
         loginfo = logutils.LoggerInfo()
 
         self.assertIs(frame, loginfo.frame)
-        line_based = 18
+        line_based = 24
         self.assertEqual(line_based + 1, loginfo.line_no)
         self.assertEqual(line_based + 2, loginfo.line_no)
         self_func = self.test_usage.im_func

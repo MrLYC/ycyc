@@ -14,12 +14,12 @@ import re
 
 import six
 
+from ycyc.base import contextutils
+
 if six.PY2:
     import exceptions
 else:
-    import builtins as exception
-
-from ycyc.base import contextutils
+    import builtins as exceptions
 
 
 def oserror_format(func):
