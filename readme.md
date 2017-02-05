@@ -1,4 +1,5 @@
-# ycyc
+![ycyc](logo.png)
+
 a library by LYC
 
 ## Installation
@@ -6,3 +7,4 @@ a library by LYC
 ```sh
 pip install ycyc
 ```
+
