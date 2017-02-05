@@ -1,4 +1,4 @@
-![ycyc](logo.png)
+![ycyc](logo-mini.png)
 
 a library by LYC
 
