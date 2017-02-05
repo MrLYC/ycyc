@@ -1,4 +1,4 @@
-![ycyc](logo-mini.png)
+![ycyc](https://cdn.rawgit.com/MrLYC/ycyc/master/logo.svg)
 
 a library by LYC
 
