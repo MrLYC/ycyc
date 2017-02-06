@@ -7,6 +7,7 @@ from ycyc.base import marker
 
 
 class TestMarker(TestCase):
+
     def test_usage(self):
         self.assertNotEqual(marker.Marker(), marker.Marker())
 

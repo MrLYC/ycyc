@@ -16,6 +16,7 @@ class RequireFieldsMissError(Exception):
 
 
 class NamedDictMeta(type):
+
     def __new__(cls, name, base, attrs):
         fields = attrs.pop("__Fields__", {})
         attrs["__Fields__"] = OrderedDict(fields)
@@ -27,14 +28,15 @@ class NamedDictMeta(type):
 
 
 class NamedDict(six.with_metaclass(NamedDictMeta, dict)):
+
     def __init__(self, *args, **kwg):  # pylint: disable=E1002
         requires = self.__Requires__
         fields = self.__Fields__.copy()
-        field_keys = fields.viewkeys()
+        field_keys = set(fields.keys())
         real_keys = field_keys | set(requires)
 
         if kwg:
-            kwg_keys = kwg.viewkeys()
+            kwg_keys = set(kwg.keys())
             undefined_keys = kwg_keys - real_keys
             if undefined_keys:
                 logger.warning("undefined keys: %s", undefined_keys)

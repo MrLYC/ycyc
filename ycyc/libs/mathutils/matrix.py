@@ -121,8 +121,8 @@ class Matrix(object):
         if self.row_n != other.row_n or self.col_n != other.col_n:
             return False
 
-        for mr, tr, r in zip(self, other, range(self.row_n)):
-            for mc, tc, c in zip(mr, tr, range(self.col_n)):
+        for mr, tr, r in zip(self, other, list(range(self.row_n))):
+            for mc, tc, c in zip(mr, tr, list(range(self.col_n))):
                 if mc != tc:
                     return False
             else:

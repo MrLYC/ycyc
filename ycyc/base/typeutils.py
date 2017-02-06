@@ -115,13 +115,13 @@ class Constants(object):
     def __new__(cls, mappings, attrs):
         consts_index = {
             val: tuple(i[0] for i in item)
-            for val, item in groupby(mappings.items(), itemgetter(1))
+            for val, item in groupby(list(mappings.items()), itemgetter(1))
         }
 
         __name__ = attrs.pop("name", cls.__name__)
 
         def __iter__(self):
-            return mappings.iteritems()
+            return iter(mappings.items())
         hook = attrs.pop("iter_hook", None)
         if hook:
             __iter__ = hook(__iter__)
@@ -160,7 +160,7 @@ class Constants(object):
         return constants
 
     def __init__(self, mappings, attrs):
-        for k, v in mappings.items():
+        for k, v in list(mappings.items()):
             setattr(self, k, v)
 
     def __getitem__(self, name):

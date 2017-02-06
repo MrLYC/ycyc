@@ -8,6 +8,7 @@ iterutils provided some utils to operate a iterable or indexable object.
 import itertools
 import collections
 import logging
+from functools import reduce
 
 logger = logging
 
@@ -20,7 +21,7 @@ def getitems(obj, items, default=None):
     :param default: default value
     :return: obj item value if existed, otherwise default value
     """
-    if isinstance(items, (str, unicode)):
+    if isinstance(items, str):
         items = (items,)
 
     try:
@@ -40,7 +41,7 @@ def getattrs(obj, attrs, default=None):
     if not attrs:
         return obj
 
-    if isinstance(attrs, (str, unicode)):
+    if isinstance(attrs, str):
         attrs = (attrs,)
 
     try:
@@ -143,7 +144,7 @@ def dict_merge(dicts):
     result = {}
 
     for d in dicts:
-        for k, v in d.items():
+        for k, v in list(d.items()):
             if k not in result:
                 result[k] = v
 
@@ -209,7 +210,7 @@ def every_n(sequence, n=1):
     :param n: n items to iterate
     """
     i_sequence = iter(sequence)
-    return zip(*[i_sequence for i in range(n)])
+    return list(zip(*[i_sequence for i in range(n)]))
 
 
 def iter_chunk(sequence, size):

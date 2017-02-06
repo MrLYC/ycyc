@@ -8,7 +8,7 @@ from ycyc.ycollections import filterlist
 
 class TestFilterList(TestCase):
     def test_usage(self):
-        list1 = filterlist.FilterList(range(5))
+        list1 = filterlist.FilterList(list(range(5)))
         list2 = list1.filter(lambda x: x % 2)
         list3 = list1.exclude(lambda x: x % 2)
 

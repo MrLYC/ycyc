@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 import json
-from functools import wraps
 
 from ycyc.base.decoratorutils import cachedproperty
 
@@ -27,7 +26,7 @@ class RichTypeJSONEncoder(object):
                 try:
                     return self.base.default(data)
                 except TypeError:
-                    for typ, fcty in type_mapping.items():
+                    for typ, fcty in list(type_mapping.items()):
                         if isinstance(data, typ):
                             return fcty(data)
                     raise
@@ -44,7 +43,7 @@ class RichTypeJSONEncoder(object):
             (
                 set, frozenset,
                 types.GeneratorType,
-                types.XRangeType,
+                range,
                 collections.deque,
             ): list,
             (

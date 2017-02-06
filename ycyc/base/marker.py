@@ -16,7 +16,7 @@ class Marker(object):
             raise AttributeError("attribute %s is not writable" % name)
         return super(Marker, self).__setattr__(name, val)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.value)
 
     def __eq__(self, other):
@@ -30,6 +30,8 @@ class Marker(object):
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, repr(self.name))
 
+    __nonzero__ = __bool__
+
 Marker.Undefined = Marker("undefined", None)
 Marker.Missed = Marker("missed", None)
 Marker.Disabled = Marker("disabled", None)
@@ -38,6 +40,7 @@ try:
     from ycyc.base.lazyutils import lazy_init
 
     class SimpleMarkers(object):
+
         @lazy_init
         def __getattr__(self, name):
             return Marker(name)

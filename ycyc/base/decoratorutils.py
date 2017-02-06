@@ -8,6 +8,7 @@ decoratorutils provided some useful decorators.
 import functools
 import logging
 import types
+import collections
 
 logger = logging.getLogger(__file__)
 
@@ -25,7 +26,7 @@ def call_trace(loger=None, name=None):
     :param name: function name
     """
     def _(func):
-        fname = name or func.func_name
+        fname = name or func.__name__
 
         @functools.wraps(func)
         def f(*args, **kwg):
@@ -65,7 +66,7 @@ class CachedProperty(DescriptorBase):
     def __get__(self, instance, cls):
         if not hasattr(self, "cached_result"):
             result = types.MethodType(self.func, instance, cls)()
-            setattr(instance, self.func.func_name, result)
+            setattr(instance, self.func.__name__, result)
         return result
 cachedproperty = CachedProperty
 
@@ -118,7 +119,7 @@ def withmanager(ctxmgr, *ctxargs, **ctxkwg):
         @functools.wraps(func)
         def helper(*args, **kwg):
             mgr = ctxmgr
-            if callable(ctxmgr):
+            if isinstance(ctxmgr, collections.Callable):
                 mgr = ctxmgr(*ctxargs, **ctxkwg)
             with mgr:
                 return func(*args, **kwg)
@@ -190,7 +191,7 @@ def withattr(**kwg):
     :param kwg: attributes dict
     """
     def foo(func):
-        for name, value in kwg.items():
+        for name, value in list(kwg.items()):
             setattr(func, name, value)
         return func
 

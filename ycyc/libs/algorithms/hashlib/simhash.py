@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import re
+from functools import reduce
 
 
 class SimHash(object):

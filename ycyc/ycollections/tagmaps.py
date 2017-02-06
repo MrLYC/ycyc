@@ -7,7 +7,7 @@ class TagMaps(dict):
 
     def __missing__(self, key):
         if isinstance(key, int):
-            return self.keys()[key]
+            return list(self.keys())[key]
         if self.DefaultKey in self:
             return self.get(self.DefaultKey)
         raise KeyError(key)

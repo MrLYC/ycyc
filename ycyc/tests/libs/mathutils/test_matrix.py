@@ -6,8 +6,8 @@ from ycyc.libs.mathutils.matrix import Matrix
 class TestMatrix(TestCase):
 
     def assertMatrixEqualAs(self, matrix, table):
-        for mr, tr, r in zip(matrix, table, range(matrix.row_n)):
-            for mc, tc, c in zip(mr, tr, range(matrix.col_n)):
+        for mr, tr, r in zip(matrix, table, list(range(matrix.row_n))):
+            for mc, tc, c in zip(mr, tr, list(range(matrix.col_n))):
                 self.assertEqual(mc, tc)
             else:
                 self.assertEqual(c, matrix.col_n - 1)

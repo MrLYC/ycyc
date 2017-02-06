@@ -178,10 +178,10 @@ class LogFunctionCall(object):
             else "-> %s" % str(self.returned)
         )
 
-        args = map(str, self.args or ())
+        args = list(map(str, self.args or ()))
         args.extend(
             "{k}={v}".format(k=str(k), v=str(v))
-            for k, v in self.kwargs.items() or ()
+            for k, v in list(self.kwargs.items()) or ()
         )
 
         return "{f}({args}){returned}".format(

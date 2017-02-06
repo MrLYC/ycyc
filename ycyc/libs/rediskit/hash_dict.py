@@ -2,13 +2,13 @@
 # encoding: utf-8
 
 from collections import MutableMapping
-import cPickle
+import pickle
 
 from .base import RedisKit
 
 
 class RedisHashDict(MutableMapping, RedisKit):
-    Convertor = cPickle
+    Convertor = pickle
 
     def __init__(self, connection, name, *args, **kwargs):
         self.connection = connection

@@ -6,8 +6,12 @@ funcutils provided some useful functions.
 """
 
 import re
-import operator
-import inspect
+from functools import reduce
+
+try:
+    unicode = unicode
+except NameError:
+    unicode = str
 
 
 def template_render(template, model):
@@ -150,6 +154,7 @@ def right_part_of(txt, sub_txt, n=-1):
 
 
 class TxtDistance(object):
+
     @classmethod
     def edit_distance(cls, s1, s2):
         """
@@ -168,7 +173,7 @@ class TxtDistance(object):
         row_n = len1 + 1
         col_n = len2 + 1
 
-        f_table = map(lambda x: [0] * col_n, range(row_n))
+        f_table = [[0] * col_n for x in range(row_n)]
         for i in range(row_n):
             f_table[i][0] = i
         for i in range(col_n):

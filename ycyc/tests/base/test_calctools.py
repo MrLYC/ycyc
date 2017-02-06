@@ -40,7 +40,7 @@ class TestSafeCalc(TestCase):
         with self.assertRaises(NameError):
             calc("mul")
 
-        self.assert_(issubclass(calctools.NameParseError, NameError))
+        self.assertTrue(issubclass(calctools.NameParseError, NameError))
 
     def test_evil(self):
         forbidden_exprs = (

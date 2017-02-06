@@ -29,7 +29,7 @@ class EMail(object):
         self, server, sender=None, receiver=None, subject="", content="",
         subtype="plain", charset="utf-8",
     ):
-        if isinstance(receiver, basestring):
+        if isinstance(receiver, str):
             receiver = [receiver]
 
         self.server = server

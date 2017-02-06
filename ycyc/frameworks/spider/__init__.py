@@ -9,6 +9,7 @@ import requests
 from ycyc.base.decoratorutils import cachedproperty
 from ycyc.base.iterutils import dict_merge
 from ycyc.base.lazyutils import lazy_import
+import collections
 
 pyquery = lazy_import("pyquery")
 logger = logging.getLogger(__name__)
@@ -112,7 +113,7 @@ class AsyncSpider(object):
         self.worker.join()
 
     def run(self):
-        if not callable(self.target):
+        if not isinstance(self.target, collections.Callable):
             raise NotImplementedError
         return self.target()
 

@@ -102,7 +102,7 @@ class AllowFail(object):
                 if hasattr(func, "__name__"):
                     f_name = func.__name__
                 elif hasattr(func, "func_name"):
-                    f_name = func.func_name
+                    f_name = func.__name__
                 else:
                     f_name = str(func)
 

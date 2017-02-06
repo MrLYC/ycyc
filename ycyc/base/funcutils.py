@@ -24,7 +24,7 @@ def is_magic_method(method):
     """
     if not inspect.ismethod(method):
         return False
-    func_name = method.im_func.func_name
+    func_name = method.__func__.__name__
     if func_name.startswith("__") and func_name.endswith("__"):
         return True
     return False

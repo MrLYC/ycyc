@@ -37,6 +37,6 @@ class Rescue(object):
             err_typ = type(err)
             if err_typ in self.exceptions:
                 return self.exceptions[err_typ]
-            for types, val in self.exceptions.items():
+            for types, val in list(self.exceptions.items()):
                 if isinstance(err, types):
                     return val

@@ -10,10 +10,11 @@ __all__ = TagMaps()
 
 @__all__.register("GenData")
 class GenData(collections.Mapping):
+
     def __init__(self, base, extend=None):
         self.base_data = base
         self.extend_data = extend
-        self.real_keys = base.viewkeys() | extend.viewkeys()
+        self.real_keys = set(base.keys()) | set(extend.keys())
 
     def __getitem__(self, key):
         if key in self.extend_data:

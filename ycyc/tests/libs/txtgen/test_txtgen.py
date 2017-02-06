@@ -9,6 +9,7 @@ from ycyc.libs import txtgen
 
 
 class Test_TxtGenerator(TestCase):
+
     def test_usage(self):
         gen = txtgen.TxtGenerator({
             "clsname": "NewClass", "basecls": "object",
@@ -41,8 +42,11 @@ class Test_TxtGenerator(TestCase):
 
         for i in cls_meta:
             gen.writeline("class {clsname}({basecls}):", **i)
-            for name, val in i["attrs"].iteritems():
-                gen.writeline("    {attrname} = {initval}", attrname=name, initval=val)
+            for name, val in i["attrs"].items():
+                gen.writeline(
+                    "    {attrname} = {initval}",
+                    attrname=name, initval=val,
+                )
             gen.writeline("")
 
         self.assertEqual(gen.getval().strip(), textwrap.dedent("""

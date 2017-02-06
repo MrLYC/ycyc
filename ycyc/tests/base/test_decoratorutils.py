@@ -77,19 +77,19 @@ class TestRetry(TestCase):
             def mockfunc(iterator):
                 return self.mockfunc(iterator)
 
-        self.assertIsNone(mockfunc3(iter(range(1))))
-        self.assertIsNone(mockfunc3(iter(range(2))))
-        self.assertIsNone(mockfunc3(iter(range(3))))
+        self.assertIsNone(mockfunc3(iter(list(range(1)))))
+        self.assertIsNone(mockfunc3(iter(list(range(2)))))
+        self.assertIsNone(mockfunc3(iter(list(range(3)))))
         with self.assertRaisesRegexp(Exception, "3"):
-            mockfunc3(iter(range(4)))
+            mockfunc3(iter(list(range(4))))
         with self.assertRaisesRegexp(Exception, "3"):
-            mockfunc3(iter(range(5)))
+            mockfunc3(iter(list(range(5))))
 
-        self.assertIsNone(mockfunc0(iter(range(1))))
-        self.assertIsNone(mockfunc0(iter(range(2))))
-        self.assertIsNone(mockfunc0(iter(range(3))))
-        self.assertIsNone(mockfunc0(iter(range(4))))
-        self.assertIsNone(mockfunc0(iter(range(5))))
+        self.assertIsNone(mockfunc0(iter(list(range(1)))))
+        self.assertIsNone(mockfunc0(iter(list(range(2)))))
+        self.assertIsNone(mockfunc0(iter(list(range(3)))))
+        self.assertIsNone(mockfunc0(iter(list(range(4)))))
+        self.assertIsNone(mockfunc0(iter(list(range(5)))))
 
 
 class TestWithManager(TestCase):

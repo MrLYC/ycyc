@@ -15,7 +15,7 @@ class FilterList(deque):
         """
         Return a new FilterList which filter by func
         """
-        return self.__class__(filter(func, self))
+        return self.__class__(list(filter(func, self)))
 
     def exclude(self, func):
         """

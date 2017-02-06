@@ -12,8 +12,8 @@ class TestHeap(TestCase):
     def test_construction(self):
         Heap()
         Heap([2, 3, 1, 17, 19, 100, 25, 17, 36])
-        Heap(range(10), cmp_attrs=["real"])
-        Heap(range(10), reverse=True)
+        Heap(list(range(10)), cmp_attrs=["real"])
+        Heap(list(range(10)), reverse=True)
 
     def test_iter(self):
         heap = Heap([2, 3, 1, 17, 19, 100, 25, 17, 36])

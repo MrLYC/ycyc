@@ -74,9 +74,9 @@ class TestObjAsDictAdapter(TestCase):
             child_dict.get("cinsval"))
 
         self.assertGreater(len(parent_dict), 0)
-        self.assertEqual(parent_dict.keys(), list(parent_dict.iterkeys()))
-        self.assertEqual(parent_dict.values(), list(parent_dict.itervalues()))
-        self.assertEqual(parent_dict.items(), list(parent_dict.iteritems()))
+        self.assertEqual(list(parent_dict.keys()), list(parent_dict.keys()))
+        self.assertEqual(list(parent_dict.values()), list(parent_dict.values()))
+        self.assertEqual(list(parent_dict.items()), list(parent_dict.items()))
         self.assertEqual(len(parent_dict), len(list(parent_dict)))
 
 
@@ -85,11 +85,11 @@ class TestMainEntry(TestCase):
     @property
     def main_mock(self):
         main_mock = mock.MagicMock()
-        main_mock.func_name = main_mock.__name__ = "main_mock"
-        main_mock.func_doc = main_mock.__doc__ = "main_mock doc"
-        main_mock.func_globals = mock.MagicMock()
-        main_mock.func_defaults = mock.MagicMock()
-        main_mock.func_code = mock.MagicMock()
+        main_mock.__name__ = main_mock.__name__ = "main_mock"
+        main_mock.__doc__ = main_mock.__doc__ = "main_mock doc"
+        main_mock.__globals__ = mock.MagicMock()
+        main_mock.__defaults__ = mock.MagicMock()
+        main_mock.__code__ = mock.MagicMock()
         return main_mock
 
     def test_usage(self):
@@ -108,7 +108,7 @@ class TestMainEntry(TestCase):
         ) as patches:
             main_mock = self.main_mock
             main_mock.__module__ = "__main__"
-            main_mock.func_code.co_argcount = 0
+            main_mock.__code__.co_argcount = 0
             main_mock.return_value = 1
 
             new_main = adapter.main_entry(main_mock)
@@ -122,7 +122,7 @@ class TestMainEntry(TestCase):
             patches.sys.argv = [id(patches)]
             main_mock = self.main_mock
             main_mock.__module__ = "__main__"
-            main_mock.func_code.co_argcount = 1
+            main_mock.__code__.co_argcount = 1
             main_mock.return_value = None
 
             new_main = adapter.main_entry(main_mock)

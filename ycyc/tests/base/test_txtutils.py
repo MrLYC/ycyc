@@ -8,60 +8,61 @@ from ycyc.base import txtutils
 
 class TestCoding(TestCase):
     b_en = b"test"
-    b_ch = u"测试".encode("utf-8")
+    b_cn = u"测试".encode("utf-8")
     u_en = u"test"
-    u_ch = u"测试"
+    u_cn = u"测试"
 
     def test_encode(self):
         self.assertEqual(self.b_en, txtutils.encode(self.u_en, "utf-8"))
-        self.assertEqual(self.b_ch, txtutils.encode(self.u_ch, "utf-8"))
+        self.assertEqual(self.b_cn, txtutils.encode(self.u_cn, "utf-8"))
         self.assertEqual(self.b_en, txtutils.encode(self.b_en, "utf-8"))
-        self.assertEqual(self.b_ch, txtutils.encode(self.b_ch, "utf-8"))
+        self.assertEqual(self.b_cn, txtutils.encode(self.b_cn, "utf-8"))
 
     def test_decode(self):
         self.assertEqual(self.u_en, txtutils.decode(self.u_en, "utf-8"))
-        self.assertEqual(self.u_ch, txtutils.decode(self.u_ch, "utf-8"))
+        self.assertEqual(self.u_cn, txtutils.decode(self.u_cn, "utf-8"))
         self.assertEqual(self.u_en, txtutils.decode(self.b_en, "utf-8"))
-        self.assertEqual(self.u_ch, txtutils.decode(self.b_ch, "utf-8"))
+        self.assertEqual(self.u_cn, txtutils.decode(self.b_cn, "utf-8"))
 
     def test_bytescat(self):
         target = u"test测试".encode("utf-8")
-        self.assertEqual(txtutils.bytescat(self.b_en, self.b_ch), target)
-        self.assertEqual(txtutils.bytescat(self.u_en, self.u_ch), target)
-        self.assertEqual(txtutils.bytescat(self.b_en, self.u_ch), target)
-        self.assertEqual(txtutils.bytescat(self.u_en, self.b_ch), target)
+        self.assertEqual(txtutils.bytescat(self.b_en, self.b_cn), target)
+        self.assertEqual(txtutils.bytescat(self.u_en, self.u_cn), target)
+        self.assertEqual(txtutils.bytescat(self.b_en, self.u_cn), target)
+        self.assertEqual(txtutils.bytescat(self.u_en, self.b_cn), target)
 
         target = u"测试测试".encode("utf-8")
-        self.assertEqual(txtutils.bytescat(self.b_ch, self.b_ch), target)
-        self.assertEqual(txtutils.bytescat(self.u_ch, self.u_ch), target)
-        self.assertEqual(txtutils.bytescat(self.b_ch, self.u_ch), target)
-        self.assertEqual(txtutils.bytescat(self.u_ch, self.b_ch), target)
+        self.assertEqual(txtutils.bytescat(self.b_cn, self.b_cn), target)
+        self.assertEqual(txtutils.bytescat(self.u_cn, self.u_cn), target)
+        self.assertEqual(txtutils.bytescat(self.b_cn, self.u_cn), target)
+        self.assertEqual(txtutils.bytescat(self.u_cn, self.b_cn), target)
 
     def test_strcat(self):
         target = u"test测试"
-        self.assertEqual(txtutils.strcat(self.b_en, self.b_ch), target)
-        self.assertEqual(txtutils.strcat(self.u_en, self.u_ch), target)
-        self.assertEqual(txtutils.strcat(self.b_en, self.u_ch), target)
-        self.assertEqual(txtutils.strcat(self.u_en, self.b_ch), target)
+        self.assertEqual(txtutils.strcat(self.b_en, self.b_cn), target)
+        self.assertEqual(txtutils.strcat(self.u_en, self.u_cn), target)
+        self.assertEqual(txtutils.strcat(self.b_en, self.u_cn), target)
+        self.assertEqual(txtutils.strcat(self.u_en, self.b_cn), target)
 
         target = u"测试测试"
-        self.assertEqual(txtutils.strcat(self.b_ch, self.b_ch), target)
-        self.assertEqual(txtutils.strcat(self.u_ch, self.u_ch), target)
-        self.assertEqual(txtutils.strcat(self.b_ch, self.u_ch), target)
-        self.assertEqual(txtutils.strcat(self.u_ch, self.b_ch), target)
+        self.assertEqual(txtutils.strcat(self.b_cn, self.b_cn), target)
+        self.assertEqual(txtutils.strcat(self.u_cn, self.u_cn), target)
+        self.assertEqual(txtutils.strcat(self.b_cn, self.u_cn), target)
+        self.assertEqual(txtutils.strcat(self.u_cn, self.b_cn), target)
 
-        gbk_ch = u"测试".encode("gbk")
+        gbk_cn = u"测试".encode("gbk")
         self.assertEqual(
-            txtutils.strcat(gbk_ch, self.b_ch, "gbk", "utf-8"), target)
+            txtutils.strcat(gbk_cn, self.b_cn, "gbk", "utf-8"), target)
         self.assertEqual(
-            txtutils.strcat(gbk_ch, self.u_ch, "gbk", "utf-8"), target)
+            txtutils.strcat(gbk_cn, self.u_cn, "gbk", "utf-8"), target)
         self.assertEqual(
-            txtutils.strcat(self.b_ch, gbk_ch, "utf-8", "gbk"), target)
+            txtutils.strcat(self.b_cn, gbk_cn, "utf-8", "gbk"), target)
         self.assertEqual(
-            txtutils.strcat(self.u_ch, gbk_ch, "utf-8", "gbk"), target)
+            txtutils.strcat(self.u_cn, gbk_cn, "utf-8", "gbk"), target)
 
 
 class TestStringUtils(TestCase):
+
     def test_drop_prefix(self):
         self.assertEqual(
             txtutils.drop_prefix("root/file.txt", "root/"),
@@ -108,6 +109,7 @@ class TestStringUtils(TestCase):
 
 
 class TestTxtDistance(TestCase):
+
     def test_edit_distance(self):
         test_cases = {
             ("ABC", "CBCD"): 2,
@@ -122,7 +124,7 @@ class TestTxtDistance(TestCase):
         edit_distance = txtutils.TxtDistance.edit_distance
         edit_distance2 = txtutils.TxtDistance.edit_distance2
 
-        for case, result in test_cases.items():
+        for case, result in list(test_cases.items()):
             s1, s2 = case
             self.assertEqual(edit_distance(s1, s2), result)
             self.assertEqual(edit_distance2(s1, s2), result)
@@ -136,7 +138,7 @@ class TestTxtDistance(TestCase):
             ("2173896", "2233796"): 3,
         }
 
-        for case, result in test_cases.items():
+        for case, result in list(test_cases.items()):
             s1, s2 = case
             self.assertEqual(
                 txtutils.TxtDistance.hamming_distance(s1, s2),
@@ -145,24 +147,25 @@ class TestTxtDistance(TestCase):
 
 
 class TestSepJoin(TestCase):
+
     def test_usage(self):
         self.assertEqual(
-            txtutils.sep_join("|", map(str, range(3))),
+            txtutils.sep_join("|", list(map(str, list(range(3))))),
             "0|1|2"
         )
         self.assertEqual(
-            txtutils.sep_join("|", map(str, range(3)), True),
+            txtutils.sep_join("|", list(map(str, list(range(3)))), True),
             "|0|1|2"
         )
         self.assertEqual(
-            txtutils.sep_join("|", map(str, range(3)), True, True),
+            txtutils.sep_join("|", list(map(str, list(range(3)))), True, True),
             "|0|1|2|"
         )
         self.assertEqual(
-            txtutils.sep_join(" | ", map(str, range(3)), "| ", " |"),
+            txtutils.sep_join(" | ", list(map(str, list(range(3)))), "| ", " |"),
             "| 0 | 1 | 2 |"
         )
         self.assertEqual(
-            txtutils.sep_join(",", map(str, range(3)), "x="),
+            txtutils.sep_join(",", list(map(str, list(range(3)))), "x="),
             "x=0,1,2"
         )

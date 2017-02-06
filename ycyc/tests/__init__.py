@@ -18,9 +18,9 @@ def mock_patches(*patches, **named_patches):
     ...     mocks.cls2() #=> package.cls
     """
     attrs = list(i.split(".")[-1] for i in patches)
-    attrs.extend(named_patches.keys())
+    attrs.extend(list(named_patches.keys()))
     patches = list(patches)
-    patches.extend(named_patches.values())
+    patches.extend(list(named_patches.values()))
     mock_patches = []
     mocks = mock.Mock()
 

@@ -28,7 +28,7 @@ def debug_call_trace(loger=None, name=None):
     :param name: function name
     """
     def _(func):
-        fname = name or func.func_name
+        fname = name or func.__name__
 
         @functools.wraps(func)
         def f(*args, **kwg):

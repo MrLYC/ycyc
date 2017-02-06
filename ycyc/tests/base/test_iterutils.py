@@ -66,7 +66,7 @@ class TestIterObj(TestCase):
         self.assertTrue(iterable(i for i in range(0)))
 
     def test_getfirst(self):
-        self.assertEqual(getfirst(range(5)), 0)
+        self.assertEqual(getfirst(list(range(5))), 0)
         self.assertEqual(getfirst({"a": 1}), "a")
 
         gen = (i for i in range(1))
@@ -181,8 +181,8 @@ class TestDictMerge(TestCase):
 
 class TestFlatten(TestCase):
     def test_usage(self):
-        seq_list = [range(0, 3), range(3, 7), (i for i in range(7, 9))]
-        self.assertListEqual(flatten(seq_list, list), range(0, 9))
+        seq_list = [list(range(0, 3)), list(range(3, 7)), (i for i in range(7, 9))]
+        self.assertListEqual(flatten(seq_list, list), list(range(0, 9)))
 
 
 class TestFindPeakItem(TestCase):
@@ -208,15 +208,15 @@ class TestFilterN(TestCase):
     def test_filter_n(self):
         self.assertListEqual(
             [1, 3],
-            list(filter_n(lambda x: x % 2, range(10), 2))
+            list(filter_n(lambda x: x % 2, list(range(10)), 2))
         )
         self.assertListEqual(
             [1],
-            list(filter_n(None, range(10), 1))
+            list(filter_n(None, list(range(10)), 1))
         )
         self.assertListEqual(
             [0, 4, 8],
-            list(filter_n(lambda x: x % 4 == 0, range(10), 20))
+            list(filter_n(lambda x: x % 4 == 0, list(range(10)), 20))
         )
 
 
@@ -224,11 +224,11 @@ class TestEveryN(TestCase):
     def test_every_n(self):
         self.assertListEqual(
             [(0, 1), (2, 3)],
-            list(every_n(range(4), 2))
+            list(every_n(list(range(4)), 2))
         )
         self.assertListEqual(
             [(0, 1, 2)],
-            list(every_n(range(4), 3))
+            list(every_n(list(range(4)), 3))
         )
 
 

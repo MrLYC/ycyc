@@ -69,7 +69,7 @@ def main_entry(main):
     if main.__module__ == "__main__":
         sys.exit(
             wraped_main()
-            if main.func_code.co_argcount == 0
+            if main.__code__.co_argcount == 0
             else wraped_main(sys.argv)
         )
 

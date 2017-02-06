@@ -72,5 +72,5 @@ def select(dct_object, *args, **kwg):
     """
     return {
         k: getitems(dct_object, i)
-        for k, i in chain(enumerate(args), kwg.iteritems())
+        for k, i in chain(enumerate(args), iter(kwg.items()))
     }
