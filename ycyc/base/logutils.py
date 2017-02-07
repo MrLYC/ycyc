@@ -5,8 +5,12 @@ import contextlib
 import logging.config
 import logging
 import sys
-import thread
 import inspect
+try:
+    from thread import get_ident
+except ImportError:
+    from threading import get_ident
+
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +19,7 @@ class LoggerInfo(object):
     def __init__(self, frame=None):
         if frame is None:
             frames = sys._current_frames()
-            frame = frames[thread.get_ident()]
+            frame = frames[get_ident()]
             self.frame = frame.f_back
         else:
             self.frame = frame
@@ -125,7 +129,7 @@ def log_disable(level=logging.CRITICAL):
     severity 'level' and below in block
     """
     cur_frames = sys._current_frames()
-    cur_frame = cur_frames[thread.get_ident()]
+    cur_frame = cur_frames[get_ident()]
     pre_frame = cur_frame.f_back
 
     logger.info(

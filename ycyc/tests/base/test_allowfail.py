@@ -28,7 +28,7 @@ class TestUsage(TestCase):
 
         _, exception = valueerror()  # pylint: disable=E1111
         self.assertIsInstance(exception, ValueError)
-        self.assertEqual(exception.message, "test exception")
+        self.assertEqual(str(exception), "test exception")
         args = magic_mock.call_args[0]
         self.assertEqual(args[0], "test valueerror")
         self.assertIs(args[1], exception)

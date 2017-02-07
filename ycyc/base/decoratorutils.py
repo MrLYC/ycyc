@@ -7,7 +7,6 @@ decoratorutils provided some useful decorators.
 
 import functools
 import logging
-import types
 import collections
 
 logger = logging.getLogger(__file__)
@@ -65,7 +64,7 @@ class CachedProperty(DescriptorBase):
 
     def __get__(self, instance, cls):
         if not hasattr(self, "cached_result"):
-            result = types.MethodType(self.func, instance, cls)()
+            result = self.func(instance)
             setattr(instance, self.func.__name__, result)
         return result
 cachedproperty = CachedProperty
@@ -205,8 +204,8 @@ class AllowUnboundMethod(DescriptorBase):
 
     def __get__(self, instance, cls):
         if instance is not None:
-            return types.MethodType(self.func, instance, cls)
-        return types.UnboundMethodType(self.func, cls, cls)
+            return functools.partial(self.func, instance)
+        return functools.partial(self.func, cls)
 allow_unbound_method = AllowUnboundMethod
 
 
@@ -216,5 +215,5 @@ class ClassProperty(DescriptorBase):
     """
 
     def __get__(self, instance, cls):
-        return types.UnboundMethodType(self.func, cls, cls)()
+        return self.func(cls)
 classproperty = ClassProperty

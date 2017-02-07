@@ -22,6 +22,24 @@ class HeapItem(object):
             self.__class__.__name__, self.value, self.heap,
         )
 
+    def __lt__(self, other):
+        return self.heap.compare_items(self, other) < 0
+
+    def __le__(self, other):
+        return self.heap.compare_items(self, other) <= 0
+
+    def __gt__(self, other):
+        return self.heap.compare_items(self, other) > 0
+
+    def __ge__(self, other):
+        return self.heap.compare_items(self, other) >= 0
+
+    def __ne__(self, other):
+        return self.heap.compare_items(self, other) != 0
+
+    def __eq__(self, other):
+        return self.heap.compare_items(self, other) == 0
+
     def __cmp__(self, other):
         return self.heap.compare_items(self, other)
 
@@ -38,10 +56,13 @@ class Heap(object):
         heapq_op.heapify(self.data)
 
     def compare_items(self, item1, item2):
-        value = cmp(
-            getattrs(item1.value, self.cmp_attrs),
-            getattrs(item2.value, self.cmp_attrs),
-        )
+        val1 = getattrs(item1.value, self.cmp_attrs)
+        val2 = getattrs(item2.value, self.cmp_attrs)
+        value = 0
+        if val1 < val2:
+            value = -1
+        elif val2 < val1:
+            value = 1
         return value * -1 if self.reverse else value
 
     def __getitem__(self, index):

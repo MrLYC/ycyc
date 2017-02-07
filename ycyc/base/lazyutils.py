@@ -6,6 +6,11 @@ import functools
 import importlib
 import sys
 
+try:
+    from importlib import reload
+except ImportError:
+    pass
+
 
 class LazyEnv(object):
     """
@@ -36,30 +41,30 @@ class LazyEnv(object):
         GlobalEnv["val"] = lambda: 1
     But LazyEnv() is not a dict like object.
     """
+
+    def __init__(self, **attrs):
+        super(LazyEnv, self).__setattr__("_env", attrs)
+
     def __setattr__(self, attr, val):
-        if hasattr(self, attr):
-            delattr(self, attr)
-        super(LazyEnv, self).__setattr__("_lazy_%s" % attr, val)
+        self[attr] = val
 
     def __getattr__(self, attr):
-        lazy_attr = "_lazy_%s" % attr
-        if hasattr(self, lazy_attr):
-            val = getattr(self, lazy_attr)
+        if attr in self._env:
+            val = self._env[attr]
             if isinstance(val, types.LambdaType):
                 val = val()
+            self._env.pop(attr)
             super(LazyEnv, self).__setattr__(attr, val)
-            delattr(self, lazy_attr)
             return val
         raise AttributeError("%s not found" % attr)
 
     def __setitem__(self, key, val):
-        setattr(self, key, lambda: val)
+        if hasattr(self, key):
+            delattr(self, key)
+        self._env[key] = val
 
     def __getitem__(self, key):
-        try:
-            return getattr(self, key)
-        except AttributeError:
-            raise KeyError("%s not found" % key)
+        return self._env[key]
 
 
 def lazy_init(func):

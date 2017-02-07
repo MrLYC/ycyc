@@ -22,7 +22,7 @@ class TestTagMaps(TestCase):
         self.assertEqual(maps["sub"](4, 5), sub(4, 5))
 
         with self.assertRaises(KeyError):
-            self.assertEqual(maps["noexist"](6, 7), None)
+            maps["noexist"](6, 7)
 
         @maps.register(maps.DefaultKey)
         def default(x, y):
@@ -30,7 +30,7 @@ class TestTagMaps(TestCase):
 
         self.assertEqual(maps["noexist"](8, 9), default(8, 9))
 
-        self.assertListEqual(list(maps), ["", "add", "sub"])
-        self.assertEqual(list(maps)[0], "")
-        self.assertEqual(list(maps)[1], "add")
-        self.assertEqual(list(maps)[2], "sub")
+        self.assertListEqual(list(maps), ["add", "sub", ""])
+        self.assertEqual(list(maps)[0], "add")
+        self.assertEqual(list(maps)[1], "sub")
+        self.assertEqual(list(maps)[2], "")

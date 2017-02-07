@@ -17,7 +17,7 @@ class TestRegex(TestCase):
 
         def test_num(num):
             rex = self.pattern_equal_rex(resources.Regex.num_less_than(num))
-            for i in range(num + num / 2):
+            for i in range(num + num // 2):
                 if i < num:
                     self.assertIsNotNone(rex.match(str(i)))
                 else:

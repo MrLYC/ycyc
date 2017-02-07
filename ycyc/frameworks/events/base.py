@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-import weakref
-
 from collections import namedtuple
 
 from ycyc.base.typeutils import SimpleExceptions
@@ -47,13 +45,14 @@ class Event(object):
 
         for callback in self.callbacks:
             result = None
+            exception = None
             try:
-                exception = None
                 result = callback(sender, *args, **kwargs)
-            except weakref.ReferenceError as exception:
+            except ReferenceError as err:
                 self.unregister(callback)  # auto unregister weakref.ProxyType object
-            except Exception as exception:
-                pass
+                exception = err
+            except Exception as err:
+                exception = err
 
             yield self.CallbackResult(
                 callback=callback, result=result,

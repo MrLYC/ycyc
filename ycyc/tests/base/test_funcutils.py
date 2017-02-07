@@ -7,14 +7,6 @@ from ycyc.base import funcutils
 
 
 class TestObjectHelper(TestCase):
-    def test_is_magic_method(self):
-        class Foo(object):
-            def __str__(self):
-                return "foo"
-
-        foo = Foo()
-        self.assertTrue(funcutils.is_magic_method(Foo.__str__))
-        self.assertTrue(funcutils.is_magic_method(foo.__str__))
 
     def test_set_default_attr(self):
         class Foo(object):
@@ -94,10 +86,13 @@ class TestObjectHelper(TestCase):
 class TestParentFrame(TestCase):
     def test_usage(self):
         import sys
-        import thread
+        try:
+            from thread import get_ident
+        except ImportError:
+            from threading import get_ident
 
         frames = sys._current_frames()
-        current_frame = frames[thread.get_ident()]
+        current_frame = frames[get_ident()]
         frame = current_frame.f_back
 
         self.assertIs(frame, funcutils.parent_frame())

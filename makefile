@@ -36,9 +36,12 @@ pylint:
 pylint-full:
 	$(PYLINT) $(SRCPATH)
 
-.PHONY: test
-test: pylint
+.PHONY: pytest
+pytest:
 	$(PYTEST) $(SRCPATH)/tests/
+
+.PHONY: test
+test: pylint pytest
 
 .PHONY: requires
 requires: $(ROOTPATH)/requirements.txt

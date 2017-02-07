@@ -16,20 +16,6 @@ else:
     import threading
 
 
-def is_magic_method(method):
-    """
-    Check a method if is magic method
-
-    :param method: method of a class
-    """
-    if not inspect.ismethod(method):
-        return False
-    func_name = method.__func__.__name__
-    if func_name.startswith("__") and func_name.endswith("__"):
-        return True
-    return False
-
-
 def set_default_attr(obj, name, value):
     """
     Set attribute to obj if attribute is not exists

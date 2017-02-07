@@ -22,7 +22,7 @@ class TestSafeCalc(TestCase):
         self.assertEqual(calc("vstr == '456'"), True)
         self.assertEqual(calc("7 in vlist"), True)
         self.assertEqual(set(calc("vdict.keys()")), set(["key1", "key2"]))
-        self.assertEqual(calc("vdict['key1']/10 == vint"), True)
+        self.assertEqual(calc("vdict['key1']//10 == vint"), True)
         self.assertEqual(calc("12 and 34 or 56"), 34)
 
     def test_func(self):

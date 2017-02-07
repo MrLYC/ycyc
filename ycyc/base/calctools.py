@@ -17,7 +17,7 @@ class SafeCalc(ast.NodeTransformer):
     """
     globals = {
         "locals": None, "globals": None, "__name__": None,
-        "__file__": None, "__builtins__": None, "True": True,
+        "__file__": None, "__builtins__": {}, "True": True,
         "False": False,
     }
 

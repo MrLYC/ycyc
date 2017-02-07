@@ -32,10 +32,7 @@ class TestLazyEnv(TestCase):
         env = lazyutils.LazyEnv()
         env["a"] = lambda: global_a
 
-        self.assertIsInstance(env.a, types.LambdaType)
         self.assertIsInstance(env["a"], types.LambdaType)
-
-        env.a = lambda: global_a
         with self.assertRaisesRegexp(NameError, r"\bglobal_a\b"):
             env.a
 
@@ -61,9 +58,7 @@ class TestLazyImport(TestCase):
             )
 
         lazy_akulamatata = lazyutils.lazy_import("noting.akulamatata")
-        with self.assertRaisesRegexp(
-            ImportError, "No module named noting.akulamatata"
-        ):
+        with self.assertRaises(ImportError):
             lazy_akulamatata.fail()
 
 

@@ -18,11 +18,12 @@ logger = logging.getLogger(__name__)
 class Request(requests.Request):
 
     def __init__(
-            self, url, callback, headers=None, params=None, data=None,
-            json=None, method="GET", **kwg):
+        self, url, callback, headers=None, params=None, data=None,
+        json=None, method="GET", **kwargs
+    ):
         super(Request, self).__init__(
             url=url, headers=headers, params=params, data=data, json=json,
-            method=method, **kwg
+            method=method, **kwargs
         )
         self.callback = callback
 
@@ -123,8 +124,8 @@ class AsyncSpider(object):
         return ThreadPool()
 
 
-def redirect_to(url, callback, **kwg):
+def redirect_to(url, callback, **kwargs):
     def redirect(response):
         logger.info("redirect to %s", url)
-        yield Request(url=url, callback=callback, **kwg)
+        yield Request(url=url, callback=callback, **kwargs)
     return redirect

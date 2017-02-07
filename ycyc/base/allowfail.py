@@ -107,9 +107,10 @@ class AllowFail(object):
                     f_name = str(func)
 
                 with AllowFail(
-                        "On error handler %s" % f_name,
-                        logger=self.logger, exc_info=self.exc_info):
-                    self.error_handler(self.label, err)
+                    "On error handler %s" % f_name,
+                    logger=self.logger, exc_info=self.exc_info,
+                ):
+                    self.error_handler(self.label, exception)
 
             return AllowFailResult(result=result, exception=exception)
         return protect

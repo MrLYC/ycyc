@@ -180,7 +180,10 @@ def find_peak_item(sequence, include_extremes=False):
     index, cur_p = next(iters)
     right_p = cur_p
     for r_idx, right_p in iters:
-        if cmp(left_p, cur_p) * cmp(cur_p, right_p) < 0:
+        if (
+            (left_p < cur_p and cur_p > right_p) or
+            (left_p > cur_p and cur_p < right_p)
+        ):
             yield index, cur_p
         left_p, cur_p, index = cur_p, right_p, r_idx
 

@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+from collections import OrderedDict
 
-class TagMaps(dict):
+
+class TagMaps(OrderedDict):
     DefaultKey = ""
 
     def __missing__(self, key):
@@ -24,7 +26,7 @@ class TagMaps(dict):
             raise KeyError("%s was existed" % key)
 
         def update(obj):
-            self.update(key, obj)
+            self[key] = obj
             return obj
 
         return update

@@ -12,13 +12,35 @@ class SeqHeapItem(object):
     def backward(self):
         self.value = next(self.sequence)
 
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __le__(self, other):
+        return self.value <= other.value
+
+    def __gt__(self, other):
+        return self.value > other.value
+
+    def __ge__(self, other):
+        return self.value >= other.value
+
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __ne__(self, other):
+        return self.value != other.value
+
     def __cmp__(self, other):
         return self.cmp_func(self.value, other.value)
 
 
+def my_cmp(x, y):
+    return (x > y) - (x < y)
+
+
 def alignment_seq(sequences, key_func=None, cmp_func=None):
     key_func = key_func or (lambda x: x)
-    cmp_func = cmp_func or (lambda x, y: cmp(key_func(x), key_func(y)))
+    cmp_func = cmp_func or (lambda x, y: my_cmp(key_func(x), key_func(y)))
 
     seq_heap = [SeqHeapItem(i, cmp_func) for i in sequences]
 
