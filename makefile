@@ -43,6 +43,9 @@ pytest:
 .PHONY: test
 test: pylint pytest
 
+.PHONY: ci
+ci: pytest
+
 .PHONY: requires
 requires: $(ROOTPATH)/requirements.txt
 	$(PIPINSTALL) -r $(ROOTPATH)/requirements.txt

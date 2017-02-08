@@ -56,7 +56,8 @@ class NamedDict(six.with_metaclass(NamedDictMeta, dict)):
             if remain_args:
                 logger.warning("not acceptable arguments: %s", remain_args)
 
-        missed_fields = set(requires) - set(fields.keys())
+        field_keys = set(fields.keys())
+        missed_fields = set(requires) - field_keys
         if missed_fields:
             logger.debug("missed_fields: %s", missed_fields)
             raise RequireFieldsMissError(
