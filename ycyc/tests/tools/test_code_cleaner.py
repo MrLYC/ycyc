@@ -127,3 +127,12 @@ class TestCodeCleaner(TestCase):
         exec(code, env, env)
         exec(code1, env1, env1)
         self.assertEqual(env1["x"], env["x"])
+
+    def test6(self):
+        code = dedent('''
+        x = 1 # comment1
+        # comment2
+        ''')
+        code1 = self.clean(code)
+        self.assertNotIn("comment1", code1)
+        self.assertNotIn("comment2", code1)
