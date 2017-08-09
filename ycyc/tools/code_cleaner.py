@@ -214,10 +214,6 @@ class CodeCleaner(object):
         )
         if macro_handler:
             macro_handler(self, macro.args)
-        else:
-            self.clean_error(
-                "unknown macro: %s" % macro.name, token,
-            )
 
     def handle_token(self, token):
         if token.type in ["NL", "NEWLINE"]:
