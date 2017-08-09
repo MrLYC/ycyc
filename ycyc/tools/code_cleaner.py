@@ -6,8 +6,12 @@ from token import tok_name
 import StringIO
 import os
 import ast
+import sys
+import logging
+import logging.config
 from collections import deque, OrderedDict, namedtuple
 
+logger = logging.getLogger("root")
 TokenPoint = namedtuple("TokenPoint", ["row", "col"])
 Token = namedtuple("Token", [
     "type", "token", "start_at", "end_at", "source_line",
@@ -17,12 +21,16 @@ Macro = namedtuple("Macro", [
 ])
 
 class CleanConfig(object):
+    NAME = "default"
+    BEGIN_MARK = "&BEGIN"
+    END_MARK = "&END"
 
     def __init__(self, **kwargs):
         self.in_header = True
-        self.name = ""
-        self.begin_mark = "&BEGIN"
-        self.end_mark = "&END"
+        self.name = self.NAME
+        self.begin_mark = self.BEGIN_MARK
+        self.end_mark = self.END_MARK
+        self.debug = False
 
         for k, v in kwargs.items():
             setattr(self, k, v)
@@ -164,6 +172,8 @@ class CodeCleaner(object):
     def line_end(self, flush=True):
         if flush and self.line is not None:
             self.lines.append(self.line)
+            logger.debug("[-] cleaned: %s", self.line)
+
         self.line = None
 
     def clean_error(self, message, token=None):
@@ -218,6 +228,9 @@ class CodeCleaner(object):
             return
         if token.type != "COMMENT":
             self.conf.in_header = False
+            if self.line and token.source_line != self.line:
+                self.line_end()
+                self.line_start()
             self.line = token.source_line
         else:
             self.line = None
@@ -246,14 +259,60 @@ def main():
         "-w", "--write_back", action="store_true",
         help="write content back to file"
     )
+    parser.add_argument(
+        "-b", "--begin_mark", default=CleanConfig.BEGIN_MARK,
+        help="begin mark of macro block",
+    )
+    parser.add_argument(
+        "-e", "--end_mark", default=CleanConfig.END_MARK,
+        help="end mark of macro block",
+    )
+    parser.add_argument(
+        "-n", "--name", default=CleanConfig.NAME,
+        help="name of environment",
+    )
+    parser.add_argument(
+        "-d", "--debug", action="store_true",
+        help="debug mode",
+    )
     parser.add_argument("-o", "--output", help="file to write content")
     args = parser.parse_args()
+    logging.config.dictConfig({
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'simple': {
+                'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+                'datefmt': '[%d/%b/%Y %H:%M:%S]',
+            },
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple'
+            },
+        },
+        'loggers': {
+            "root": {
+                'handlers': ['console'],
+                'level': 'DEBUG' if args.debug else "INFO",
+            }
+        },
+    })
 
-    with open(args.path, "rt") as fp:
-        code = fp.read()
+    if args.path == "-":
+        code = sys.stdin.read()
+    else:
+        with open(args.path, "rt") as fp:
+            code = fp.read()
 
     try:
-        cleaner = CodeCleaner(code)
+        cleaner = CodeCleaner(code, config={
+            "name": args.name,
+            "begin_mark": args.begin_mark,
+            "end_mark": args.end_mark,
+        })
         content = cleaner.clean()
     except CleanError as error:
         print(error.message)
@@ -266,6 +325,7 @@ def main():
                 + BColors.ENDC
                 + token.source_line[token.end_at.col:]
             )
+        sys.exit(1)
 
     output = args.path if args.write_back else args.output
     if output:

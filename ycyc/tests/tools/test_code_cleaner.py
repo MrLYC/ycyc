@@ -115,3 +115,15 @@ class TestCodeCleaner(TestCase):
         env2 = {}
         exec(code2, env2, env2)
         self.assertEqual(env2["x"], 2)
+
+    def test5(self):
+        code = dedent('''
+        x = "111222333" \\
+          .strip()
+        ''')
+        code1 = self.clean(code)
+        env = {}
+        env1 = {}
+        exec(code, env, env)
+        exec(code1, env1, env1)
+        self.assertEqual(env1["x"], env["x"])
