@@ -3,12 +3,15 @@
 
 import tokenize
 from token import tok_name
-import StringIO
 import ast
 import sys
 import logging
 import logging.config
 from collections import deque, namedtuple
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO  # pylint: disable=E1101
 
 logger = logging.getLogger("root")
 TokenPoint = namedtuple("TokenPoint", ["row", "col"])
@@ -79,7 +82,7 @@ class BColors(object):
 
 
 def split_by_token(code):
-    tokens = tokenize.generate_tokens(StringIO.StringIO(code).readline)
+    tokens = tokenize.generate_tokens(StringIO(code).readline)
     return [i[1] for i in tokens if i[1].strip()]
 
 
@@ -119,7 +122,7 @@ class CodeCleaner(object):
         )
         self.token_buffer = deque(maxlen=bufsize)
         self.token_gen = tokenize.generate_tokens(
-            StringIO.StringIO(code).readline,
+            StringIO(code).readline,
         )
 
     @property
