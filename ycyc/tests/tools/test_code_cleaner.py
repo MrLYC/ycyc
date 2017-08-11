@@ -31,7 +31,7 @@ class TestCodeCleaner(TestCase):
         with open(
             "/tmp/test", "rt"
         ) as fp:
-            print test_func(fp.read())
+            print(test_func(fp.read()))
         ''')
         content = self.clean(code)
         code_lines = code.splitlines()
