@@ -159,3 +159,10 @@ class TestCodeCleaner(TestCase):
         ''')
         code1 = self.clean(code)
         self.assertEqual(code, code1)
+
+    def test9(self):
+        code = '''u"""
+        123
+        456
+        """'''
+        self.assertEqual(code, self.clean(code))

@@ -232,7 +232,11 @@ class CodeCleaner(object):
         self.line = token.source_line
 
     def handle_string(self, token):
-        lines = [i + "\n" for i in token.token.split("\n") if i]
+        source_lines = [i + "\n" for i in token.source_line.split("\n")]
+        source_lines[-1] = source_lines[-1][:-1]
+        start_row = token.start_at.row
+        end_row = token.end_at.row - start_row + 1
+        lines = source_lines[:end_row]
         if len(lines) == 1:
             return self.handle_default(token)
         line0 = lines[0]
@@ -240,9 +244,8 @@ class CodeCleaner(object):
             self.line = line0
         self.line_end()
         map(self.write_line, lines[1:-1])
-        line_1 = lines[-1]
-        if token.source_line.endswith(line_1):
-            self.write_line(line_1.rstrip("\n"))
+        line_1 = lines[-1] + "".join(source_lines[end_row:])
+        self.line = line_1
 
     def handle_token(self, token):
         handlers = {
