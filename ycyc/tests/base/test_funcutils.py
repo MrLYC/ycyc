@@ -10,6 +10,7 @@ class TestObjectHelper(TestCase):
 
     def test_set_default_attr(self):
         class Foo(object):
+
             def __str__(self):
                 return "foo"
 
@@ -84,12 +85,13 @@ class TestObjectHelper(TestCase):
 
 
 class TestParentFrame(TestCase):
+
     def test_usage(self):
         import sys
         try:
             from thread import get_ident
         except ImportError:
-            from threading import get_ident
+            from threading import get_ident  # pylint: disable=E0611
 
         frames = sys._current_frames()
         current_frame = frames[get_ident()]
@@ -99,6 +101,7 @@ class TestParentFrame(TestCase):
 
 
 class TestExportModule(TestCase):
+
     def test_funcutils(self):
         locals_env = locals()
         export_module = funcutils.export_module(funcutils.__name__)

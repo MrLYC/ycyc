@@ -4,12 +4,11 @@
 import tokenize
 from token import tok_name
 import StringIO
-import os
 import ast
 import sys
 import logging
 import logging.config
-from collections import deque, OrderedDict, namedtuple
+from collections import deque, namedtuple
 
 logger = logging.getLogger("root")
 TokenPoint = namedtuple("TokenPoint", ["row", "col"])
@@ -336,7 +335,7 @@ def main():
         })
         content = cleaner.clean()
     except CleanError as error:
-        print(error.message)
+        print(str(error))
         token = error.token
         if token:
             print(

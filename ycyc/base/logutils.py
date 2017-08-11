@@ -9,13 +9,14 @@ import inspect
 try:
     from thread import get_ident
 except ImportError:
-    from threading import get_ident
+    from threading import get_ident  # pylint: disable=E0611
 
 
 logger = logging.getLogger(__name__)
 
 
 class LoggerInfo(object):
+
     def __init__(self, frame=None):
         if frame is None:
             frames = sys._current_frames()
@@ -170,6 +171,7 @@ def log_with_label(log_method, label):
 
 
 class LogFunctionCall(object):
+
     def __init__(self, func=None, args=None, kwargs=None, returned=None):
         self.func = func
         self.args = args
