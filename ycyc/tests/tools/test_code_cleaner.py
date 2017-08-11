@@ -8,6 +8,7 @@ from ycyc.tools import code_cleaner
 
 
 class TestCodeCleaner(TestCase):
+
     def clean(self, code, **conf):
         cleaner = code_cleaner.CodeCleaner(code, config=conf)
         content = cleaner.clean(True)
@@ -76,20 +77,6 @@ class TestCodeCleaner(TestCase):
         exec(code1, env1, env1)
         with self.assertRaises(KeyError):
             env1["x"]
-
-    def test3(self):
-        code = dedent('''
-        def getval():
-            return 2
-
-        # &END
-
-        x = getval()
-        ''')
-        code1 = self.clean(code, name="env1")
-        env1 = {}
-        exec(code1, env1, env1)
-        self.assertEqual(env1["x"], 2)
 
     def test4(self):
         code = dedent('''
@@ -166,3 +153,17 @@ class TestCodeCleaner(TestCase):
         456
         """'''
         self.assertEqual(code, self.clean(code))
+
+    def test10(self):
+        code = dedent('''
+        def getval():
+            return 2
+
+        # &END
+
+        x = getval()
+        ''')
+        code1 = self.clean(code, name="env1")
+        env1 = {}
+        exec(code1, env1, env1)
+        self.assertEqual(env1["x"], 2)

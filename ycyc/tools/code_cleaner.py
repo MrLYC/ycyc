@@ -22,6 +22,7 @@ Macro = namedtuple("Macro", [
 TokenNames = dict(tok_name)
 TokenNames[54] = TokenNames[4]
 
+
 class CleanConfig(object):
     NAME = "default"
     BEGIN_MARK = "&BEGIN"
@@ -96,6 +97,7 @@ def parse_macro(macro, marks):
 
 
 class CleanError(Exception):
+
     def __init__(self, message, token):
         message = (
             "{message}\n"
@@ -203,10 +205,9 @@ class CodeCleaner(object):
         if self.conf.in_header:
             self.handle_header(token)
         else:
-            cleaned_line = (
-                token.source_line[:token.start_at.col]
-                + token.source_line[token.end_at.col:]
-            )
+            cleaned_line = token.source_line[:token.start_at.col] + \
+                token.source_line[token.end_at.col:]
+
             self.line = cleaned_line
             if cleaned_line.strip():
                 return
@@ -339,11 +340,11 @@ def main():
         token = error.token
         if token:
             print(
-                token.source_line[:token.start_at.col]
-                + BColors.WARNING
-                + token.source_line[token.start_at.col:token.end_at.col]
-                + BColors.ENDC
-                + token.source_line[token.end_at.col:]
+                token.source_line[:token.start_at.col] +
+                BColors.WARNING +
+                token.source_line[token.start_at.col:token.end_at.col] +
+                BColors.ENDC +
+                token.source_line[token.end_at.col:]
             )
         sys.exit(1)
 
@@ -353,6 +354,7 @@ def main():
             fp.write(content)
     else:
         print(content)
+
 
 if __name__ == '__main__':
     main()
