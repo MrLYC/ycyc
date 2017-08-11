@@ -136,3 +136,26 @@ class TestCodeCleaner(TestCase):
         code1 = self.clean(code)
         self.assertNotIn("comment1", code1)
         self.assertNotIn("comment2", code1)
+
+    def test7(self):
+        code = dedent('''
+        def f():
+            """docstring
+            """
+            pass
+        ''')
+        code1 = self.clean(code)
+        self.assertEqual(code, code1)
+
+    def test8(self):
+        code = dedent('''
+        message = f(u"""
+            hello %s
+            hi %s
+        """ % (
+            "world",
+            "me",
+        ))
+        ''')
+        code1 = self.clean(code)
+        self.assertEqual(code, code1)

@@ -19,6 +19,8 @@ Token = namedtuple("Token", [
 Macro = namedtuple("Macro", [
     "mark", "name", "args",
 ])
+TokenNames = dict(tok_name)
+TokenNames[54] = TokenNames[4]
 
 class CleanConfig(object):
     NAME = "default"
@@ -151,7 +153,7 @@ class CodeCleaner(object):
             type_, token, start_at, end_at, source_line = next(self.token_gen)
             start_at = TokenPoint(*start_at)
             end_at = TokenPoint(*end_at)
-            type_ = tok_name[type_]
+            type_ = TokenNames[type_]
             token = Token(type_, token, start_at, end_at, source_line)
             self.token_buffer.append(token)
             return token
@@ -190,7 +192,14 @@ class CodeCleaner(object):
         self.line = token.source_line
         return True
 
+    def handle_newline(self, token):
+        if self.line:
+            self.line_end()
+        else:
+            self.write_line(token.token)
+
     def handle_comment(self, token):
+        self.line = None
         if self.conf.in_header:
             self.handle_header(token)
         else:
@@ -215,22 +224,34 @@ class CodeCleaner(object):
         if macro_handler:
             macro_handler(self, macro.args)
 
+    def handle_default(self, token):
+        self.conf.in_header = False
+        if self.line and self.line != token.source_line:
+            self.line_end()
+            self.line_start()
+        self.line = token.source_line
+
+    def handle_string(self, token):
+        lines = [i + "\n" for i in token.token.split("\n") if i]
+        if len(lines) == 1:
+            return self.handle_default(token)
+        line0 = lines[0]
+        if not self.line or not self.line.endswith(line0):
+            self.line = line0
+        self.line_end()
+        map(self.write_line, lines[1:-1])
+        line_1 = lines[-1]
+        if token.source_line.endswith(line_1):
+            self.write_line(line_1.rstrip("\n"))
+
     def handle_token(self, token):
-        if token.type in ["NL", "NEWLINE"]:
-            if self.line:
-                self.line_end()
-            else:
-                self.write_line(token.token)
-            return
-        if token.type != "COMMENT":
-            self.conf.in_header = False
-            if self.line and token.source_line != self.line:
-                self.line_end()
-                self.line_start()
-            self.line = token.source_line
-        else:
-            self.line = None
-            self.handle_comment(token)
+        handlers = {
+            "NEWLINE": self.handle_newline,
+            "COMMENT": self.handle_comment,
+            "STRING": self.handle_string,
+        }
+        handler = handlers.get(token.type, self.handle_default)
+        handler(token)
 
     def clean(self, validate=True):
         self.line_start()
