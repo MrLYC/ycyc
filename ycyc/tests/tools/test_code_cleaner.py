@@ -7,6 +7,39 @@ from textwrap import dedent
 from ycyc.tools import code_cleaner
 
 
+class TestTokenReader(TestCase):
+
+    def test_gen_split_lines(self):
+        self.assertListEqual(
+            [],
+            list(code_cleaner.TokenReader.gen_split_lines(""))
+        )
+        self.assertListEqual(
+            ["\n"],
+            list(code_cleaner.TokenReader.gen_split_lines("\n"))
+        )
+        self.assertListEqual(
+            ["123\n"],
+            list(code_cleaner.TokenReader.gen_split_lines("123\n"))
+        )
+        self.assertListEqual(
+            ["123\n", "456"],
+            list(code_cleaner.TokenReader.gen_split_lines("123\n456"))
+        )
+        self.assertListEqual(
+            ["\n", "\n"],
+            list(code_cleaner.TokenReader.gen_split_lines("\n\n"))
+        )
+        self.assertListEqual(
+            ["123\n", "456\n"],
+            list(code_cleaner.TokenReader.gen_split_lines("123\n456\n"))
+        )
+        self.assertListEqual(
+            ["123\n", "456\r\n"],
+            list(code_cleaner.TokenReader.gen_split_lines("123\n456\r\n"))
+        )
+
+
 class TestCodeCleaner(TestCase):
 
     def clean(self, code, **conf):

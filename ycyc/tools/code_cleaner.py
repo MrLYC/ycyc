@@ -11,7 +11,7 @@ from collections import deque, namedtuple
 try:
     from StringIO import StringIO
 except ImportError:
-    from io import StringIO  # pylint: disable=E1101
+    from io import StringIO
 
 logger = logging.getLogger("root")
 TokenPoint = namedtuple("TokenPoint", ["row", "col"])
@@ -22,7 +22,42 @@ Macro = namedtuple("Macro", [
     "mark", "name", "args",
 ])
 TokenNames = dict(tok_name)
-TokenNames[54] = TokenNames[4]
+TokenNames[54] = "NEWLINE"
+TokenNames[-1] = "SPACE"
+
+
+class TokenReader(object):
+
+    @classmethod
+    def gen_split_lines(cls, code):
+        base = 0
+        for i, c in enumerate(code):
+            if c == "\n":
+                yield code[base: base + i + 1]
+                base = i + 1
+        line = code[base:]
+        if line:
+            yield line
+
+    def __init__(self, code):
+        self.tokens = deque()
+        self.buffer_index = 0
+        self.handle_tokens(code)
+
+    def handle_tokens(self, code):
+        self.tokens.clear()
+        self.buffer_index = 0
+        gen_tokens = tokenize.generate_tokens(
+            lambda: next(self.gen_split_lines(code)),
+        )
+        row = 0
+        col = 0
+        for type_, token, start_at, end_at, source_line in gen_tokens:
+            start_at = TokenPoint(*start_at)
+            end_at = TokenPoint(*end_at)
+            type_ = TokenNames[type_]
+            token = Token(type_, token, start_at, end_at, source_line)
+            self.tokens.append(token)
 
 
 class CleanConfig(object):
