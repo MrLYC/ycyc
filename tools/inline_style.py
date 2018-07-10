@@ -147,6 +147,10 @@ def main():
         "-i", "--ignore", action="store_true", default=False,
         help="ignore inline style",
     )
+    arg_parser.add_argument(
+        "-I", "--stdin", action="store_true", default=False,
+        help="read style from stdin",
+    )
     args = arg_parser.parse_args()
 
     with safe_open_for_read(args.base_file) as fp:
@@ -155,6 +159,8 @@ def main():
     if args.style:
         with safe_open_for_read(args.style) as fp:
             style = fp.read()
+    elif args.stdin:
+        style = raw_input()
     else:
         style = ""
 
