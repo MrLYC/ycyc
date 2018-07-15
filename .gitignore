@@ -68,3 +68,5 @@ ycyc-venv/
 .tags
 tags
 .tags1
+
+.pytest_cache

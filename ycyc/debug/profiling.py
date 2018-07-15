@@ -4,7 +4,7 @@
 from functools import wraps
 import cProfile
 import pstats
-import StringIO
+from six import StringIO
 from collections import namedtuple
 from contextlib import contextmanager
 import logging

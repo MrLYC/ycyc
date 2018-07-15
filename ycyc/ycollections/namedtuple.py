@@ -21,8 +21,7 @@ class NamedTuple(object):
         return super(NamedTuple, cls).__new__(cls, *list(i_args), **params)
 
 
-def namedtuple(name, requires=(), defaults=None):
-    defaults = defaults or {}
+def namedtuple(name, requires=(), **defaults):
     fields = tuple(i for i in chain(requires, defaults.keys()))
     return type(name, (NamedTuple, _namedtuple(name, fields)), {
         "__Defaults__": defaults,
