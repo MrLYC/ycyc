@@ -9,7 +9,7 @@ import six
 from ycyc.base import logutils
 
 if six.PY2:
-    import thread as threading
+    import thread as threading  # pylint: disable=import-error
 else:
     import threading
 

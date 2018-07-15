@@ -19,7 +19,7 @@ from ycyc.base import contextutils
 if six.PY2:
     import exceptions
 else:
-    import builtins as exceptions
+    import builtins as exceptions  # pylint: disable=import-error
 
 
 def oserror_format(func):
